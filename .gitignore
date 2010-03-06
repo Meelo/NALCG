@@ -1,0 +1,8 @@
+*.rar
+*.zip
+*.gz
+*.tar
+* - Copy.jpg
+.metadata
+.class
+.~*
