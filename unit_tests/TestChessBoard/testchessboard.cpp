@@ -19,6 +19,8 @@ private slots:
     void boardSize();
     void createBoard_data();
     void createBoard();
+    void checkPieces_data();
+    void checkPieces();
     void isInitialized();
 };
 
@@ -61,7 +63,21 @@ void TestChessBoard::createBoard()
     QFETCH(std::size_t, expected);
 
     std::vector<Square> squares = ChessBoard::createBoard();
-    
+    QCOMPARE(squares.size(), expected);
+}
+
+void TestChessBoard::checkPieces_data()
+{
+    QTest::addColumn<std::size_t>("expected");
+
+    QTest::newRow("8x8 board") << std::size_t(64);
+}
+
+void TestChessBoard::checkPieces()
+{
+    QFETCH(std::size_t, expected);
+
+    std::vector<Square> squares = ChessBoard::createBoard();
     QCOMPARE(squares.size(), expected);
 }
 

@@ -3,23 +3,29 @@
 
 // system includes
 #include <iostream>
+#include <vector>
 
 // class includes
 #include "board.h"
+#include "square.h"
 
 class ChessBoard : public Board
 {
     // Constants
+    static const std::size_t WIDTH = 8;
+    static const std::size_t HEIGHT = 8;
+    static const std::size_t BOARD_SIZE = 64;
 
     // Members
 
     // Methods
 
 public:
-    ChessBoard(std::size_t width = 8, std::size_t height = 8);
+    ChessBoard();
     virtual ~ChessBoard() { }
 
     // Methods
+    static std::vector<Square> createBoard();
 
     // Getters
     
