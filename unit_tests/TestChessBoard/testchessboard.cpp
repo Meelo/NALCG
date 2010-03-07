@@ -2,10 +2,12 @@
 #include <QObject>
 #include <QtTest/QtTest>
 #include <iostream>
+#include <vector>
 
 // classes to be tested
 #include "../../src/board.h"
 #include "../../src/chessboard.h"
+#include "../../src/square.h"
 
 class TestChessBoard : public QObject
 {
@@ -15,7 +17,8 @@ private slots:
     // Test case declarations
     void boardSize_data();
     void boardSize();
-    void isNotInitialized();
+    void createBoard_data();
+    void createBoard();
     void isInitialized();
 };
 
@@ -37,7 +40,7 @@ void TestChessBoard::boardSize()
     QFETCH(std::size_t, height);
     QFETCH(std::size_t, total_size);
 
-    Board *board = new ChessBoard();
+    Board* board = new ChessBoard();
 
     QCOMPARE(board->getWidth(), width);
     QCOMPARE(board->getHeight(), height);
@@ -46,18 +49,26 @@ void TestChessBoard::boardSize()
     delete board;
 }
 
-void TestChessBoard::isNotInitialized()
+void TestChessBoard::createBoard_data()
 {
-    Board *board = new ChessBoard();
-    QVERIFY(!board->isInitialized());
+    QTest::addColumn<std::size_t>("expected");
 
-    delete board;
+    QTest::newRow("8x8 board") << std::size_t(64);
+}
+
+void TestChessBoard::createBoard()
+{
+    QFETCH(std::size_t, expected);
+
+    std::vector<Square> squares = ChessBoard::createBoard();
+    
+    QCOMPARE(squares.size(), expected);
 }
 
 void TestChessBoard::isInitialized()
 {
     Board *board = new ChessBoard();
-    
+
     delete board;
 }
 

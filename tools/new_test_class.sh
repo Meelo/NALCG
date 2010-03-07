@@ -4,6 +4,7 @@
 where_was_I=`pwd`
 script_location=`readlink -f "$0"`
 where_should_I_be=`dirname "$script_location"`
+echo "Switching to $where_should_I_be"
 cd "$where_should_I_be"
 
 # inner constants
@@ -52,4 +53,5 @@ else
 fi
 
 # cleaning
+echo "Switching back to $where_was_I"
 cd "$where_was_I"

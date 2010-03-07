@@ -9,3 +9,5 @@
 *.swp
 *.moc
 *.o
+Makefile
+!src/Makefile

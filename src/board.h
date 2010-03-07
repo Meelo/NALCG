@@ -29,9 +29,6 @@ public:
     virtual std::size_t getHeight() const { return height; }
     virtual std::size_t getTotalSize() const { return 64; }
     
-    bool isInitialized() const { return initialized; }
-
-
     // Setters
 };
 
