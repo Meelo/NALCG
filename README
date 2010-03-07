@@ -8,3 +8,4 @@ Dependencies:
 OGRE-1.6.5
 Qt-test-4.x (x not confirmed)
 CEGUI-0.5.1
+OIS-1.2.0
