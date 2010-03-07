@@ -1,0 +1,27 @@
+#ifndef _#[GPROJECT]_#[GCLASS_NAME]_H_
+#define _#[GPROJECT]_#[GCLASS_NAME]_H_
+
+// system includes
+
+// class includes
+
+class #[CLASS_NAME]
+{
+    // Constants
+
+    // Members
+
+    // Methods
+
+public:
+    #[CLASS_NAME]();
+    virtual ~#[CLASS_NAME]() { }
+
+    // Methods
+
+    // Getters
+    
+    // Setters
+};
+
+#endif // _#[GPROJECT]_#[GCLASS_NAME]_H_
