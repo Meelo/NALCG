@@ -26,7 +26,7 @@ key_class_filename="##CLASS_FILENAME#"
 key_class_name="##CLASS_NAME#"
 
 function usage {
-    echo "usage sh: $0 class1 class2 class3.."
+    echo "usage sh: $0 Class1 Class2 Class3.."
     echo "Please use CamelCasing in class names."
 }
 
@@ -69,8 +69,6 @@ if [[ "$#" -ge "$NEW_CLASSES" ]]; then
 
             echo "$source_file generated"
         fi
-
-        
     done
 else
     usage
