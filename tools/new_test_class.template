@@ -8,7 +8,7 @@ class ##TEST_CLASS_NAME# : public QObject
 {
     Q_OBJECT
 
-private slot:
+private slots:
     // Test case declarations
     
 };

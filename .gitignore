@@ -6,3 +6,6 @@
 .metadata
 .class
 .~*
+*.swp
+*.moc
+*.o

@@ -20,16 +20,19 @@ key_class_name="##TEST_CLASS_NAME#"
 key_class_filename="##TEST_CLASS_FILENAME#"
 
 function usage {
-    echo "usage sh: $0 TestClass1 TestClass2 TestClass3.."
+    echo "usage: sh $0 TestClass1 TestClass2 TestClass3.."
     echo "Please use CamelCasing in class names."
 }
 
 if [[ "$#" -ge "$NEW_CLASSES" ]]; then
     for class in "$@"
     do
-        # all file names are lower case, according to coding convention.
+        # all file names are lower case, according to coding convention
         filename=`echo "$class" | $TO_LOWER`
-        test_file="$source_folder/$filename.cpp"
+        
+        # ensure there is a folder for this test
+        mkdir -p "$source_folder/$class"
+        test_file="$source_folder/$class/$filename.cpp"
         
         # only create header file if such doesn't exist
         if [[ ! -f "$test_file" ]]; then
