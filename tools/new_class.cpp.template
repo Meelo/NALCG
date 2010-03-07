@@ -1,9 +1,9 @@
 // system includes
 
 // class dependencies
-#include "#[CLASS_NAME].h"
+#include "##CLASS_FILENAME#.h"
 
-#[CLASS_NAME]::#[CLASS_NAME]()
+##CLASS_NAME#::##CLASS_NAME#()
 {
 
 }

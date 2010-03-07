@@ -4,7 +4,7 @@
 
 // classes to be tested
 
-class #[TEST_CLASS_NAME] : public QObject
+class ##TEST_CLASS_NAME# : public QObject
 {
     Q_OBJECT
 
@@ -17,5 +17,5 @@ private slot:
 
 // End of Tests
 
-QTEST_MAIN(#[TEST_CLASS_NAME])
-#include "#[TEST_CLASS_FILENAME].moc"
+QTEST_MAIN(##TEST_CLASS_NAME#)
+#include "##TEST_CLASS_FILENAME#.moc"

@@ -1,11 +1,11 @@
-#ifndef _#[GPROJECT]_#[GCLASS_NAME]_H_
-#define _#[GPROJECT]_#[GCLASS_NAME]_H_
+#ifndef _##GPROJECT###GCLASS_NAME#_H_
+#define _##GPROJECT###GCLASS_NAME#_H_
 
 // system includes
 
 // class includes
 
-class #[CLASS_NAME]
+class ##CLASS_NAME#
 {
     // Constants
 
@@ -14,8 +14,8 @@ class #[CLASS_NAME]
     // Methods
 
 public:
-    #[CLASS_NAME]();
-    virtual ~#[CLASS_NAME]() { }
+    ##CLASS_NAME#();
+    virtual ~##CLASS_NAME#() { }
 
     // Methods
 
@@ -24,4 +24,4 @@ public:
     // Setters
 };
 
-#endif // _#[GPROJECT]_#[GCLASS_NAME]_H_
+#endif // _##GPROJECT###GCLASS_NAME#_H_
