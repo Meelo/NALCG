@@ -4,7 +4,7 @@ class TutorialApplication : public ExampleApplication
 {
 protected:
 public:
-    TutorialApplication()
+    TutorialApplication() : entityCount(0)
     {
     }
 
@@ -12,6 +12,7 @@ public:
     {
     }
 protected:
+    int entityCount;
 
     virtual void createCamera()
     {
@@ -31,6 +32,17 @@ protected:
         mCamera->setAspectRatio(Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
     }
 
+    virtual void createPiece(const std::string& modelName, const Vector3& location)
+    {
+        std::stringstream entityName(modelName);
+        entityName << entityCount;
+        entityCount++;
+
+        Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName);
+        ent->setCastShadows(true);
+        mSceneMgr->getRootSceneNode()->createChildSceneNode(location)->attachObject(ent);
+    }
+
     void createScene()
     {
         Entity *ent;
@@ -39,13 +51,31 @@ protected:
         mSceneMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
         mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
 
-        for (int i = 0; i < 8; i++) {
-            std::stringstream name("BlackPawnEntity");
-            name << i;
-            ent = mSceneMgr->createEntity(name.str(), "black_pawn.mesh");
-            ent->setCastShadows(true);
-            mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(-700 + i*200, 0, -500))->attachObject(ent);
+        for (int i = 0; i < 8; i++)
+        {
+            createPiece("black_pawn.mesh", Vector3(-700 + i*200, 0, -500));
         }
+        createPiece("black_rook.mesh", Vector3(-700, 0, -700));
+        createPiece("black_knight.mesh", Vector3(-500, 0, -700));
+        createPiece("black_bishop.mesh", Vector3(-300, 0, -700));
+        createPiece("black_king.mesh", Vector3(-100, 0, -700));
+        createPiece("black_queen.mesh", Vector3(100, 0, -700));
+        createPiece("black_bishop.mesh", Vector3(300, 0, -700));
+        createPiece("black_knight.mesh", Vector3(500, 0, -700));
+        createPiece("black_rook.mesh", Vector3(700, 0, -700));
+
+        for (int i = 0; i < 8; i++)
+        {
+            createPiece("white_pawn.mesh", Vector3(-700 + i*200, 0, 500));
+        }
+        createPiece("white_rook.mesh", Vector3(-700, 0, 700));
+        createPiece("white_knight.mesh", Vector3(-500, 0, 700));
+        createPiece("white_bishop.mesh", Vector3(-300, 0, 700));
+        createPiece("white_king.mesh", Vector3(-100, 0, 700));
+        createPiece("white_queen.mesh", Vector3(100, 0, 700));
+        createPiece("white_bishop.mesh", Vector3(300, 0, 700));
+        createPiece("white_knight.mesh", Vector3(500, 0, 700));
+        createPiece("white_rook.mesh", Vector3(700, 0, 700));
 
         ent = mSceneMgr->createEntity("BoardEntity", "board.mesh");
         mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ent);
