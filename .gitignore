@@ -11,3 +11,8 @@
 *.o
 Makefile
 !src/Makefile
+ogre.cfg
+Ogre.log
+NALCG.pdb
+*.vcproj*
+src/Release

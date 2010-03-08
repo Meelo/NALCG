@@ -1,0 +1,66 @@
+
+material color_247_242_229
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588 0.588 0.588 1
+			diffuse 0.588 0.588 0.588 1
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture evil.jpg
+			}
+		}
+
+	}
+
+}
+
+
+
+material 17-Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture skin.jpg
+			}
+		}
+
+	}
+
+}
+
+
+
+material 19-Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.937255 0.913726 0.823529 1
+			diffuse 0.937255 0.913726 0.823529 1
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture gold.jpg
+			}
+		}
+
+	}
+
+}
+
+
