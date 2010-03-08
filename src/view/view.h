@@ -39,9 +39,13 @@ protected:
         mSceneMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
         mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
 
-        ent = mSceneMgr->createEntity("BlackPawnEntity", "black_pawn.mesh");
-        ent->setCastShadows(true);
-        mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ent);
+        for (int i = 0; i < 8; i++) {
+            std::stringstream name("BlackPawnEntity");
+            name << i;
+            ent = mSceneMgr->createEntity(name.str(), "black_pawn.mesh");
+            ent->setCastShadows(true);
+            mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(-700 + i*200, 0, -500))->attachObject(ent);
+        }
 
         ent = mSceneMgr->createEntity("BoardEntity", "board.mesh");
         mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ent);
