@@ -21,7 +21,7 @@ material 05-Default
 
 
 
-material asdasddfhch
+material default
 {
 	technique
 	{
@@ -33,7 +33,7 @@ material asdasddfhch
 
 			texture_unit
 			{
-				texture good.jpg
+				texture white.jpg
 			}
 		}
 
@@ -56,28 +56,6 @@ material 04-Default
 			texture_unit
 			{
 				texture color_red.png
-			}
-		}
-
-	}
-
-}
-
-
-
-material 12-Default
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.588235 0.588235 0.588235 1
-			diffuse 0.588235 0.588235 0.588235 1
-			specular 0 0 0 10 0
-
-			texture_unit
-			{
-				texture white_marble.jpg
 			}
 		}
 
