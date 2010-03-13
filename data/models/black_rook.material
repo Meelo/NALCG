@@ -43,6 +43,28 @@ material asdfasf
 
 
 
+material 06-Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture leather.jpg
+			}
+		}
+
+	}
+
+}
+
+
+
 material color_247_242_229
 {
 	technique
@@ -87,7 +109,7 @@ material 21-Default
 
 
 
-material 16-Default
+material 18-Default
 {
 	technique
 	{
@@ -99,7 +121,7 @@ material 16-Default
 
 			texture_unit
 			{
-				texture demon_skin_green.jpg
+				texture dark_skin.jpg
 			}
 		}
 

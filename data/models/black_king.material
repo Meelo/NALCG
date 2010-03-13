@@ -43,6 +43,28 @@ material 17-Default
 
 
 
+material 18-Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture dark_skin.jpg
+			}
+		}
+
+	}
+
+}
+
+
+
 material 19-Default
 {
 	technique
