@@ -5,7 +5,7 @@
 
 using namespace Ogre;
 
-class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener
+class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
 {
 public:
     BufferedInputHandler(OIS::Keyboard *keyboard = 0, OIS::Mouse *mouse = 0)
@@ -82,8 +82,8 @@ public:
             OIS::InputManager::destroyInputSystem(mInputManager);
         }
 
-        delete mRenderer;
         delete mSystem;
+        delete mRenderer;
 
         delete mListener;
         delete mRoot;
@@ -184,6 +184,13 @@ protected:
     {
         mRenderer = new CEGUI::OgreCEGUIRenderer(mWindow, Ogre::RENDER_QUEUE_OVERLAY, false, 3000, mSceneMgr);
         mSystem = new CEGUI::System(mRenderer);
+
+        CEGUI::SchemeManager::getSingleton().loadScheme("TaharezLookSkin.scheme");
+
+        mSystem->setDefaultMouseCursor("TaharezLook", "MouseArrow");
+        mSystem->setDefaultFont("BlueHighway-12");
+
+        CEGUI::MouseCursor::getSingleton().setImage(CEGUI::System::getSingleton().getDefaultMouseCursor());
     }
 
     void createFrameListener()
