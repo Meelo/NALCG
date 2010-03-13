@@ -16,11 +16,6 @@ private slots:
     // Test case declarations
     void boardSize_data();
     void boardSize();
-    void createBoard_data();
-    void createBoard();
-    void checkPieces_data();
-    void checkPieces();
-    void isInitialized();
 };
 
 // Test case implementations
@@ -46,41 +41,6 @@ void TestBoard::boardSize()
     QCOMPARE(board.getWidth(), width);
     QCOMPARE(board.getHeight(), height);
     QCOMPARE(board.getTotalSize(), total_size);
-}
-
-void TestBoard::createBoard_data()
-{
-    QTest::addColumn<std::size_t>("expected");
-
-    QTest::newRow("8x8 board") << std::size_t(64);
-}
-
-void TestBoard::createBoard()
-{
-    QFETCH(std::size_t, expected);
-
-    std::vector<Square> squares = Board::createBoard();
-    QCOMPARE(squares.size(), expected);
-}
-
-void TestBoard::checkPieces_data()
-{
-    QTest::addColumn<std::size_t>("expected");
-
-    QTest::newRow("8x8 board") << std::size_t(64);
-}
-
-void TestBoard::checkPieces()
-{
-    QFETCH(std::size_t, expected);
-
-    std::vector<Square> squares = Board::createBoard();
-    QCOMPARE(squares.size(), expected);
-}
-
-void TestBoard::isInitialized()
-{
-    Board board;
 }
 
 // End of Tests
