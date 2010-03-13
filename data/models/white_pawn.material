@@ -65,7 +65,7 @@ material 22-Default
 
 
 
-material 18-Default
+material 17-Default
 {
 	technique
 	{
@@ -77,7 +77,7 @@ material 18-Default
 
 			texture_unit
 			{
-				texture dark_skin.jpg
+				texture skin.jpg
 			}
 		}
 

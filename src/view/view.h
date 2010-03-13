@@ -201,8 +201,8 @@ protected:
     {
         mCamera = mSceneMgr->createCamera("PlayerCam");
         // set its position, direction
-        mCamera->setPosition(Vector3(0,10,500));
-        mCamera->lookAt(Vector3(0,0,0));
+        mCamera->setPosition(Vector3(0,1500,1500));
+        mCamera->lookAt(Vector3(0,0,-45.0));
         mCamera->setNearClipDistance(5);
     }
 
@@ -241,8 +241,8 @@ protected:
         createPiece("black_rook.mesh", Vector3(-700, 0, -700));
         createPiece("black_knight.mesh", Vector3(-500, 0, -700));
         createPiece("black_bishop.mesh", Vector3(-300, 0, -700));
-        createPiece("black_king.mesh", Vector3(-100, 0, -700));
-        createPiece("black_queen.mesh", Vector3(100, 0, -700));
+        createPiece("black_queen.mesh", Vector3(-100, 0, -700));
+        createPiece("black_king.mesh", Vector3(100, 0, -700));
         createPiece("black_bishop.mesh", Vector3(300, 0, -700));
         createPiece("black_knight.mesh", Vector3(500, 0, -700));
         createPiece("black_rook.mesh", Vector3(700, 0, -700));
@@ -254,8 +254,8 @@ protected:
         createPiece("white_rook.mesh", Vector3(-700, 0, 700));
         createPiece("white_knight.mesh", Vector3(-500, 0, 700));
         createPiece("white_bishop.mesh", Vector3(-300, 0, 700));
-        createPiece("white_king.mesh", Vector3(-100, 0, 700));
-        createPiece("white_queen.mesh", Vector3(100, 0, 700));
+        createPiece("white_queen.mesh", Vector3(-100, 0, 700));
+        createPiece("white_king.mesh", Vector3(100, 0, 700));
         createPiece("white_bishop.mesh", Vector3(300, 0, 700));
         createPiece("white_knight.mesh", Vector3(500, 0, 700));
         createPiece("white_rook.mesh", Vector3(700, 0, 700));
