@@ -1,18 +1,100 @@
-#include "ExampleApplication.h"
+#include <Ogre.h>
+#include <OIS/OIS.h>
+#include <CEGUI/CEGUI.h>
+#include <OgreCEGUIRenderer.h>
 
-class TutorialApplication : public ExampleApplication
+using namespace Ogre;
+
+class KeyListener : public FrameListener
 {
-protected:
 public:
-    TutorialApplication() : entityCount(0)
+    KeyListener(OIS::Keyboard *keyboard)
+        : mKeyboard(keyboard)
     {
     }
 
-    ~TutorialApplication()
+    bool frameStarted(const FrameEvent& evt)
+    {
+        mKeyboard->capture();
+        return !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
+    }
+
+protected:
+    OIS::Keyboard *mKeyboard;
+};
+
+class View
+{
+public:
+    View() : entityCount(0)
+    {
+    }
+
+    void go()
+    {
+        createRoot();
+        defineResources();
+        setupRenderSystem();
+        createRenderWindow();
+        initializeResourceGroups();
+        setupScene();
+        setupInputSystem();
+        setupCEGUI();
+        createFrameListener();
+        startRenderLoop();
+    }
+
+    virtual ~View()
     {
     }
 protected:
+    Root *mRoot;
+    OIS::Keyboard *mKeyboard;
+    OIS::InputManager *mInputManager;
+    CEGUI::OgreCEGUIRenderer *mRenderer;
+    KeyListener *mListener;
+
     int entityCount;
+
+    void createRoot()
+    {
+    }
+
+    void defineResources()
+    {
+    }
+
+    void setupRenderSystem()
+    {
+    }
+
+    void createRenderWindow()
+    {
+    }
+
+    void initializeResourceGroups()
+    {
+    }
+
+    void setupScene()
+    {
+    }
+
+    void setupInputSystem()
+    {
+    }
+
+    void setupCEGUI()
+    {
+    }
+
+    void createFrameListener()
+    {
+    }
+
+    void startRenderLoop()
+    {
+    }
 
     virtual void createCamera()
     {
