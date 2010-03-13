@@ -42,4 +42,6 @@ elif [[ "$1" == "--extra-quiet" ]]; then
     make_cmd="$make_extra_quiet"
 fi
 
+# qmake -project "CONFIG += qtestlib" -o TestBoard.pro && qmake && make -j5
+
 usage

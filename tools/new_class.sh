@@ -13,7 +13,7 @@ TO_UPPER='tr "[:lower:]" "[:upper:]"'
 TO_LOWER='tr "[:upper:]" "[:lower:]"'
 
 # change this if src-folder is somewhere else
-source_folder="../src"
+source_folder="../src/logic"
 header_template="new_class.h.template"
 source_template="new_class.cpp.template"
 
