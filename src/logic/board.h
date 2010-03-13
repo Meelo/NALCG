@@ -3,8 +3,10 @@
 
 // system includes
 #include <iostream>
+#include <vector>
 
 // class includes
+#include "square.h"
 
 class Board
 {
@@ -13,22 +15,23 @@ class Board
     // Members
     std::size_t width;
     std::size_t height;
-    
+
     bool initialized;
 
     // Methods
 
 public:
-    Board(std::size_t width, std::size_t height);
+    Board(std::size_t width = 8, std::size_t height = 8);
     virtual ~Board() { }
 
     // Methods
+    static std::vector<Square> createBoard(std::size_t width = 8, std::size_t height = 8);
 
     // Getters
-    virtual std::size_t getWidth() const { return width; }
-    virtual std::size_t getHeight() const { return height; }
-    virtual std::size_t getTotalSize() const { return 64; }
-    
+    std::size_t getWidth() const { return width; }
+    std::size_t getHeight() const { return height; }
+    std::size_t getTotalSize() const { return 64; }
+
     // Setters
 };
 
