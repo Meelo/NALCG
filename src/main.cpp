@@ -3,9 +3,9 @@
 int main(int argc, char **argv)
 {
     // Create application object
-    TutorialApplication app;
+    View view;
     try {
-        app.go();
+        view.go();
     } catch( Exception& e ) {
         fprintf(stderr, "An exception has occurred: %s\n", e.what());
     }

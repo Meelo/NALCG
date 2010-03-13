@@ -5,10 +5,36 @@
 
 using namespace Ogre;
 
-class KeyListener : public FrameListener
+class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener
 {
 public:
-    KeyListener(OIS::Keyboard *keyboard)
+    BufferedInputHandler(OIS::Keyboard *keyboard = 0, OIS::Mouse *mouse = 0)
+    {
+        if (keyboard)
+        {
+            keyboard->setEventCallback(this);
+        }
+
+        if (mouse)
+        {
+            mouse->setEventCallback(this);
+        }
+    }
+
+    // KeyListener
+    virtual bool keyPressed(const OIS::KeyEvent &arg) { return true; }
+    virtual bool keyReleased(const OIS::KeyEvent &arg) { return true; }
+
+    // MouseListener
+    virtual bool mouseMoved(const OIS::MouseEvent &arg) { return true; }
+    virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) { return true; }
+    virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) { return true; }
+};
+
+class ViewFrameListener : public FrameListener
+{
+public:
+    ViewFrameListener(OIS::Keyboard *keyboard)
         : mKeyboard(keyboard)
     {
     }
@@ -26,7 +52,9 @@ protected:
 class View
 {
 public:
-    View() : entityCount(0)
+    View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
+        mRenderer(0), mSystem(0), mListener(0),
+        entityCount(0)
     {
     }
 
@@ -41,59 +69,132 @@ public:
         setupInputSystem();
         setupCEGUI();
         createFrameListener();
+        createScene();
         startRenderLoop();
     }
 
     virtual ~View()
     {
+        if (mInputManager)
+        {
+            mInputManager->destroyInputObject(mKeyboard);
+            mInputManager->destroyInputObject(mMouse);
+            OIS::InputManager::destroyInputSystem(mInputManager);
+        }
+
+        delete mRenderer;
+        delete mSystem;
+
+        delete mListener;
+        delete mRoot;
     }
 protected:
     Root *mRoot;
     OIS::Keyboard *mKeyboard;
+    OIS::Mouse *mMouse;
     OIS::InputManager *mInputManager;
     CEGUI::OgreCEGUIRenderer *mRenderer;
-    KeyListener *mListener;
+    CEGUI::System *mSystem;
+    ViewFrameListener *mListener;
+    SceneManager *mSceneMgr;
+    Camera *mCamera;
+    RenderWindow *mWindow;
 
     int entityCount;
 
     void createRoot()
     {
+#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+        mRoot = new Root("plugins-windows.cfg");
+#else
+        mRoot = new Root("plugins-linux.cfg");
+#endif
     }
 
     void defineResources()
     {
+        String secName, typeName, archName;
+        ConfigFile cf;
+        cf.load("resources.cfg");
+        ConfigFile::SectionIterator seci = cf.getSectionIterator();
+        while (seci.hasMoreElements())
+        {
+            secName = seci.peekNextKey();
+            ConfigFile::SettingsMultiMap *settings = seci.getNext();
+            ConfigFile::SettingsMultiMap::iterator i;
+            for (i = settings->begin(); i != settings->end(); ++i)
+            {
+                typeName = i->first;
+                archName = i->second;
+                ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
+            }
+        }
     }
 
     void setupRenderSystem()
     {
+        if (!mRoot->restoreConfig() && !mRoot->showConfigDialog())
+            throw Exception(52, "User canceled the config dialog!", "Application::setupRenderSystem()");
     }
 
     void createRenderWindow()
     {
+        mRoot->initialise(true, "Not Another Lousy Chess Game");
     }
 
     void initializeResourceGroups()
     {
+        TextureManager::getSingleton().setDefaultNumMipmaps(5);
+        ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
     }
 
     void setupScene()
     {
+        mSceneMgr = mRoot->createSceneManager(ST_GENERIC, "Default SceneManager");
+        createCamera();
+        mWindow = mRoot->getAutoCreatedWindow();
+        createViewports();
     }
 
     void setupInputSystem()
     {
+        size_t windowHnd = 0;
+        std::ostringstream windowHndStr;
+        OIS::ParamList pl;
+        RenderWindow *win = mRoot->getAutoCreatedWindow();
+
+        win->getCustomAttribute("WINDOW", &windowHnd);
+        windowHndStr << windowHnd;
+        pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
+        mInputManager = OIS::InputManager::createInputSystem(pl);
+
+        try
+        {
+            mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject(OIS::OISKeyboard, true));
+            mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject(OIS::OISMouse, true));
+            //mJoy = static_cast<OIS::JoyStick*>(mInputManager->createInputObject(OIS::OISJoyStick, false));
+        }
+        catch (const OIS::Exception &e)
+        {
+            throw Exception(42, e.eText, "Application::setupInputSystem");
+        }
     }
 
     void setupCEGUI()
     {
+        mRenderer = new CEGUI::OgreCEGUIRenderer(mWindow, Ogre::RENDER_QUEUE_OVERLAY, false, 3000, mSceneMgr);
+        mSystem = new CEGUI::System(mRenderer);
     }
 
     void createFrameListener()
     {
+        mListener = new ViewFrameListener(mKeyboard);
+        mRoot->addFrameListener(mListener);
     }
 
     void startRenderLoop()
     {
+        mRoot->startRendering();
     }
 
     virtual void createCamera()
