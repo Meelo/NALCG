@@ -328,5 +328,15 @@ protected:
         light->setPosition(Vector3(-150, 250, -150));
         light->setDiffuseColour(0.4, 0.4, 1.0);
         light->setSpecularColour(1.0, 1.0, 1.0);
+
+        CEGUI::WindowManager *win = CEGUI::WindowManager::getSingletonPtr();
+        CEGUI::Window *sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
+
+        CEGUI::Window *quit = win->createWindow("TaharezLook/Button", "View/QuitButton");
+        quit->setText("Quit");
+        quit->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+
+        sheet->addChildWindow(quit);
+        mSystem->setGUISheet(sheet);
     }
 };
