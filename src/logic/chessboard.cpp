@@ -7,8 +7,8 @@
 #include "rook.h"
 #include "knight.h"
 #include "bishop.h"
-//#include "queen.h"
-//#include "king.h"
+#include "queen.h"
+#include "king.h"
 
 ChessBoard::ChessBoard() :
     Board(WIDTH, HEIGHT)
@@ -87,9 +87,12 @@ std::vector<Square> ChessBoard::createBoard()
     squares.at(WHITE_BISHOP_RIGHT).addPiece(new Bishop(white));
     
     // Queens
-    
+    squares.at(BLACK_QUEEN).addPiece(new Queen(black));    
+    squares.at(WHITE_QUEEN).addPiece(new Queen(white));    
     
     // Kings
+    squares.at(BLACK_KING).addPiece(new King(black));    
+    squares.at(WHITE_KING).addPiece(new King(white));    
 
     return squares;
 }

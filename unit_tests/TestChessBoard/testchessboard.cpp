@@ -14,8 +14,8 @@
 #include "../../src/logic/rook.h"
 #include "../../src/logic/knight.h"
 #include "../../src/logic/bishop.h"
-//#include "../../src/logic/queen.h"
-//#include "../../src/logic/king.h"
+#include "../../src/logic/queen.h"
+#include "../../src/logic/king.h"
 
 class TestChessBoard : public QObject
 {
@@ -97,9 +97,12 @@ void TestChessBoard::checkUnits_data()
     QTest::newRow("black rook at a8")   << std::size_t(0)  << black << rook;
     QTest::newRow("black knight at b8") << std::size_t(1)  << black << knight;
     QTest::newRow("black bishop at c8") << std::size_t(2)  << black << bishop;
+    QTest::newRow("black queen at d1")  << std::size_t(3)  << black << queen;
+    QTest::newRow("black king at e1")   << std::size_t(4)  << black << king;
     QTest::newRow("black bishop at f8") << std::size_t(5)  << black << bishop;
     QTest::newRow("black knight at g8") << std::size_t(6)  << black << knight;
     QTest::newRow("black rook at h8")   << std::size_t(7)  << black << rook;
+    
     QTest::newRow("black pawn at a7")   << std::size_t(8)  << black << pawn;
     QTest::newRow("black pawn at b7")   << std::size_t(9)  << black << pawn;
     QTest::newRow("black pawn at c7")   << std::size_t(10) << black << pawn;
@@ -123,9 +126,12 @@ void TestChessBoard::checkUnits_data()
     QTest::newRow("white pawn at f2")   << std::size_t(53) << white << pawn;
     QTest::newRow("white pawn at g2")   << std::size_t(54) << white << pawn;
     QTest::newRow("white pawn at h2")   << std::size_t(55) << white << pawn;
+
     QTest::newRow("white rook at a1")   << std::size_t(56) << white << rook;
     QTest::newRow("white knight at b1") << std::size_t(57) << white << knight;
     QTest::newRow("white bishop at c1") << std::size_t(58) << white << bishop;
+    QTest::newRow("white queen at d1")  << std::size_t(59) << white << queen;
+    QTest::newRow("white king at e1")   << std::size_t(60) << white << king;
     QTest::newRow("white bishop at f1") << std::size_t(61) << white << bishop;
     QTest::newRow("white knight at g1") << std::size_t(62) << white << knight;
     QTest::newRow("white rook at h1")   << std::size_t(63) << white << rook;
