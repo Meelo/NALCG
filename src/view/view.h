@@ -22,31 +22,77 @@ public:
     }
 
     // KeyListener
-    virtual bool keyPressed(const OIS::KeyEvent &arg) { return true; }
-    virtual bool keyReleased(const OIS::KeyEvent &arg) { return true; }
+    virtual bool keyPressed(const OIS::KeyEvent &arg)
+    {
+        CEGUI::System *sys = CEGUI::System::getSingletonPtr();
+        sys->injectKeyDown(arg.key);
+        sys->injectChar(arg.text);
+
+        return true;
+    }
+    virtual bool keyReleased(const OIS::KeyEvent &arg)
+    {
+        CEGUI::System::getSingleton().injectKeyUp(arg.key);
+
+        return true;
+    }
 
     // MouseListener
-    virtual bool mouseMoved(const OIS::MouseEvent &arg) { return true; }
-    virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) { return true; }
-    virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) { return true; }
+
+    CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
+    {
+        switch (buttonID)
+        {
+        case OIS::MB_Left:
+            return CEGUI::LeftButton;
+
+        case OIS::MB_Right:
+            return CEGUI::RightButton;
+
+        case OIS::MB_Middle:
+            return CEGUI::MiddleButton;
+
+        default:
+            return CEGUI::LeftButton;
+        }
+    }
+    virtual bool mouseMoved(const OIS::MouseEvent &arg)
+    {
+        CEGUI::System::getSingleton().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+        return true;
+    }
+    virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+    {
+        CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
+
+        return true;
+    }
+    virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+    {
+        CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
+        return true;
+    }
 };
 
 class ViewFrameListener : public FrameListener
 {
 public:
-    ViewFrameListener(OIS::Keyboard *keyboard)
-        : mKeyboard(keyboard)
+    ViewFrameListener(OIS::Keyboard *keyboard, OIS::Mouse *mouse)
+        : mKeyboard(keyboard), mMouse(mouse), handler(keyboard, mouse)
     {
     }
 
     bool frameStarted(const FrameEvent& evt)
     {
         mKeyboard->capture();
+        mMouse->capture();
         return !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
     }
 
 protected:
     OIS::Keyboard *mKeyboard;
+    OIS::Mouse *mMouse;
+    BufferedInputHandler handler;
 };
 
 class View
@@ -195,7 +241,7 @@ protected:
 
     void createFrameListener()
     {
-        mListener = new ViewFrameListener(mKeyboard);
+        mListener = new ViewFrameListener(mKeyboard, mMouse);
         mRoot->addFrameListener(mListener);
     }
 
