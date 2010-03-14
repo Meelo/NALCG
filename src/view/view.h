@@ -135,6 +135,7 @@ protected:
         Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/mWindow->getWidth(), mousePos.d_y/mWindow->getHeight());
         mRaySceneQuery->setRay(mouseRay);
         mRaySceneQuery->setSortByDistance(true);
+        mRaySceneQuery->setQueryMask(1 << 0);
 
         RaySceneQueryResult &result = mRaySceneQuery->execute();
         RaySceneQueryResult::iterator itr;
@@ -430,12 +431,13 @@ protected:
 
     virtual void createPiece(const std::string& modelName, const Vector3& location)
     {
-        std::stringstream entityName(modelName);
-        entityName << mEntityCount;
+        std::ostringstream entityName;
+        entityName << modelName << mEntityCount;
         mEntityCount++;
 
         Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName);
         //ent->setCastShadows(true);
+        ent->setQueryFlags(0);
 
         mSceneMgr->getRootSceneNode()->createChildSceneNode(location)->attachObject(ent);
     }
@@ -486,11 +488,11 @@ protected:
         {
             for (int i = 0; i < 8; i++)
             {
-                std::stringstream entityName("Board");
-                entityName << i << "," << j;
+                std::ostringstream name;
+                name << "Board" << i << "," << j;
 
-                ent = mSceneMgr->createEntity(entityName.str(), "square");
-                mSceneMgr->getRootSceneNode()->createChildSceneNode(
+                ent = mSceneMgr->createEntity(name.str(), "square");
+                mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(),
                     Vector3(-700 + i * 200, 0, -700 + j * 200)
                     )->attachObject(ent);
 
@@ -502,6 +504,7 @@ protected:
                 {
                     ent->setMaterialName("board/square/white");
                 }
+                ent->setQueryFlags(1 << 0);
             }
         }
 
