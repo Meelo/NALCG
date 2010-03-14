@@ -18,5 +18,36 @@ material 11-Default
 	}
 
 }
+material board/square/black
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			texture_unit
+			{
+				texture board_square_black.png
+			}
+		}
 
+	}
+
+}
+material board/square/white
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			texture_unit
+			{
+				texture board_square_white.png
+			}
+		}
+
+	}
+
+}
 

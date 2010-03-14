@@ -130,7 +130,8 @@ protected:
     {
         std::cout << "left pressed" << std::endl;
         CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
-        //Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/float(arg.state.width), mousePos.d_y/float(arg.state.height));
+
+        // Not using arg.state.width since it won't be updated.
         Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/mWindow->getWidth(), mousePos.d_y/mWindow->getHeight());
         mRaySceneQuery->setRay(mouseRay);
         mRaySceneQuery->setSortByDistance(true);
@@ -435,6 +436,7 @@ protected:
 
         Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName);
         //ent->setCastShadows(true);
+
         mSceneMgr->getRootSceneNode()->createChildSceneNode(location)->attachObject(ent);
     }
 
@@ -472,9 +474,36 @@ protected:
         createPiece("white_knight.mesh", Vector3(500, 0, 700));
         createPiece("white_rook.mesh", Vector3(700, 0, 700));
 
-        ent = mSceneMgr->createEntity("BoardEntity", "board.mesh");
-        mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ent);
+        //ent = mSceneMgr->createEntity("BoardEntity", "board.mesh");
+        //mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ent);
         //ent->setCastShadows(false);
+        Plane plane(Vector3::UNIT_Y, 0);
+
+        MeshManager::getSingleton().createPlane("square",
+            ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
+            200,200,1,1,true,1,1,1,Vector3::UNIT_Z);
+        for (int j = 0; j < 8; j++)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                std::stringstream entityName("Board");
+                entityName << i << "," << j;
+
+                ent = mSceneMgr->createEntity(entityName.str(), "square");
+                mSceneMgr->getRootSceneNode()->createChildSceneNode(
+                    Vector3(-700 + i * 200, 0, -700 + j * 200)
+                    )->attachObject(ent);
+
+                if ((i + j) % 2 == 0)
+                {
+                    ent->setMaterialName("board/square/black");
+                }
+                else
+                {
+                    ent->setMaterialName("board/square/white");
+                }
+            }
+        }
 
         light = mSceneMgr->createLight("Light1");
         light->setType(Light::LT_POINT);
