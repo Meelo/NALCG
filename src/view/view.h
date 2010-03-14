@@ -8,80 +8,132 @@ using namespace Ogre;
 class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-    BufferedInputHandler(OIS::Keyboard *keyboard = 0, OIS::Mouse *mouse = 0)
-    {
-        if (keyboard)
-        {
-            keyboard->setEventCallback(this);
-        }
+    BufferedInputHandler(SceneManager* sceneMgr) :
+      mLMouseDown(false), mRMouseDown(false), mSceneMgr(sceneMgr),
+          mRaySceneQuery(sceneMgr->createRayQuery(Ray()))
+      {
+      }
 
-        if (mouse)
-        {
-            mouse->setEventCallback(this);
-        }
+      ~BufferedInputHandler()
+      {
+          mSceneMgr->destroyQuery(mRaySceneQuery);
+      }
+
+      // KeyListener
+      virtual bool keyPressed(const OIS::KeyEvent &arg)
+      {
+          CEGUI::System *sys = CEGUI::System::getSingletonPtr();
+          sys->injectKeyDown(arg.key);
+          sys->injectChar(arg.text);
+
+          return true;
+      }
+      virtual bool keyReleased(const OIS::KeyEvent &arg)
+      {
+          CEGUI::System::getSingleton().injectKeyUp(arg.key);
+
+          return true;
+      }
+
+      // MouseListener
+
+      CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
+      {
+          switch (buttonID)
+          {
+          case OIS::MB_Left:
+              return CEGUI::LeftButton;
+
+          case OIS::MB_Right:
+              return CEGUI::RightButton;
+
+          case OIS::MB_Middle:
+              return CEGUI::MiddleButton;
+
+          default:
+              return CEGUI::LeftButton;
+          }
+      }
+      virtual bool mouseMoved(const OIS::MouseEvent &arg)
+      {
+          CEGUI::System::getSingleton().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+          return true;
+      }
+      virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+      {
+          CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
+
+          // Left mouse button down
+          if (id == OIS::MB_Left)
+          {
+              onLeftPressed(arg);
+              mLMouseDown = true;
+          } // if
+
+          // Right mouse button down
+          else if (id == OIS::MB_Right)
+          {
+              onRightPressed(arg);
+              mRMouseDown = true;
+          }
+          return true;
+      }
+      virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+      {
+          CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
+
+          // Left mouse button up
+          if (id == OIS::MB_Left)
+          {
+              onLeftReleased(arg);
+              mLMouseDown = false;
+          } // if
+
+          // Right mouse button up
+          else if (id == OIS::MB_Right)
+          {
+              onRightReleased(arg);
+              mRMouseDown = false;
+          }
+          return true;
+      }
+
+protected:
+    bool mLMouseDown, mRMouseDown;     // True if the mouse buttons are down
+    SceneManager *mSceneMgr;           // A pointer to the scene manager
+    RaySceneQuery *mRaySceneQuery;     // The ray scene query pointer
+    //SceneNode *mCurrentObject;         // The newly created object
+    //CEGUI::Renderer *mGUIRenderer;     // CEGUI renderer
+    //bool mRobotMode;                   // The current state
+
+    virtual void onLeftPressed(const OIS::MouseEvent &arg)
+    {
     }
 
-    // KeyListener
-    virtual bool keyPressed(const OIS::KeyEvent &arg)
+    virtual void onLeftReleased(const OIS::MouseEvent &arg)
     {
-        CEGUI::System *sys = CEGUI::System::getSingletonPtr();
-        sys->injectKeyDown(arg.key);
-        sys->injectChar(arg.text);
-
-        return true;
-    }
-    virtual bool keyReleased(const OIS::KeyEvent &arg)
-    {
-        CEGUI::System::getSingleton().injectKeyUp(arg.key);
-
-        return true;
     }
 
-    // MouseListener
-
-    CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
+    virtual void onRightPressed(const OIS::MouseEvent &arg)
     {
-        switch (buttonID)
-        {
-        case OIS::MB_Left:
-            return CEGUI::LeftButton;
-
-        case OIS::MB_Right:
-            return CEGUI::RightButton;
-
-        case OIS::MB_Middle:
-            return CEGUI::MiddleButton;
-
-        default:
-            return CEGUI::LeftButton;
-        }
     }
-    virtual bool mouseMoved(const OIS::MouseEvent &arg)
-    {
-        CEGUI::System::getSingleton().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
-        return true;
-    }
-    virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-    {
-        CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
 
-        return true;
-    }
-    virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+    virtual void onRightReleased(const OIS::MouseEvent &arg)
     {
-        CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
-        return true;
     }
 };
 
 class ViewFrameListener : public FrameListener
 {
 public:
-    ViewFrameListener(OIS::Keyboard *keyboard, OIS::Mouse *mouse, RenderWindow *window)
-        : mKeyboard(keyboard), mMouse(mouse), handler(keyboard, mouse),
+    ViewFrameListener(OIS::Keyboard *keyboard, OIS::Mouse *mouse,
+        RenderWindow *window, SceneManager *sceneManager)
+        : mKeyboard(keyboard), mMouse(mouse), mHandler(sceneManager),
         mContinue(true), mWindow(window)
     {
         mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
+        mKeyboard->setEventCallback(&mHandler);
+        mMouse->setEventCallback(&mHandler);
     }
 
     bool frameStarted(const FrameEvent& evt)
@@ -119,7 +171,7 @@ public:
 protected:
     OIS::Keyboard *mKeyboard;
     OIS::Mouse *mMouse;
-    BufferedInputHandler handler;
+    BufferedInputHandler mHandler;
     bool mContinue;
     Overlay* mDebugOverlay;
     RenderWindow *mWindow;
@@ -167,7 +219,7 @@ class View
 public:
     View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
         mRenderer(0), mSystem(0), mListener(0),
-        entityCount(0)
+        mEntityCount(0)
     {
     }
 
@@ -213,7 +265,7 @@ protected:
     Camera *mCamera;
     RenderWindow *mWindow;
 
-    int entityCount;
+    int mEntityCount;
 
     void createRoot()
     {
@@ -307,7 +359,7 @@ protected:
 
     void createFrameListener()
     {
-        mListener = new ViewFrameListener(mKeyboard, mMouse, mWindow);
+        mListener = new ViewFrameListener(mKeyboard, mMouse, mWindow, mSceneMgr);
         mRoot->addFrameListener(mListener);
     }
 
@@ -337,8 +389,8 @@ protected:
     virtual void createPiece(const std::string& modelName, const Vector3& location)
     {
         std::stringstream entityName(modelName);
-        entityName << entityCount;
-        entityCount++;
+        entityName << mEntityCount;
+        mEntityCount++;
 
         Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName);
         //ent->setCastShadows(true);
