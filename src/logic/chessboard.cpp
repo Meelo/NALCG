@@ -6,7 +6,7 @@
 #include "pawn.h"
 #include "rook.h"
 #include "knight.h"
-//#include "bishop.h"
+#include "bishop.h"
 //#include "queen.h"
 //#include "king.h"
 
@@ -81,7 +81,14 @@ std::vector<Square> ChessBoard::createBoard()
     squares.at(WHITE_KNIGHT_RIGHT).addPiece(new Knight(white));
     
     // Bishops
+    squares.at(BLACK_BISHOP_LEFT).addPiece(new Bishop(black));
+    squares.at(BLACK_BISHOP_RIGHT).addPiece(new Bishop(black));
+    squares.at(WHITE_BISHOP_LEFT).addPiece(new Bishop(white));
+    squares.at(WHITE_BISHOP_RIGHT).addPiece(new Bishop(white));
+    
     // Queens
+    
+    
     // Kings
 
     return squares;
