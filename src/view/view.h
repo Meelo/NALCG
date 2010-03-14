@@ -77,22 +77,89 @@ public:
 class ViewFrameListener : public FrameListener
 {
 public:
-    ViewFrameListener(OIS::Keyboard *keyboard, OIS::Mouse *mouse)
-        : mKeyboard(keyboard), mMouse(mouse), handler(keyboard, mouse)
+    ViewFrameListener(OIS::Keyboard *keyboard, OIS::Mouse *mouse, RenderWindow *window)
+        : mKeyboard(keyboard), mMouse(mouse), handler(keyboard, mouse),
+        mContinue(true), mWindow(window)
     {
+        mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
     }
 
     bool frameStarted(const FrameEvent& evt)
     {
         mKeyboard->capture();
         mMouse->capture();
-        return !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
+        return mContinue && !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
+    }
+
+    bool frameEnded(const FrameEvent& evt)
+    {
+        updateStats();
+        return true;
+    }
+
+    bool quit(const CEGUI::EventArgs &e)
+    {
+        mContinue = false;
+        return true;
+    }
+
+    bool toggleDebugInfo(const CEGUI::EventArgs &e)
+    {
+        if (mDebugOverlay->isVisible())
+        {
+            mDebugOverlay->hide();
+        }
+        else
+        {
+            mDebugOverlay->show();
+        }
+        return true;
     }
 
 protected:
     OIS::Keyboard *mKeyboard;
     OIS::Mouse *mMouse;
     BufferedInputHandler handler;
+    bool mContinue;
+    Overlay* mDebugOverlay;
+    RenderWindow *mWindow;
+
+    virtual void updateStats(void)
+    {
+        static String currFps = "Current FPS: ";
+        static String avgFps = "Average FPS: ";
+        static String bestFps = "Best FPS: ";
+        static String worstFps = "Worst FPS: ";
+        static String tris = "Triangle Count: ";
+        static String batches = "Batch Count: ";
+
+        // update stats when necessary
+        try {
+            OverlayElement* guiAvg = OverlayManager::getSingleton().getOverlayElement("Core/AverageFps");
+            OverlayElement* guiCurr = OverlayManager::getSingleton().getOverlayElement("Core/CurrFps");
+            OverlayElement* guiBest = OverlayManager::getSingleton().getOverlayElement("Core/BestFps");
+            OverlayElement* guiWorst = OverlayManager::getSingleton().getOverlayElement("Core/WorstFps");
+
+            const RenderTarget::FrameStats& stats = mWindow->getStatistics();
+            guiAvg->setCaption(avgFps + StringConverter::toString(stats.avgFPS));
+            guiCurr->setCaption(currFps + StringConverter::toString(stats.lastFPS));
+            guiBest->setCaption(bestFps + StringConverter::toString(stats.bestFPS)
+                +" "+StringConverter::toString(stats.bestFrameTime)+" ms");
+            guiWorst->setCaption(worstFps + StringConverter::toString(stats.worstFPS)
+                +" "+StringConverter::toString(stats.worstFrameTime)+" ms");
+
+            OverlayElement* guiTris = OverlayManager::getSingleton().getOverlayElement("Core/NumTris");
+            guiTris->setCaption(tris + StringConverter::toString(stats.triangleCount));
+
+            OverlayElement* guiBatches = OverlayManager::getSingleton().getOverlayElement("Core/NumBatches");
+            guiBatches->setCaption(batches + StringConverter::toString(stats.batchCount));
+
+            //OverlayElement* guiDbg = OverlayManager::getSingleton().getOverlayElement("Core/DebugText");
+            //guiDbg->setCaption(mDebugText);
+        }
+        catch(...) { /* ignore */ }
+    }
+
 };
 
 class View
@@ -207,9 +274,8 @@ protected:
         size_t windowHnd = 0;
         std::ostringstream windowHndStr;
         OIS::ParamList pl;
-        RenderWindow *win = mRoot->getAutoCreatedWindow();
 
-        win->getCustomAttribute("WINDOW", &windowHnd);
+        mWindow->getCustomAttribute("WINDOW", &windowHnd);
         windowHndStr << windowHnd;
         pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
         mInputManager = OIS::InputManager::createInputSystem(pl);
@@ -241,7 +307,7 @@ protected:
 
     void createFrameListener()
     {
-        mListener = new ViewFrameListener(mKeyboard, mMouse);
+        mListener = new ViewFrameListener(mKeyboard, mMouse, mWindow);
         mRoot->addFrameListener(mListener);
     }
 
@@ -336,7 +402,20 @@ protected:
         quit->setText("Quit");
         quit->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
 
+        CEGUI::Window *debug = win->createWindow("TaharezLook/Button", "View/DebugButton");
+        debug->setText("Debug");
+        debug->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.05, 0)));
+        debug->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+
         sheet->addChildWindow(quit);
+        sheet->addChildWindow(debug);
         mSystem->setGUISheet(sheet);
+
+        //CEGUI::WindowManager *wmgr = CEGUI::WindowManager::getSingletonPtr();
+        //CEGUI::Window *quit = wmgr->getWindow("View/QuitButton");
+        quit->subscribeEvent(CEGUI::PushButton::EventClicked,
+            CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
+        debug->subscribeEvent(CEGUI::PushButton::EventClicked,
+            CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
     }
 };
