@@ -9,7 +9,7 @@ Square::Square(Piece* piece) : piece(piece)
 }
 
 
-const std::string Square::getName() const
+const std::string Square::getNameOfPiece() const
 {
     if (piece)
     {

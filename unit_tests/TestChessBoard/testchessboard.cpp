@@ -56,19 +56,19 @@ void TestChessBoard::createBoard()
     // black units
     for (std::size_t i = black_start; i < black_end; ++i)
     {
-        QVERIFY(squares.at(i).hasUnit());
+        QVERIFY(squares.at(i).hasPiece());
     }
 
     // empty squares
     for (std::size_t i = black_end; i < white_start; ++i)
     {
-        QVERIFY(!squares.at(i).hasUnit());
+        QVERIFY(!squares.at(i).hasPiece());
     }
 
     // white units
     for (std::size_t i = white_start; i < white_end; ++i)
     {
-        QVERIFY(squares.at(i).hasUnit());
+        QVERIFY(squares.at(i).hasPiece());
     }
 }
 
@@ -129,7 +129,7 @@ void TestChessBoard::checkUnits()
 
     Square shouldHaveUnit = squares.at(position);
 
-    QCOMPARE(shouldHaveUnit.getName(), unit);
+    QCOMPARE(shouldHaveUnit.getNameOfPiece(), unit);
     QCOMPARE(shouldHaveUnit.getColourOfPiece(), colour);
 }
 

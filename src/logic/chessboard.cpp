@@ -46,25 +46,15 @@ std::vector<Square> ChessBoard::createBoard()
     Piece::Colour white = Piece::WHITE;
     
     std::vector<Square> squares;
+    
+    // The magic numbers are the row indices, from top to bottom.
+    std::size_t blackPawnRow = 1 * WIDTH;
+    std::size_t whitePawnRow = 6 * WIDTH;
 
-    for (std::size_t i = 0; i < 64; ++i)
+    for (std::size_t i = 0; i < BOARD_SIZE; ++i)
     {
-        Square* square = 0;
-        Piece* piece = 0;
-        if (i >= 8 && i <= 15)
-        {
-            piece = new Pawn(black);
-        }
-        else if (i >= 48 && i <= 55)
-        {
-            piece = new Pawn(white);
-        }
-
-        if (piece) { square = new Square(piece); }
-        else { square = new Square(); }
-
-        squares.push_back(*square);
-        delete square;
+        Square square;
+        squares.push_back(square);
     }
 
     return squares;

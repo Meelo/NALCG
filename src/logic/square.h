@@ -18,13 +18,14 @@ class Square
 
 public:
     Square(Piece* piece = 0);
-    virtual ~Square() { }
+    virtual ~Square() { delete piece; }
 
     // Methods
-    bool hasUnit() { return piece != 0; }
+    bool hasPiece() { return piece != 0; }
+    void addPiece(Piece* newPiece) { piece = newPiece; }
 
     // Getters
-    const std::string getName() const;
+    const std::string getNameOfPiece() const;
     Piece::Colour getColourOfPiece() const;
     
     // Setters
