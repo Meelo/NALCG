@@ -341,7 +341,7 @@ protected:
         entityCount++;
 
         Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName);
-        ent->setCastShadows(true);
+        //ent->setCastShadows(true);
         mSceneMgr->getRootSceneNode()->createChildSceneNode(location)->attachObject(ent);
     }
 
@@ -351,7 +351,7 @@ protected:
         Light *light;
 
         mSceneMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
-        mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
+        //mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
 
         for (int i = 0; i < 8; i++)
         {
@@ -381,7 +381,7 @@ protected:
 
         ent = mSceneMgr->createEntity("BoardEntity", "board.mesh");
         mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ent);
-        ent->setCastShadows(false);
+        //ent->setCastShadows(false);
 
         light = mSceneMgr->createLight("Light1");
         light->setType(Light::LT_POINT);
