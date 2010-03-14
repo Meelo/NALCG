@@ -8,9 +8,9 @@ using namespace Ogre;
 class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-    BufferedInputHandler(SceneManager* sceneMgr) :
-      mLMouseDown(false), mRMouseDown(false), mSceneMgr(sceneMgr),
-          mRaySceneQuery(sceneMgr->createRayQuery(Ray()))
+    BufferedInputHandler(Camera *camera, SceneManager *sceneMgr) :
+      mLMouseDown(false), mRMouseDown(false), mCamera(camera),
+          mSceneMgr(sceneMgr), mRaySceneQuery(sceneMgr->createRayQuery(Ray()))
       {
       }
 
@@ -56,7 +56,37 @@ public:
       }
       virtual bool mouseMoved(const OIS::MouseEvent &arg)
       {
-          CEGUI::System::getSingleton().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+          if (!mRMouseDown) {
+              CEGUI::System::getSingleton().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+          }
+
+          // If we are dragging the left mouse button.
+          if (mLMouseDown)
+          {
+              /*CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
+              Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/float(arg.state.width),mousePos.d_y/float(arg.state.height));
+              mRaySceneQuery->setRay(mouseRay);
+              mRaySceneQuery->setSortByDistance(false);
+
+              RaySceneQueryResult &result = mRaySceneQuery->execute();
+              RaySceneQueryResult::iterator itr;
+
+              for (itr = result.begin(); itr != result.end(); itr++)
+              if (itr->worldFragment)
+              {
+              mCurrentObject->setPosition(itr->worldFragment->singleIntersection);
+              break;
+              }*/
+          }
+
+          // If we are dragging the right mouse button.
+          else if (mRMouseDown)
+          {
+              const double rotationSpeed = 0.2;
+              mCamera->yaw(Degree(-arg.state.X.rel) * rotationSpeed);
+              mCamera->pitch(Degree(-arg.state.Y.rel) * rotationSpeed);
+          }
+
           return true;
       }
       virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
@@ -100,6 +130,7 @@ public:
 
 protected:
     bool mLMouseDown, mRMouseDown;     // True if the mouse buttons are down
+    Camera *mCamera;
     SceneManager *mSceneMgr;           // A pointer to the scene manager
     RaySceneQuery *mRaySceneQuery;     // The ray scene query pointer
     //SceneNode *mCurrentObject;         // The newly created object
@@ -127,8 +158,8 @@ class ViewFrameListener : public FrameListener
 {
 public:
     ViewFrameListener(OIS::Keyboard *keyboard, OIS::Mouse *mouse,
-        RenderWindow *window, SceneManager *sceneManager)
-        : mKeyboard(keyboard), mMouse(mouse), mHandler(sceneManager),
+        RenderWindow *window, Camera *camera, SceneManager *sceneManager)
+        : mKeyboard(keyboard), mMouse(mouse), mHandler(camera, sceneManager),
         mContinue(true), mWindow(window)
     {
         mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
@@ -359,7 +390,7 @@ protected:
 
     void createFrameListener()
     {
-        mListener = new ViewFrameListener(mKeyboard, mMouse, mWindow, mSceneMgr);
+        mListener = new ViewFrameListener(mKeyboard, mMouse, mWindow, mCamera, mSceneMgr);
         mRoot->addFrameListener(mListener);
     }
 
