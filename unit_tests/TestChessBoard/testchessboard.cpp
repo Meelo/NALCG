@@ -11,6 +11,11 @@
 #include "../../src/logic/square.h"
 #include "../../src/logic/piece.h"
 #include "../../src/logic/pawn.h"
+#include "../../src/logic/rook.h"
+#include "../../src/logic/knight.h"
+//#include "../../src/logic/bishop.h"
+//#include "../../src/logic/queen.h"
+//#include "../../src/logic/king.h"
 
 class TestChessBoard : public QObject
 {
@@ -89,16 +94,18 @@ void TestChessBoard::checkUnits_data()
     QTest::addColumn<Piece::Colour>("colour");
     QTest::addColumn<std::string>("unit");
 
-    QTest::newRow("black rook at a8") << std::size_t(0)  << black << rook;
-    QTest::newRow("black rook at h8") << std::size_t(7)  << black << rook;
-    QTest::newRow("black pawn at a7") << std::size_t(8)  << black << pawn;
-    QTest::newRow("black pawn at b7") << std::size_t(9)  << black << pawn;
-    QTest::newRow("black pawn at c7") << std::size_t(10) << black << pawn;
-    QTest::newRow("black pawn at d7") << std::size_t(11) << black << pawn;
-    QTest::newRow("black pawn at e7") << std::size_t(12) << black << pawn;
-    QTest::newRow("black pawn at f7") << std::size_t(13) << black << pawn;
-    QTest::newRow("black pawn at g7") << std::size_t(14) << black << pawn;
-    QTest::newRow("black pawn at h7") << std::size_t(15) << black << pawn;
+    QTest::newRow("black rook at a8")   << std::size_t(0)  << black << rook;
+    QTest::newRow("black knight at b8") << std::size_t(1)  << black << knight;
+    QTest::newRow("black knight at g8") << std::size_t(6)  << black << knight;
+    QTest::newRow("black rook at h8")   << std::size_t(7)  << black << rook;
+    QTest::newRow("black pawn at a7")   << std::size_t(8)  << black << pawn;
+    QTest::newRow("black pawn at b7")   << std::size_t(9)  << black << pawn;
+    QTest::newRow("black pawn at c7")   << std::size_t(10) << black << pawn;
+    QTest::newRow("black pawn at d7")   << std::size_t(11) << black << pawn;
+    QTest::newRow("black pawn at e7")   << std::size_t(12) << black << pawn;
+    QTest::newRow("black pawn at f7")   << std::size_t(13) << black << pawn;
+    QTest::newRow("black pawn at g7")   << std::size_t(14) << black << pawn;
+    QTest::newRow("black pawn at h7")   << std::size_t(15) << black << pawn;
 
     // All the empty squares needs to be tested as well
     for (std::size_t i = 16; i < 48; ++i)
@@ -106,16 +113,18 @@ void TestChessBoard::checkUnits_data()
         QTest::newRow("empty slots") << i << undefined << empty;
     }
     
-    QTest::newRow("white pawn at a2") << std::size_t(48) << white << pawn;
-    QTest::newRow("white pawn at b2") << std::size_t(49) << white << pawn;
-    QTest::newRow("white pawn at c2") << std::size_t(50) << white << pawn;
-    QTest::newRow("white pawn at d2") << std::size_t(51) << white << pawn;
-    QTest::newRow("white pawn at e2") << std::size_t(52) << white << pawn;
-    QTest::newRow("white pawn at f2") << std::size_t(53) << white << pawn;
-    QTest::newRow("white pawn at g2") << std::size_t(54) << white << pawn;
-    QTest::newRow("white pawn at h2") << std::size_t(55) << white << pawn;
-    QTest::newRow("white rook at a1") << std::size_t(56) << white << rook;
-    QTest::newRow("white rook at h1") << std::size_t(63) << white << rook;
+    QTest::newRow("white pawn at a2")   << std::size_t(48) << white << pawn;
+    QTest::newRow("white pawn at b2")   << std::size_t(49) << white << pawn;
+    QTest::newRow("white pawn at c2")   << std::size_t(50) << white << pawn;
+    QTest::newRow("white pawn at d2")   << std::size_t(51) << white << pawn;
+    QTest::newRow("white pawn at e2")   << std::size_t(52) << white << pawn;
+    QTest::newRow("white pawn at f2")   << std::size_t(53) << white << pawn;
+    QTest::newRow("white pawn at g2")   << std::size_t(54) << white << pawn;
+    QTest::newRow("white pawn at h2")   << std::size_t(55) << white << pawn;
+    QTest::newRow("white rook at a1")   << std::size_t(56) << white << rook;
+    QTest::newRow("white knight at b1") << std::size_t(57) << white << knight;
+    QTest::newRow("white knight at g1") << std::size_t(62) << white << knight;
+    QTest::newRow("white rook at h1")   << std::size_t(63) << white << rook;
 }
 
 void TestChessBoard::checkUnits()

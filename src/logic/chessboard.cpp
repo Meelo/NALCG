@@ -4,6 +4,11 @@
 #include "chessboard.h"
 #include "piece.h"
 #include "pawn.h"
+#include "rook.h"
+#include "knight.h"
+//#include "bishop.h"
+//#include "queen.h"
+//#include "king.h"
 
 ChessBoard::ChessBoard() :
     Board(WIDTH, HEIGHT)
@@ -59,12 +64,25 @@ std::vector<Square> ChessBoard::createBoard()
 
     for (std::size_t column = 0; column < WIDTH; ++column)
     {
-        Piece* blackPawn = new Pawn(black);
-        Piece* whitePawn = new Pawn(white);
-
-        squares.at(blackPawnRow + column).addPiece(blackPawn);
-        squares.at(whitePawnRow + column).addPiece(whitePawn);
+        squares.at(blackPawnRow + column).addPiece(new Pawn(black));
+        squares.at(whitePawnRow + column).addPiece(new Pawn(white));
     }
+
+    // Rooks
+    squares.at(BLACK_ROOK_LEFT).addPiece(new Rook(black));
+    squares.at(BLACK_ROOK_RIGHT).addPiece(new Rook(black));
+    squares.at(WHITE_ROOK_LEFT).addPiece(new Rook(white));
+    squares.at(WHITE_ROOK_RIGHT).addPiece(new Rook(white));
+
+    // Knights
+    squares.at(BLACK_KNIGHT_LEFT).addPiece(new Knight(black));
+    squares.at(BLACK_KNIGHT_RIGHT).addPiece(new Knight(black));
+    squares.at(WHITE_KNIGHT_LEFT).addPiece(new Knight(white));
+    squares.at(WHITE_KNIGHT_RIGHT).addPiece(new Knight(white));
+    
+    // Bishops
+    // Queens
+    // Kings
 
     return squares;
 }
