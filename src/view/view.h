@@ -145,9 +145,20 @@ protected:
             std::cout << "iterating" << std::endl;
             if (itr->movable)
             {
-                mSelectedObject = itr->movable->getParentSceneNode();
-                mSelectedObject->showBoundingBox(true);
-                std::cout << mSelectedObject->getName() << " hit" << std::endl;
+                if (mSelectedObject)
+                {
+                    // TODO: find the object above this square by O(n) iterating everything
+                    // Or maybe just send the request to model and update everything or something?
+                    SceneNode *targetNode = itr->movable->getParentSceneNode();
+                    std::cout << mSelectedObject->getName() << " -> " << targetNode->getName() << std::endl;
+                    mSelectedObject->showBoundingBox(false);
+                    mSelectedObject = 0;
+                }
+                else
+                {
+                    mSelectedObject = itr->movable->getParentSceneNode();
+                    mSelectedObject->showBoundingBox(true);
+                }
                 break;
             }
         }
