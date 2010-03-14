@@ -30,7 +30,7 @@ void TestBoard::boardSize_data()
         << std::size_t(8) << std::size_t(8) << std::size_t(64);
 }
 
-void TestBoard::boardSize()
+void TestBoard::boardSize() 
 {
     QFETCH(std::size_t, width);
     QFETCH(std::size_t, height);

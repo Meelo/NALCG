@@ -1,5 +1,16 @@
 #!/bin/bash
 
+keep_going=true
+modified=false
+function signal_handler() {
+    if "$modified" ; then
+        keep_going=false
+    else
+        modified=true
+    fi
+}
+trap 'signal_handler' SIGINT
+
 # define the source folder, relative to this script.
 src_folders="../src ../src/logic ../unit_tests" 
 
@@ -39,22 +50,36 @@ function usage {
     # free memory, wohoo?
     unset instructions
 }
+
 if [[ "$1" == "--help" ]]; then
     usage
 elif [[ "$1" == "--quiet" ]]; then 
-    make_cmd="$make_quiet"
+    make_cmd="$make_quiet $MAKEOPTS"
 elif [[ "$1" == "--extra-quiet" ]]; then
-    make_cmd="$make_extra_quiet"
+    make_cmd="$make_extra_quiet $MAKEOPTS"
 fi
 
-while true
+function run_test_at() {
+    curr_file="$1"
+    if [[ -n "$curr_file" ]]; then
+        cd "$curr_file"
+        make clean 1> /dev/null
+        qmake -project "CONFIG += qtestlib" -o "$curr_file.pro" 2> /dev/null
+        qmake 1> /dev/null
+        $make_cmd 1> /dev/null && "./$curr_file"
+        make clean 1> /dev/null
+        cd - 1> /dev/null
+    fi
+}
+
+
+
+while "$keep_going" == true
 do
     if [[ -z "$tracked_files" ]]; then
         declare -A tracked_files
     fi
     
-    modified=false
-
     for dir in $src_folders
     do
         for extension in $tracked
@@ -74,30 +99,23 @@ do
     done
 
     if [[ "$modified" == "true" ]]; then
+        echo "----------------------"
+        sleep "1s"
+        echo "re-running all tests.."
         # go through unit_test folders and re-compile and re-run all tests.
         curr_location=`pwd`
-        cd "$unit_test_folder"
-        echo "---"
+        cd "$unit_test_folder" 1> /dev/null
         for curr_file in *
         do
-            echo "$curr_file <-"
-            ls
             if [[ -d "$curr_file" ]]; then
-                echo "abc"
-                cd "$curr_file"
-                echo "abcd"
-                #make clean
-                #qmake -project "CONFIG += qtestlib" -o "$curr_file.pro"
-                #qmake 
-                #make -j5 && "./$curr_file"
-                #make clean
-                cd -
+                run_test_at "$curr_file"
             fi
         done
-        cd "$curr_location"
+        cd "$curr_location" 1> /dev/null
+        modified=false
     fi
 
-    sleep 1s
+    sleep "1s"
 done
 # qmake -project "CONFIG += qtestlib" -o TestBoard.pro && qmake && make -j5
 
