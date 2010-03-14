@@ -2,20 +2,28 @@
 
 keep_going=true
 modified=false
+lock=false
 function signal_handler() {
     if "$modified" ; then
         keep_going=false
+        if [[ "$lock" == false ]]; then
+            exit 0
+        fi
     else
         modified=true
+        echo "--- SIGINT caught, press ctrl+c again to exit. ---"
     fi
 }
+
+# this application potentially loops inifinitely, ctrl+c (SIGINT) will
+# allow us to exit cleanly.
 trap 'signal_handler' SIGINT
 
 # define the source folder, relative to this script.
-src_folders="../src ../src/logic ../unit_tests" 
+src_folders="../src ../src/logic" 
 
 # define the unit test folder, relate to this script.
-unit_test_folder="../unit_tests/"
+unit_test_folder="../unit_tests"
 
 # define which file types are tracked.
 tracked="*.h *.cpp *.hpp"
@@ -62,13 +70,18 @@ fi
 function run_test_at() {
     curr_file="$1"
     if [[ -n "$curr_file" ]]; then
+        # lock, so if interruption is caught, 
+        # the application won't immediatelly exit
+        lock=true
         cd "$curr_file"
+        # all these 1> /dev/nulls are for suppressing standard output
         make clean 1> /dev/null
         qmake -project "CONFIG += qtestlib" -o "$curr_file.pro" 2> /dev/null
         qmake 1> /dev/null
         $make_cmd 1> /dev/null && "./$curr_file"
         make clean 1> /dev/null
         cd - 1> /dev/null
+        lock=false
     fi
 }
 
@@ -87,6 +100,7 @@ do
             for curr_file in $dir/$extension
             do
                 if [[ -f "$curr_file" ]]; then
+                    # getting last modified time.
                     modtime=`stat -c %Y "$curr_file"`
                     if [[ "$modtime" -gt "${tracked_files[$curr_file]}" ]]; then
                         echo "$curr_file was modified"
@@ -100,8 +114,10 @@ do
 
     if [[ "$modified" == "true" ]]; then
         echo "----------------------"
+        # wait for a second for interruptions.
         sleep "1s"
         echo "re-running all tests.."
+
         # go through unit_test folders and re-compile and re-run all tests.
         curr_location=`pwd`
         cd "$unit_test_folder" 1> /dev/null
@@ -117,5 +133,3 @@ do
 
     sleep "1s"
 done
-# qmake -project "CONFIG += qtestlib" -o TestBoard.pro && qmake && make -j5
-
