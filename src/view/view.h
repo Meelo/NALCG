@@ -8,132 +8,134 @@ using namespace Ogre;
 class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-    BufferedInputHandler(Camera *camera, SceneManager *sceneMgr) :
-      mLMouseDown(false), mRMouseDown(false), mCamera(camera),
-          mSceneMgr(sceneMgr), mRaySceneQuery(sceneMgr->createRayQuery(Ray()))
-      {
-      }
+    BufferedInputHandler(Camera *camera, SceneManager *sceneMgr)
+        : mLMouseDown(false), mRMouseDown(false), mCamera(camera),
+        mSceneMgr(sceneMgr), mRaySceneQuery(sceneMgr->createRayQuery(Ray())),
+        mSelectedObject(0)
+    {
+    }
 
-      ~BufferedInputHandler()
-      {
-          mSceneMgr->destroyQuery(mRaySceneQuery);
-      }
+    ~BufferedInputHandler()
+    {
+        mSceneMgr->destroyQuery(mRaySceneQuery);
+    }
 
-      // KeyListener
-      virtual bool keyPressed(const OIS::KeyEvent &arg)
-      {
-          CEGUI::System *sys = CEGUI::System::getSingletonPtr();
-          sys->injectKeyDown(arg.key);
-          sys->injectChar(arg.text);
+    // KeyListener
+    virtual bool keyPressed(const OIS::KeyEvent &arg)
+    {
+        CEGUI::System *sys = CEGUI::System::getSingletonPtr();
+        sys->injectKeyDown(arg.key);
+        sys->injectChar(arg.text);
 
-          return true;
-      }
-      virtual bool keyReleased(const OIS::KeyEvent &arg)
-      {
-          CEGUI::System::getSingleton().injectKeyUp(arg.key);
+        return true;
+    }
+    virtual bool keyReleased(const OIS::KeyEvent &arg)
+    {
+        CEGUI::System::getSingleton().injectKeyUp(arg.key);
 
-          return true;
-      }
+        return true;
+    }
 
-      // MouseListener
+    // MouseListener
 
-      CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
-      {
-          switch (buttonID)
-          {
-          case OIS::MB_Left:
-              return CEGUI::LeftButton;
+    CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
+    {
+        switch (buttonID)
+        {
+        case OIS::MB_Left:
+            return CEGUI::LeftButton;
 
-          case OIS::MB_Right:
-              return CEGUI::RightButton;
+        case OIS::MB_Right:
+            return CEGUI::RightButton;
 
-          case OIS::MB_Middle:
-              return CEGUI::MiddleButton;
+        case OIS::MB_Middle:
+            return CEGUI::MiddleButton;
 
-          default:
-              return CEGUI::LeftButton;
-          }
-      }
-      virtual bool mouseMoved(const OIS::MouseEvent &arg)
-      {
-          if (!mRMouseDown) {
-              CEGUI::System::getSingleton().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
-          }
+        default:
+            return CEGUI::LeftButton;
+        }
+    }
+    virtual bool mouseMoved(const OIS::MouseEvent &arg)
+    {
+        if (!mRMouseDown) {
+            CEGUI::System::getSingleton().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+        }
 
-          // If we are dragging the left mouse button.
-          if (mLMouseDown)
-          {
-              /*CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
-              Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/float(arg.state.width),mousePos.d_y/float(arg.state.height));
-              mRaySceneQuery->setRay(mouseRay);
-              mRaySceneQuery->setSortByDistance(false);
+        // If we are dragging the left mouse button.
+        if (mLMouseDown)
+        {
+            CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
+            Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/float(arg.state.width),mousePos.d_y/float(arg.state.height));
+            mRaySceneQuery->setRay(mouseRay);
+            mRaySceneQuery->setSortByDistance(false);
 
-              RaySceneQueryResult &result = mRaySceneQuery->execute();
-              RaySceneQueryResult::iterator itr;
+            RaySceneQueryResult &result = mRaySceneQuery->execute();
+            RaySceneQueryResult::iterator itr;
 
-              for (itr = result.begin(); itr != result.end(); itr++)
-              if (itr->worldFragment)
-              {
-              mCurrentObject->setPosition(itr->worldFragment->singleIntersection);
-              break;
-              }*/
-          }
+            for (itr = result.begin(); itr != result.end(); itr++)
+                if (itr->worldFragment)
+                {
+                    std::cout << itr->worldFragment->singleIntersection.x << std::endl;
+                    //mSelectedObject->setPosition(itr->worldFragment->singleIntersection);
+                    break;
+                }
+        }
 
-          // If we are dragging the right mouse button.
-          else if (mRMouseDown)
-          {
-              const double rotationSpeed = 0.2;
-              mCamera->yaw(Degree(-arg.state.X.rel) * rotationSpeed);
-              mCamera->pitch(Degree(-arg.state.Y.rel) * rotationSpeed);
-          }
+        // If we are dragging the right mouse button.
+        else if (mRMouseDown)
+        {
+            const double rotationSpeed = 0.2;
+            mCamera->yaw(Degree(-arg.state.X.rel) * rotationSpeed);
+            mCamera->pitch(Degree(-arg.state.Y.rel) * rotationSpeed);
+        }
 
-          return true;
-      }
-      virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-      {
-          CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
+        return true;
+    }
+    virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+    {
+        CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
 
-          // Left mouse button down
-          if (id == OIS::MB_Left)
-          {
-              onLeftPressed(arg);
-              mLMouseDown = true;
-          } // if
+        // Left mouse button down
+        if (id == OIS::MB_Left)
+        {
+            onLeftPressed(arg);
+            mLMouseDown = true;
+        } // if
 
-          // Right mouse button down
-          else if (id == OIS::MB_Right)
-          {
-              onRightPressed(arg);
-              mRMouseDown = true;
-          }
-          return true;
-      }
-      virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-      {
-          CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
+        // Right mouse button down
+        else if (id == OIS::MB_Right)
+        {
+            onRightPressed(arg);
+            mRMouseDown = true;
+        }
+        return true;
+    }
+    virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+    {
+        CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
 
-          // Left mouse button up
-          if (id == OIS::MB_Left)
-          {
-              onLeftReleased(arg);
-              mLMouseDown = false;
-          } // if
+        // Left mouse button up
+        if (id == OIS::MB_Left)
+        {
+            onLeftReleased(arg);
+            mLMouseDown = false;
+        } // if
 
-          // Right mouse button up
-          else if (id == OIS::MB_Right)
-          {
-              onRightReleased(arg);
-              mRMouseDown = false;
-          }
-          return true;
-      }
+        // Right mouse button up
+        else if (id == OIS::MB_Right)
+        {
+            onRightReleased(arg);
+            mRMouseDown = false;
+        }
+        return true;
+    }
 
 protected:
     bool mLMouseDown, mRMouseDown;     // True if the mouse buttons are down
     Camera *mCamera;
     SceneManager *mSceneMgr;           // A pointer to the scene manager
     RaySceneQuery *mRaySceneQuery;     // The ray scene query pointer
-    //SceneNode *mCurrentObject;         // The newly created object
+    SceneNode *mSelectedObject;         // The selected object
     //CEGUI::Renderer *mGUIRenderer;     // CEGUI renderer
     //bool mRobotMode;                   // The current state
 
