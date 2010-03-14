@@ -156,7 +156,7 @@ void TestChessBoard::checkUnits()
 void TestChessBoard::isInitialized()
 {
     Board* board = new ChessBoard();
-
+    
     delete board;
 }
 // End of Tests

@@ -39,6 +39,12 @@ make_cmd="make $MAKEOPTS"
 make_quiet="make $MAKEOPTS 1>/dev/null"
 make_extra_quiet="make $MAKEOPTS 2>/dev/null 1>/dev/null"
 
+# colours
+RED=`echo -e '\033[;31m'`
+GREEN=`echo -e '\033[22;32m'`
+ORANGE=`echo -e '\033[22;33m'`
+NORM=`echo -e '\033[22;38m'`
+
 function usage {
     # declare associative array
     declare -A instructions
@@ -47,6 +53,8 @@ function usage {
     # like FILO, so lets stack instructions for now. Change when proven to
     # be random or something fancier
     instructions["--help"]="Show this help message"
+    instructions["--nocolour"]="Ignore colours from output"
+    instructions["--nocolor"]="Ignore colours from output"
     instructions["--extra-quiet"]="Suppresses all standard and error output from tests."
     instructions["--quiet"]="Suppresses all standard output from tests."
 
@@ -61,11 +69,24 @@ function usage {
 
 if [[ "$1" == "--help" ]]; then
     usage
+    exit 0
+elif [[ "$1" == "--nocolour" || "$1" == "--nocolor" ]]; then
+    no_colours=true
 elif [[ "$1" == "--quiet" ]]; then 
     make_cmd="$make_quiet $MAKEOPTS"
 elif [[ "$1" == "--extra-quiet" ]]; then
     make_cmd="$make_extra_quiet $MAKEOPTS"
 fi
+
+function colourize() {
+    if [[ -z "$no_colours" ]]; then
+        sed -e "s:^\(PASS.*\)$:$GREEN\1$NORM:g" \
+            -e"s:^\(FAIL.*\)$:$RED\1$NORM:g" \
+            -e"s:^\(SKIP.*\)$:$ORANGE\1$NORM:g"
+    else
+        cat
+    fi
+}
 
 function run_test_at() {
     curr_file="$1"
@@ -78,13 +99,12 @@ function run_test_at() {
         make clean 1> /dev/null
         qmake -project "CONFIG += qtestlib" -o "$curr_file.pro" 2> /dev/null
         qmake 1> /dev/null
-        $make_cmd 1> /dev/null && "./$curr_file"
+        $make_cmd 1> /dev/null && "./$curr_file" | colourize
         make clean 1> /dev/null
         cd - 1> /dev/null
         lock=false
     fi
 }
-
 
 
 while "$keep_going" == true
