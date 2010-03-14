@@ -2,165 +2,14 @@
 #include <OIS/OIS.h>
 #include <CEGUI/CEGUI.h>
 #include <OgreCEGUIRenderer.h>
-#include "ExampleFrameListener.h"
 
 using namespace Ogre;
-
-class MouseQueryListener : public ExampleFrameListener, public OIS::MouseListener
-{
-public:
-    enum QueryFlags
-    {
-        NINJA_MASK = 1<<0,
-        ROBOT_MASK = 1<<1
-    };
-
-    MouseQueryListener(RenderWindow* win, Camera* cam, SceneManager *sceneManager, CEGUI::Renderer *renderer)
-        : ExampleFrameListener(win, cam, false, true), mGUIRenderer(renderer)
-    {
-        // Setup default variables
-        mCount = 0;
-        mCurrentObject = NULL;
-        mLMouseDown = false;
-        mRMouseDown = false;
-        mSceneMgr = sceneManager;
-
-        // Reduce move speed
-        mMoveSpeed = 50;
-        mRotateSpeed /= 500;
-
-        // Register this so that we get mouse events.
-        mMouse->setEventCallback(this);
-
-        // Create RaySceneQuery
-        mRaySceneQuery = mSceneMgr->createRayQuery(Ray());
-
-        // Set result text, and default state
-        mRobotMode = true;
-        mDebugText = "Robot Mode Enabled - Press Space to Toggle";
-    } // MouseQueryListener
-
-    ~MouseQueryListener()
-    {
-        mSceneMgr->destroyQuery(mRaySceneQuery);
-    }
-
-    bool frameStarted(const FrameEvent &evt)
-    {
-
-        return true;
-    }
-
-    /* MouseListener callbacks. */
-    bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-    {
-        // Left mouse button up
-        if (id == OIS::MB_Left)
-        {
-            onLeftReleased(arg);
-            mLMouseDown = false;
-        } // if
-
-        // Right mouse button up
-        else if (id == OIS::MB_Right)
-        {
-            onRightReleased(arg);
-            mRMouseDown = false;
-        } // else if
-
-        return true;
-    }
-
-    bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-    {
-        // Left mouse button down
-        if (id == OIS::MB_Left)
-        {
-            onLeftPressed(arg);
-            mLMouseDown = true;
-        } // if
-
-        // Right mouse button down
-        else if (id == OIS::MB_Right)
-        {
-            onRightPressed(arg);
-            mRMouseDown = true;
-        } // else if
-
-        return true;
-    }
-
-    bool mouseMoved(const OIS::MouseEvent &arg)
-    {
-        // Update CEGUI with the mouse motion
-        CEGUI::System::getSingleton().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
-
-
-        return true;
-    }
-
-    // Specific handlers
-    void onLeftPressed(const OIS::MouseEvent &arg)
-    {
-        // Turn off bounding box.
-        if (mCurrentObject)
-            mCurrentObject->showBoundingBox(false);
-
-        // Setup the ray scene query
-        CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
-        Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/float(arg.state.width), mousePos.d_y/float(arg.state.height));
-        mRaySceneQuery->setRay(mouseRay);
-        mRaySceneQuery->setSortByDistance(true);
-        //mRaySceneQuery->setQueryMask(mRobotMode ? ROBOT_MASK : NINJA_MASK);
-
-        // Execute query
-        RaySceneQueryResult &result = mRaySceneQuery->execute();
-        RaySceneQueryResult::iterator itr;
-        // Get results, create a node/entity on the position
-        std::cout << "pressed " << mousePos.d_x << " " << mousePos.d_y << std::endl;
-
-        for (itr = result.begin(); itr != result.end(); itr++)
-        {
-        std::cout << "iterating" << std::endl;
-            if (itr->movable && itr->movable->getName().substr(0, 5) != "tile[")
-            {
-                mCurrentObject = itr->movable->getParentSceneNode();
-            mCurrentObject->showBoundingBox(true);
-                break;
-            }
-        }
-
-    }
-
-    void onLeftReleased(const OIS::MouseEvent &arg)
-    {
-    }
-
-    void onRightPressed(const OIS::MouseEvent &arg)
-    {
-        CEGUI::MouseCursor::getSingleton().hide();
-    }
-
-    virtual void onRightReleased(const OIS::MouseEvent &arg)
-    {
-        CEGUI::MouseCursor::getSingleton().show();
-    }
-
-protected:
-    RaySceneQuery *mRaySceneQuery;     // The ray scene query pointer
-    bool mLMouseDown, mRMouseDown;     // True if the mouse buttons are down
-    int mCount;                        // The number of robots on the screen
-    SceneManager *mSceneMgr;           // A pointer to the scene manager
-    SceneNode *mCurrentObject;         // The newly created object
-    CEGUI::Renderer *mGUIRenderer;     // CEGUI renderer
-    bool mRobotMode;                   // The current state
-};
 
 class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-    BufferedInputHandler(Camera *camera, SceneManager *sceneMgr)
-        : mLMouseDown(false), mRMouseDown(false), mCamera(camera),
+    BufferedInputHandler(RenderWindow *window, Camera *camera, SceneManager *sceneMgr)
+        : mLMouseDown(false), mRMouseDown(false), mWindow(window), mCamera(camera),
         mSceneMgr(sceneMgr), mRaySceneQuery(sceneMgr->createRayQuery(Ray())),
         mSelectedObject(0)
     {
@@ -269,6 +118,7 @@ public:
 
 protected:
     bool mLMouseDown, mRMouseDown;     // True if the mouse buttons are down
+    RenderWindow *mWindow;
     Camera *mCamera;
     SceneManager *mSceneMgr;           // A pointer to the scene manager
     RaySceneQuery *mRaySceneQuery;     // The ray scene query pointer
@@ -276,60 +126,30 @@ protected:
     //CEGUI::Renderer *mGUIRenderer;     // CEGUI renderer
     //bool mRobotMode;                   // The current state
 
-        void onLeftPressed(const OIS::MouseEvent &arg)
+    virtual void onLeftPressed(const OIS::MouseEvent &arg)
     {
-        // Turn off bounding box.
-        if (mSelectedObject)
-            mSelectedObject->showBoundingBox(false);
-
-        // Setup the ray scene query
+        std::cout << "left pressed" << std::endl;
         CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
-        Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/float(arg.state.width), mousePos.d_y/float(arg.state.height));
+        //Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/float(arg.state.width), mousePos.d_y/float(arg.state.height));
+        Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/mWindow->getWidth(), mousePos.d_y/mWindow->getHeight());
         mRaySceneQuery->setRay(mouseRay);
         mRaySceneQuery->setSortByDistance(true);
-        //mRaySceneQuery->setQueryMask(mRobotMode ? ROBOT_MASK : NINJA_MASK);
 
-        // Execute query
         RaySceneQueryResult &result = mRaySceneQuery->execute();
         RaySceneQueryResult::iterator itr;
-        // Get results, create a node/entity on the position
-        std::cout << "pressed " << mousePos.d_x << " " << mousePos.d_y << std::endl;
+
         for (itr = result.begin(); itr != result.end(); itr++)
         {
-        std::cout << "iterating" << std::endl;
-            if (itr->movable && itr->movable->getName().substr(0, 5) != "tile[")
+            std::cout << "iterating" << std::endl;
+            if (itr->movable)
             {
                 mSelectedObject = itr->movable->getParentSceneNode();
-            mSelectedObject->showBoundingBox(true);
+                mSelectedObject->showBoundingBox(true);
+                std::cout << mSelectedObject->getName() << " hit" << std::endl;
                 break;
             }
         }
-
     }
-    //virtual void onLeftPressed(const OIS::MouseEvent &arg)
-    //{
-    //    std::cout << "left pressed" << std::endl;
-    //    CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
-    //    Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/float(arg.state.width), mousePos.d_y/float(arg.state.height));
-    //    mRaySceneQuery->setRay(mouseRay);
-    //    mRaySceneQuery->setSortByDistance(true);
-    //    //mRaySceneQuery->setQueryMask(1);
-
-    //    RaySceneQueryResult &result = mRaySceneQuery->execute();
-    //    RaySceneQueryResult::iterator itr;
-
-    //    for (itr = result.begin(); itr != result.end(); itr++)
-    //    {
-    //        std::cout << "iterating" << std::endl;
-    //        if (itr->movable)
-    //        {
-    //            mSelectedObject = itr->movable->getParentSceneNode();
-    //            mSelectedObject->showBoundingBox(true);
-    //            std::cout << mSelectedObject->getName() << " hit" << std::endl;
-    //            break;
-    //        }
-    //    }
-    //}
 
     virtual void onLeftReleased(const OIS::MouseEvent &arg)
     {
@@ -349,7 +169,7 @@ class ViewFrameListener : public FrameListener
 public:
     ViewFrameListener(OIS::Keyboard *keyboard, OIS::Mouse *mouse,
         RenderWindow *window, Camera *camera, SceneManager *sceneManager)
-        : mKeyboard(keyboard), mMouse(mouse), mHandler(camera, sceneManager),
+        : mKeyboard(keyboard), mMouse(mouse), mHandler(window, camera, sceneManager),
         mContinue(true), mWindow(window)
     {
         mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
@@ -482,7 +302,6 @@ protected:
     CEGUI::OgreCEGUIRenderer *mRenderer;
     CEGUI::System *mSystem;
     ViewFrameListener *mListener;
-    //MouseQueryListener *mListener;
     SceneManager *mSceneMgr;
     Camera *mCamera;
     RenderWindow *mWindow;
@@ -537,7 +356,7 @@ protected:
 
     void setupScene()
     {
-        mSceneMgr = mRoot->createSceneManager(ST_EXTERIOR_CLOSE, "Default SceneManager");
+        mSceneMgr = mRoot->createSceneManager(ST_GENERIC, "Default SceneManager");
         createCamera();
         mWindow = mRoot->getAutoCreatedWindow();
         createViewports();
@@ -583,10 +402,6 @@ protected:
     {
         mListener = new ViewFrameListener(mKeyboard, mMouse, mWindow, mCamera, mSceneMgr);
         mRoot->addFrameListener(mListener);
-        //mListener = new MouseQueryListener(mWindow, mCamera, mSceneMgr, mRenderer);
-        //mListener->showDebugOverlay(true);
-        //mRoot->addFrameListener(mListener);
-
     }
 
     void startRenderLoop()
@@ -620,7 +435,6 @@ protected:
 
         Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName);
         //ent->setCastShadows(true);
-        //ent->setQueryFlags(1);
         mSceneMgr->getRootSceneNode()->createChildSceneNode(location)->attachObject(ent);
     }
 
@@ -692,9 +506,9 @@ protected:
 
         //CEGUI::WindowManager *wmgr = CEGUI::WindowManager::getSingletonPtr();
         //CEGUI::Window *quit = wmgr->getWindow("View/QuitButton");
-        /*quit->subscribeEvent(CEGUI::PushButton::EventClicked,
+        quit->subscribeEvent(CEGUI::PushButton::EventClicked,
             CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
         debug->subscribeEvent(CEGUI::PushButton::EventClicked,
-            CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));*/
+            CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
     }
 };
