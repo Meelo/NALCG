@@ -6,6 +6,7 @@
 
 // class includes
 #include "piece.h"
+#include "colours.h"
 
 class Square
 {
@@ -13,21 +14,19 @@ class Square
 
     // Members
     Piece* piece;
-    bool holdsUnit;
 
     // Methods
 
 public:
-    Square();
-    Square(Piece* piece);
+    Square(Piece* piece = 0);
     virtual ~Square() { }
 
     // Methods
-    bool hasUnit() { return holdsUnit; }
+    bool hasUnit() { return piece != 0; }
 
     // Getters
     const std::string getName() const;
-    const std::string getColour() const;
+    enum Colours getColour() const;
     
     // Setters
 };

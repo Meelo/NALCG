@@ -22,7 +22,7 @@ class Board
 
 public:
     Board(std::size_t width = 8, std::size_t height = 8);
-    virtual ~Board() { }
+    virtual ~Board();
 
     // Methods
     static std::vector<Square> createBoard(std::size_t width = 8, std::size_t height = 8);

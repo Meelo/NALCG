@@ -3,7 +3,7 @@
 // class dependencies
 #include "pawn.h"
 
-Pawn::Pawn(const std::string& colour) : Piece(colour, "Pawn")
+Pawn::Pawn(const enum Colours& colour) : Piece(colour, "Pawn")
 {
 
 }

@@ -9,6 +9,11 @@ Board::Board(std::size_t width, std::size_t height) :
 
 }
 
+Board::~Board()
+{
+    
+}
+
 std::vector<Square> Board::createBoard(std::size_t width, std::size_t height)
 {
     std::vector<Square> squares;

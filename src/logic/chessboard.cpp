@@ -4,6 +4,7 @@
 #include "chessboard.h"
 #include "piece.h"
 #include "pawn.h"
+#include "colours.h"
 
 ChessBoard::ChessBoard() :
     Board(WIDTH, HEIGHT)
@@ -42,14 +43,15 @@ ChessBoard::ChessBoard() :
 //    A  B  C  D  E  F  G  H
 std::vector<Square> ChessBoard::createBoard()
 {
-    std::string black("black");
-    std::string white("white");
+    enum Colours black = BLACK;
+    enum Colours white = WHITE;
     
     std::vector<Square> squares;
-    for (std::size_t i = 0; i < BOARD_SIZE; ++i)
+
+    for (std::size_t i = 0; i < 64; ++i)
     {
+        Square* square = 0;
         Piece* piece = 0;
-        Square square;
         if (i >= 8 && i <= 15)
         {
             piece = new Pawn(black);
@@ -59,12 +61,11 @@ std::vector<Square> ChessBoard::createBoard()
             piece = new Pawn(white);
         }
 
-        if (piece)
-        {
-            square = Square(piece);
-        }
+        if (piece) { square = new Square(piece); }
+        else { square = new Square(); }
 
-        squares.push_back(square);
+        squares.push_back(*square);
+        delete square;
     }
 
     return squares;

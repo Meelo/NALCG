@@ -11,6 +11,7 @@
 #include "../../src/logic/square.h"
 #include "../../src/logic/piece.h"
 #include "../../src/logic/pawn.h"
+#include "../../src/logic/colours.h"
 
 class TestChessBoard : public QObject
 {
@@ -27,6 +28,7 @@ private slots:
 
 // Use Q_DECLARE_METATYPE in order to use 'custom' types in _data() functions.
 Q_DECLARE_METATYPE(std::string)
+Q_DECLARE_METATYPE(enum Colours)
 
 // Test case implementations
 void TestChessBoard::createBoard_data()
@@ -73,8 +75,9 @@ void TestChessBoard::createBoard()
 
 void TestChessBoard::checkUnits_data()
 {
-    std::string white("white");
-    std::string black("black");
+    enum Colours white = WHITE;
+    enum Colours black = BLACK;
+    enum Colours undefined = UNDEFINED;
     std::string empty("empty");
     std::string pawn("Pawn");
     std::string rook("Rook");
@@ -84,7 +87,7 @@ void TestChessBoard::checkUnits_data()
     std::string king("King");
 
     QTest::addColumn<std::size_t>("position");
-    QTest::addColumn<std::string>("colour");
+    QTest::addColumn<enum Colours>("colour");
     QTest::addColumn<std::string>("unit");
 
     QTest::newRow("black rook at a8") << std::size_t(0)  << black << rook;
@@ -101,7 +104,7 @@ void TestChessBoard::checkUnits_data()
     // All the empty squares needs to be tested as well
     for (std::size_t i = 16; i < 48; ++i)
     {
-        QTest::newRow("empty slots") << i << empty << empty;
+        QTest::newRow("empty slots") << i << undefined << empty;
     }
     
     QTest::newRow("white pawn at a2") << std::size_t(48) << white << pawn;
@@ -119,7 +122,7 @@ void TestChessBoard::checkUnits_data()
 void TestChessBoard::checkUnits()
 {
     QFETCH(std::size_t, position);
-    QFETCH(std::string, colour);
+    QFETCH(enum Colours, colour);
     QFETCH(std::string, unit);
 
     std::vector<Square> squares = ChessBoard::createBoard();

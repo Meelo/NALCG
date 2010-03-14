@@ -5,26 +5,27 @@
 #include <string>
 
 // class includes
+#include "colours.h"
 
 class Piece
 {
     // Constants
 
     // Members
-    const std::string colour;
+    const enum Colours colour;
     const std::string name;
 
     // Methods
 
 public:
-    Piece(const std::string& colour, const std::string& name);
+    Piece(const enum Colours& colour, const std::string& name);
     virtual ~Piece() { }
 
     // Methods
 
     // Getters
-    const std::string getName() const { return name; };
-    const std::string getColour() const { return colour; }
+    const enum Colours& getColour() const { return colour; }
+    const std::string& getName() const { return name; };
     
     // Setters
 };

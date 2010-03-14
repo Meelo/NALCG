@@ -3,12 +3,7 @@
 // class dependencies
 #include "square.h"
 
-Square::Square() : piece(0), holdsUnit(false)
-{
-
-}
-
-Square::Square(Piece* piece) : piece(piece), holdsUnit(true)
+Square::Square(Piece* piece) : piece(piece)
 {
 
 }
@@ -24,12 +19,12 @@ const std::string Square::getName() const
     return "empty";
 }
 
-const std::string Square::getColour() const
+enum Colours Square::getColour() const
 {
     if (piece)
     {
         return piece->getColour();
     }
 
-    return "empty";
+    return UNDEFINED;
 }

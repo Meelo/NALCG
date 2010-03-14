@@ -22,7 +22,7 @@ class ChessBoard : public Board
 
 public:
     ChessBoard();
-    virtual ~ChessBoard() { }
+    virtual ~ChessBoard() { };
 
     // Methods
     static std::vector<Square> createBoard();
