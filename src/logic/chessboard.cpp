@@ -4,7 +4,6 @@
 #include "chessboard.h"
 #include "piece.h"
 #include "pawn.h"
-#include "colours.h"
 
 ChessBoard::ChessBoard() :
     Board(WIDTH, HEIGHT)
@@ -43,8 +42,8 @@ ChessBoard::ChessBoard() :
 //    A  B  C  D  E  F  G  H
 std::vector<Square> ChessBoard::createBoard()
 {
-    enum Colours black = BLACK;
-    enum Colours white = WHITE;
+    Piece::Colour black = Piece::BLACK;
+    Piece::Colour white = Piece::WHITE;
     
     std::vector<Square> squares;
 

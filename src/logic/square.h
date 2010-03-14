@@ -6,7 +6,6 @@
 
 // class includes
 #include "piece.h"
-#include "colours.h"
 
 class Square
 {
@@ -26,7 +25,7 @@ public:
 
     // Getters
     const std::string getName() const;
-    enum Colours getColour() const;
+    Piece::Colour getColourOfPiece() const;
     
     // Setters
 };

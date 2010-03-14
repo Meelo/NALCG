@@ -5,26 +5,34 @@
 #include <string>
 
 // class includes
-#include "colours.h"
 
 class Piece
 {
+public:
+    enum Colour
+    {
+        UNDEFINED,
+        WHITE,
+        BLACK
+    };
+
+private:
     // Constants
 
     // Members
-    const enum Colours colour;
+    const Colour colour;
     const std::string name;
 
     // Methods
 
 public:
-    Piece(const enum Colours& colour, const std::string& name);
+    Piece(const Colour& colour, const std::string& name);
     virtual ~Piece() { }
 
     // Methods
 
     // Getters
-    const enum Colours& getColour() const { return colour; }
+    const Colour& getColour() const { return colour; }
     const std::string& getName() const { return name; };
     
     // Setters

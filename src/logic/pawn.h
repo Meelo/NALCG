@@ -5,7 +5,6 @@
 
 // class includes
 #include "piece.h"
-#include "colours.h"
 
 class Pawn : public Piece
 {
@@ -16,7 +15,7 @@ class Pawn : public Piece
     // Methods
 
 public:
-    Pawn(const enum Colours& colour);
+    Pawn(const Piece::Colour& colour);
     virtual ~Pawn() { }
 
     // Methods

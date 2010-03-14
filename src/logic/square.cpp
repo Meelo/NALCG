@@ -19,12 +19,12 @@ const std::string Square::getName() const
     return "empty";
 }
 
-enum Colours Square::getColour() const
+Piece::Colour Square::getColourOfPiece() const
 {
     if (piece)
     {
         return piece->getColour();
     }
 
-    return UNDEFINED;
+    return Piece::UNDEFINED;
 }
