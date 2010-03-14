@@ -57,5 +57,14 @@ std::vector<Square> ChessBoard::createBoard()
         squares.push_back(square);
     }
 
+    for (std::size_t column = 0; column < WIDTH; ++column)
+    {
+        Piece* blackPawn = new Pawn(black);
+        Piece* whitePawn = new Pawn(white);
+
+        squares.at(blackPawnRow + column).addPiece(blackPawn);
+        squares.at(whitePawnRow + column).addPiece(whitePawn);
+    }
+
     return squares;
 }

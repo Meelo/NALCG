@@ -18,6 +18,7 @@ private slots:
     void addingPiecesToSquare_data();
     void addingPiecesToSquare();
 };
+
 // Use Q_DECLARE_METATYPE in order to use 'custom' types in _data() functions.
 Q_DECLARE_METATYPE(std::string)
 Q_DECLARE_METATYPE(Piece::Colour)

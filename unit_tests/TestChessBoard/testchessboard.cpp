@@ -127,7 +127,8 @@ void TestChessBoard::checkUnits()
     std::vector<Square> squares = ChessBoard::createBoard();
     QCOMPARE(squares.size(), std::size_t(64));
 
-    Square shouldHaveUnit = squares.at(position);
+    QVERIFY( position < std::size_t(64) );
+    Square& shouldHaveUnit = squares.at(position);
 
     QCOMPARE(shouldHaveUnit.getNameOfPiece(), unit);
     QCOMPARE(shouldHaveUnit.getColourOfPiece(), colour);
