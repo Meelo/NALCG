@@ -19,6 +19,7 @@ public:
     virtual ~Pawn() { }
 
     // Methods
+//    std::vector<std::size_t> get
 
     // Getters
     

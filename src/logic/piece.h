@@ -3,9 +3,11 @@
 
 // system includes
 #include <string>
+#include <vector>
 
 // class includes
 
+class Square;
 class Piece
 {
 public:
@@ -30,6 +32,7 @@ public:
     virtual ~Piece() { }
 
     // Methods
+    virtual std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& square);
 
     // Getters
     const Colour& getColour() const { return colour; }

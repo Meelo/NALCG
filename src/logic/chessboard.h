@@ -13,10 +13,6 @@
 class ChessBoard : public Board
 {
     // Constants
-    static const std::size_t WIDTH = 8;
-    static const std::size_t HEIGHT = 8;
-    static const std::size_t BOARD_SIZE = 64;
-
     static const std::size_t BLACK_ROOK_LEFT = 0;
     static const std::size_t BLACK_KNIGHT_LEFT = 1;
     static const std::size_t BLACK_BISHOP_LEFT = 2;
@@ -49,6 +45,13 @@ public:
     // Getters
     
     // Setters
+
+    // Public Constants
+    static const std::size_t WIDTH = 8;
+    static const std::size_t HEIGHT = 8;
+    static const std::size_t BOARD_SIZE = 64;
+    static const std::size_t BLACK_PAWN_ROW = 1;
+    static const std::size_t WHITE_PAWN_ROW = 6;
 };
 
 #endif // _NALCG_CHESS_BOARD_H_

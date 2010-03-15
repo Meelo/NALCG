@@ -47,8 +47,8 @@ std::vector<Square> ChessBoard::createBoard()
     std::vector<Square> squares;
     
     // The magic numbers are the row indices, from top to bottom.
-    std::size_t blackPawnRow = 1 * WIDTH;
-    std::size_t whitePawnRow = 6 * WIDTH;
+    std::size_t blackPawnRow = BLACK_PAWN_ROW * WIDTH;
+    std::size_t whitePawnRow = WHITE_PAWN_ROW * WIDTH;
 
     for (std::size_t i = 0; i < BOARD_SIZE; ++i)
     {
