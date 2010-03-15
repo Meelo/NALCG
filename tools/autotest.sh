@@ -98,7 +98,7 @@ function run_test_at() {
         cd "$curr_file"
         # all these 1> /dev/nulls are for suppressing standard output
         make clean 1> /dev/null
-        qmake -project "CONFIG += qtestlib" -o "$curr_file.pro" 2> /dev/null
+        qmake -project "QT -= gui" "CONFIG += console qtestlib" -o "$curr_file.pro" 2> /dev/null
         qmake 1> /dev/null
         $make_cmd 1> /dev/null && "./$curr_file" | colourize
         make clean 1> /dev/null
