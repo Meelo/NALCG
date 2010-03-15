@@ -8,6 +8,7 @@
 // class includes
 #include "board.h"
 #include "square.h"
+#include "chesspieces-meta.h"
 
 class ChessBoard : public Board
 {
@@ -39,7 +40,7 @@ class ChessBoard : public Board
     // Methods
 
 public:
-    ChessBoard();
+    ChessBoard(const std::vector<Square>& squares);
     virtual ~ChessBoard() { };
 
     // Methods

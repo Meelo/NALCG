@@ -3,8 +3,8 @@
 // class dependencies
 #include "board.h"
 
-Board::Board(std::size_t width, std::size_t height) :
-    width(width), height(height), initialized(false)
+Board::Board(const std::vector<Square>& squares, std::size_t width, 
+    std::size_t height) : squares(squares), width(width), height(height)
 {
 
 }

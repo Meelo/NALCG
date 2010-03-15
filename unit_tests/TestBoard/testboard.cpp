@@ -6,6 +6,7 @@
 
 // classes to be tested
 #include "../../src/logic/board.h"
+#include "../../src/logic/chessboard.h"
 #include "../../src/logic/square.h"
 
 class TestBoard : public QObject
@@ -36,11 +37,11 @@ void TestBoard::boardSize()
     QFETCH(std::size_t, height);
     QFETCH(std::size_t, total_size);
 
-    Board board;
+    Board* board = new ChessBoard(ChessBoard::createBoard());
 
-    QCOMPARE(board.getWidth(), width);
-    QCOMPARE(board.getHeight(), height);
-    QCOMPARE(board.getTotalSize(), total_size);
+    QCOMPARE(board->getWidth(), width);
+    QCOMPARE(board->getHeight(), height);
+    QCOMPARE(board->getTotalSize(), total_size);
 }
 
 // End of Tests

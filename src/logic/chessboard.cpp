@@ -2,16 +2,10 @@
 
 // class dependencies
 #include "chessboard.h"
-#include "piece.h"
-#include "pawn.h"
-#include "rook.h"
-#include "knight.h"
-#include "bishop.h"
-#include "queen.h"
-#include "king.h"
+#include "chesspieces-meta.h"
 
-ChessBoard::ChessBoard() :
-    Board(WIDTH, HEIGHT)
+ChessBoard::ChessBoard(const std::vector<Square>& squares) :
+    Board(squares, WIDTH, HEIGHT)
 {
 
 }

@@ -21,7 +21,6 @@ private slots:
     void createBoard();
     void checkUnits_data();
     void checkUnits();
-    void isInitialized();
 };
 
 // Use Q_DECLARE_METATYPE in order to use 'custom' types in _data() functions.
@@ -147,12 +146,6 @@ void TestChessBoard::checkUnits()
     QCOMPARE(shouldHaveUnit.getColourOfPiece(), colour);
 }
 
-void TestChessBoard::isInitialized()
-{
-    Board* board = new ChessBoard();
-    
-    delete board;
-}
 // End of Tests
 
 QTEST_MAIN(TestChessBoard)
