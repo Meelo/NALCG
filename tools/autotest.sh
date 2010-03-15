@@ -20,13 +20,14 @@ function signal_handler() {
 trap 'signal_handler' SIGINT
 
 # define the source folder, relative to this script.
-src_folders="../src ../src/logic" 
+#src_folders="../src ../src/logic" 
+src_folders="../src ../unit_tests" 
 
 # define the unit test folder, relate to this script.
 unit_test_folder="../unit_tests"
 
 # define which file types are tracked.
-tracked="*.h *.cpp *.hpp"
+tracked=".*\.h .*\.cpp .*\.hpp"
 
 # define how the tests should be compiled.
 # qmake project initialization
@@ -117,7 +118,7 @@ do
     do
         for extension in $tracked
         do
-            for curr_file in $dir/$extension
+            for curr_file in `find "$dir" -iregex "$extension"`
             do
                 if [[ -f "$curr_file" ]]; then
                     # getting last modified time.
