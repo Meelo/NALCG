@@ -147,11 +147,16 @@ protected:
             {
                 if (mSelectedObject)
                 {
-                    // TODO: find the object above this square by O(n) iterating everything
-                    // Or maybe just send the request to model and update everything or something?
                     SceneNode *targetNode = itr->movable->getParentSceneNode();
                     std::cout << mSelectedObject->getName() << " -> " << targetNode->getName() << std::endl;
                     mSelectedObject->showBoundingBox(false);
+                    
+                    Node *pieceNode = findPieceAbove(mSelectedObject);
+                    if (pieceNode)
+                    {
+                        pieceNode->setPosition(targetNode->getPosition());
+                    }
+
                     mSelectedObject = 0;
                 }
                 else
@@ -162,6 +167,22 @@ protected:
                 break;
             }
         }
+    }
+
+    virtual Node* findPieceAbove(SceneNode* squareNode)
+    {
+        const Vector3& squarePosition = squareNode->getPosition();
+        Node::ChildNodeIterator it = mSceneMgr->getRootSceneNode()->getChildIterator();
+        while (it.hasMoreElements())
+        {
+            Node* next = it.getNext();
+            if (squareNode != next && next->getPosition() == squarePosition)
+            {
+                return next;
+            }
+            //dynamic_cast<Ogre::SceneNode*>(it.getNext())->setVisible(false);
+        }
+        return 0;
     }
 
     virtual void onLeftReleased(const OIS::MouseEvent &arg)
