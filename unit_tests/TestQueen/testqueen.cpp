@@ -4,7 +4,7 @@
 
 // classes to be tested
 
-class King : public QObject
+class TestQueen : public QObject
 {
     Q_OBJECT
 
@@ -17,5 +17,5 @@ private slots:
 
 // End of Tests
 
-QTEST_MAIN(King)
-#include "king.moc"
+QTEST_MAIN(TestQueen)
+#include "testqueen.moc"

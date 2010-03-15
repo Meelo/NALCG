@@ -4,7 +4,7 @@
 
 // classes to be tested
 
-class Rook : public QObject
+class TestRook : public QObject
 {
     Q_OBJECT
 
@@ -17,5 +17,5 @@ private slots:
 
 // End of Tests
 
-QTEST_MAIN(Rook)
-#include "rook.moc"
+QTEST_MAIN(TestRook)
+#include "testrook.moc"

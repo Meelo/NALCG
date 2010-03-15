@@ -4,7 +4,7 @@
 
 // classes to be tested
 
-class Bishop : public QObject
+class TestBishop : public QObject
 {
     Q_OBJECT
 
@@ -17,5 +17,5 @@ private slots:
 
 // End of Tests
 
-QTEST_MAIN(Bishop)
-#include "bishop.moc"
+QTEST_MAIN(TestBishop)
+#include "testbishop.moc"
