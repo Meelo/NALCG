@@ -154,6 +154,12 @@ protected:
                     Node *pieceNode = findPieceAbove(mSelectedObject);
                     if (pieceNode)
                     {
+                        Node *targetPiece = findPieceAbove(targetNode);
+                        if (targetPiece)
+                        {
+                            mSceneMgr->getRootSceneNode()->removeAndDestroyChild(targetPiece->getName());
+                            
+                        }
                         pieceNode->setPosition(targetNode->getPosition());
                     }
 
@@ -180,7 +186,6 @@ protected:
             {
                 return next;
             }
-            //dynamic_cast<Ogre::SceneNode*>(it.getNext())->setVisible(false);
         }
         return 0;
     }
