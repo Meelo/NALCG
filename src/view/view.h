@@ -148,21 +148,22 @@ protected:
                 if (mSelectedObject)
                 {
                     SceneNode *targetNode = itr->movable->getParentSceneNode();
-                    std::cout << mSelectedObject->getName() << " -> " << targetNode->getName() << std::endl;
-                    mSelectedObject->showBoundingBox(false);
-                    
-                    Node *pieceNode = findPieceAbove(mSelectedObject);
-                    if (pieceNode)
+                    if (mSelectedObject != targetNode)
                     {
-                        Node *targetPiece = findPieceAbove(targetNode);
-                        if (targetPiece)
-                        {
-                            mSceneMgr->getRootSceneNode()->removeAndDestroyChild(targetPiece->getName());
-                            
-                        }
-                        pieceNode->setPosition(targetNode->getPosition());
-                    }
+                        std::cout << mSelectedObject->getName() << " -> " << targetNode->getName() << std::endl;
 
+                        Node *pieceNode = findPieceAbove(mSelectedObject);
+                        if (pieceNode)
+                        {
+                            Node *targetPiece = findPieceAbove(targetNode);
+                            if (targetPiece)
+                            {
+                                mSceneMgr->getRootSceneNode()->removeAndDestroyChild(targetPiece->getName());
+                            }
+                            pieceNode->setPosition(targetNode->getPosition());
+                        }
+                    }
+                    mSelectedObject->showBoundingBox(false);
                     mSelectedObject = 0;
                 }
                 else
