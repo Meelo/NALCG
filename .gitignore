@@ -12,6 +12,7 @@ Makefile
 !src/Makefile
 ogre.cfg
 *.log
+*.pro
 NALCG.pdb
 *.vcproj*
 src/Release

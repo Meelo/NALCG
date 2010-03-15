@@ -82,8 +82,8 @@ fi
 function colourize() {
     if [[ -z "$no_colours" ]]; then
         sed -e "s:^\(PASS.*\)$:$GREEN\1$NORM:g" \
-            -e"s:^\(FAIL.*\)$:$RED\1$NORM:g" \
-            -e"s:^\(SKIP.*\)$:$ORANGE\1$NORM:g"
+            -e "s:^\(FAIL.*\)$:$RED\1$NORM:g" \
+            -e "s:^\(SKIP.*\)$:$ORANGE\1$NORM:g"
     else
         cat
     fi
