@@ -11,7 +11,7 @@ public:
     BufferedInputHandler(RenderWindow *window, Camera *camera, SceneManager *sceneMgr)
         : mLMouseDown(false), mRMouseDown(false), mWindow(window), mCamera(camera),
         mSceneMgr(sceneMgr), mRaySceneQuery(sceneMgr->createRayQuery(Ray())),
-        mSelectedObject(0)
+        mSelectedObject(0), mDirection(Vector3::ZERO)
     {
     }
 
@@ -27,12 +27,77 @@ public:
         sys->injectKeyDown(arg.key);
         sys->injectChar(arg.text);
 
+        switch (arg.key)
+        {
+        case OIS::KC_UP:
+        case OIS::KC_W:
+            mDirection.z -= mMove;
+            break;
+
+        case OIS::KC_DOWN:
+        case OIS::KC_S:
+            mDirection.z += mMove;
+            break;
+
+        case OIS::KC_LEFT:
+        case OIS::KC_A:
+            mDirection.x -= mMove;
+            break;
+
+        case OIS::KC_RIGHT:
+        case OIS::KC_D:
+            mDirection.x += mMove;
+            break;
+
+        case OIS::KC_PGDOWN:
+        case OIS::KC_E:
+            mDirection.y -= mMove;
+            break;
+
+        case OIS::KC_PGUP:
+        case OIS::KC_Q:
+            mDirection.y += mMove;
+            break;
+        }
         return true;
     }
+
     virtual bool keyReleased(const OIS::KeyEvent &arg)
     {
         CEGUI::System::getSingleton().injectKeyUp(arg.key);
 
+        switch (arg.key)
+        {
+        case OIS::KC_UP:
+        case OIS::KC_W:
+            mDirection.z += mMove;
+            break;
+
+        case OIS::KC_DOWN:
+        case OIS::KC_S:
+            mDirection.z -= mMove;
+            break;
+
+        case OIS::KC_LEFT:
+        case OIS::KC_A:
+            mDirection.x += mMove;
+            break;
+
+        case OIS::KC_RIGHT:
+        case OIS::KC_D:
+            mDirection.x -= mMove;
+            break;
+
+        case OIS::KC_PGDOWN:
+        case OIS::KC_E:
+            mDirection.y += mMove;
+            break;
+
+        case OIS::KC_PGUP:
+        case OIS::KC_Q:
+            mDirection.y -= mMove;
+            break;
+        } // switch
         return true;
     }
 
@@ -86,7 +151,7 @@ public:
         {
             onLeftPressed(arg);
             mLMouseDown = true;
-        } // if
+        }
 
         // Right mouse button down
         else if (id == OIS::MB_Right)
@@ -105,7 +170,7 @@ public:
         {
             onLeftReleased(arg);
             mLMouseDown = false;
-        } // if
+        }
 
         // Right mouse button up
         else if (id == OIS::MB_Right)
@@ -116,6 +181,12 @@ public:
         return true;
     }
 
+    virtual void moveCamera(Real timeSinceLastFrame)
+    {
+        mCamera->setPosition(mCamera->getPosition() + 
+            mCamera->getOrientation() * mDirection * timeSinceLastFrame);
+    }
+
 protected:
     bool mLMouseDown, mRMouseDown;     // True if the mouse buttons are down
     RenderWindow *mWindow;
@@ -123,6 +194,8 @@ protected:
     SceneManager *mSceneMgr;           // A pointer to the scene manager
     RaySceneQuery *mRaySceneQuery;     // The ray scene query pointer
     SceneNode *mSelectedObject;         // The selected object
+    Vector3 mDirection;     // Value to move in the correct direction
+    static const int mMove = 500;
     //CEGUI::Renderer *mGUIRenderer;     // CEGUI renderer
     //bool mRobotMode;                   // The current state
 
@@ -223,6 +296,7 @@ public:
     {
         mKeyboard->capture();
         mMouse->capture();
+        mHandler.moveCamera(evt.timeSinceLastFrame);
         return mContinue && !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
     }
 
