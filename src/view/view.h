@@ -128,7 +128,6 @@ protected:
 
     virtual void onLeftPressed(const OIS::MouseEvent &arg)
     {
-        std::cout << "left pressed" << std::endl;
         CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
 
         // Not using arg.state.width since it won't be updated.
@@ -142,41 +141,44 @@ protected:
 
         for (itr = result.begin(); itr != result.end(); itr++)
         {
-            std::cout << "iterating" << std::endl;
             if (itr->movable)
             {
                 if (mSelectedObject)
                 {
                     SceneNode *targetNode = itr->movable->getParentSceneNode();
+                    SceneNode *pieceNode = findPieceAbove(mSelectedObject);
                     if (mSelectedObject != targetNode)
                     {
                         std::cout << mSelectedObject->getName() << " -> " << targetNode->getName() << std::endl;
 
-                        Node *pieceNode = findPieceAbove(mSelectedObject);
-                        if (pieceNode)
+                        SceneNode *targetPiece = findPieceAbove(targetNode);
+                        if (targetPiece)
                         {
-                            Node *targetPiece = findPieceAbove(targetNode);
-                            if (targetPiece)
-                            {
-                                mSceneMgr->getRootSceneNode()->removeAndDestroyChild(targetPiece->getName());
-                            }
-                            pieceNode->setPosition(targetNode->getPosition());
+                            mSceneMgr->getRootSceneNode()->removeAndDestroyChild(targetPiece->getName());
                         }
+                        pieceNode->setPosition(targetNode->getPosition());
                     }
                     mSelectedObject->showBoundingBox(false);
+                    pieceNode->showBoundingBox(false);
                     mSelectedObject = 0;
                 }
                 else
                 {
-                    mSelectedObject = itr->movable->getParentSceneNode();
-                    mSelectedObject->showBoundingBox(true);
+                    SceneNode *squareNode = itr->movable->getParentSceneNode();
+                    SceneNode *pieceNode = findPieceAbove(squareNode);
+                    if (pieceNode)
+                    {
+                        mSelectedObject = squareNode;
+                        mSelectedObject->showBoundingBox(true);
+                        pieceNode->showBoundingBox(true);
+                    }
                 }
                 break;
             }
         }
     }
 
-    virtual Node* findPieceAbove(SceneNode* squareNode)
+    virtual SceneNode* findPieceAbove(SceneNode* squareNode)
     {
         const Vector3& squarePosition = squareNode->getPosition();
         Node::ChildNodeIterator it = mSceneMgr->getRootSceneNode()->getChildIterator();
@@ -185,7 +187,7 @@ protected:
             Node* next = it.getNext();
             if (squareNode != next && next->getPosition() == squarePosition)
             {
-                return next;
+                return dynamic_cast<SceneNode*>(next);
             }
         }
         return 0;
