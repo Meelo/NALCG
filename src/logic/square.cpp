@@ -28,3 +28,12 @@ Piece::Colour Square::getColourOfPiece() const
 
     return Piece::UNDEFINED;
 }
+
+
+Piece* Square::removePiece()
+{
+    Piece* _piece = piece;
+    piece = 0;
+
+    return _piece;
+}

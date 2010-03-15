@@ -23,12 +23,14 @@ public:
     // Methods
     bool hasPiece() { return piece != 0; }
     void addPiece(Piece* newPiece) { piece = newPiece; }
+    Piece* removePiece();
 
     // Getters
     const std::string getNameOfPiece() const;
     Piece::Colour getColourOfPiece() const;
     
     // Setters
+
 };
 
 #endif // _NALCG_SQUARE_H_

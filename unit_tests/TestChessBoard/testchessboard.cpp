@@ -9,13 +9,7 @@
 #include "../../src/logic/board.h"
 #include "../../src/logic/chessboard.h"
 #include "../../src/logic/square.h"
-#include "../../src/logic/piece.h"
-#include "../../src/logic/pawn.h"
-#include "../../src/logic/rook.h"
-#include "../../src/logic/knight.h"
-#include "../../src/logic/bishop.h"
-#include "../../src/logic/queen.h"
-#include "../../src/logic/king.h"
+#include "../../src/logic/chesspieces-meta.h"
 
 class TestChessBoard : public QObject
 {

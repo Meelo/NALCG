@@ -1,11 +1,13 @@
 // system includes
 #include <QObject>
 #include <QtTest/QtTest>
+#include <vector>
+#include <string>
 
 // classes to be tested
 #include "../../src/logic/square.h"
-#include "../../src/logic/piece.h"
-#include "../../src/logic/pawn.h"
+#include "../../src/logic/chessboard.h"
+#include "../../src/logic/chesspieces-meta.h"
 
 class TestSquare : public QObject
 {
@@ -17,6 +19,8 @@ private slots:
     void constructing();
     void addingPiecesToSquare_data();
     void addingPiecesToSquare();
+    void removingPiecesFromSquare_data();
+    void removingPiecesFromSquare();
 };
 
 // Use Q_DECLARE_METATYPE in order to use 'custom' types in _data() functions.
@@ -64,6 +68,10 @@ void TestSquare::addingPiecesToSquare_data()
     Piece::Colour black = Piece::BLACK;
     std::string pawn("Pawn");
     std::string rook("Rook");
+    std::string knight("Knight");
+    std::string bishop("Bishop");
+    std::string queen("Queen");
+    std::string king("King");
     QTest::addColumn<Piece*>("piece");
     QTest::addColumn<std::string>("expectedName");
     QTest::addColumn<Piece::Colour>("expectedColour");
@@ -73,6 +81,27 @@ void TestSquare::addingPiecesToSquare_data()
         << (piece = new Pawn(white)) << pawn << white;
     QTest::newRow("adding a black pawn") 
         << (piece = new Pawn(black)) << pawn << black;
+    QTest::newRow("adding a white rook") 
+        << (piece = new Rook(white)) << rook << white;
+    QTest::newRow("adding a black rook") 
+        << (piece = new Rook(black)) << rook << black;
+    QTest::newRow("adding a white knight") 
+        << (piece = new Knight(white)) << knight << white;
+    QTest::newRow("adding a black knight") 
+        << (piece = new Knight(black)) << knight << black;
+    QTest::newRow("adding a white bishop") 
+        << (piece = new Bishop(white)) << bishop << white;
+    QTest::newRow("adding a black bishop") 
+        << (piece = new Bishop(black)) << bishop << black;
+    QTest::newRow("adding a white queen") 
+        << (piece = new Queen(white)) << queen << white;
+    QTest::newRow("adding a black queen") 
+        << (piece = new Queen(black)) << queen << black;
+    QTest::newRow("adding a white king") 
+        << (piece = new King(white)) << king << white;
+    QTest::newRow("adding a black king") 
+        << (piece = new King(black)) << king << black;
+
 }
 
 void TestSquare::addingPiecesToSquare()
@@ -89,6 +118,41 @@ void TestSquare::addingPiecesToSquare()
 
     QCOMPARE(square.getNameOfPiece(), expectedName);
     QCOMPARE(square.getColourOfPiece(), expectedColour);
+}
+
+void TestSquare::removingPiecesFromSquare_data()
+{
+    std::string empty = "empty";
+    std::string pawn = "Pawn";
+    std::string king = "King";
+    QTest::addColumn<std::size_t>("index");
+    QTest::addColumn<std::string>("before");
+    QTest::addColumn<std::string>("after");
+
+    QTest::newRow("removing pawn from a2") << std::size_t(48) << pawn << empty;
+    QTest::newRow("trying to remove from empty slot (a3)") 
+        << std::size_t(40) << empty << empty;
+    QTest::newRow("removing king from e8") << std::size_t(4) << king << empty;
+}
+
+void TestSquare::removingPiecesFromSquare()
+{
+    QFETCH(std::size_t, index);
+    QFETCH(std::string, before);
+    QFETCH(std::string, after);
+
+    std::vector<Square> squares = ChessBoard::createBoard();
+    QVERIFY(squares.size() > index);
+    
+    QCOMPARE(squares.at(index).getNameOfPiece(), before);
+
+    Piece* piece = squares.at(index).removePiece();
+    if (piece) 
+    {
+        QCOMPARE(piece->getName(), before);
+        delete piece;
+    }
+    QCOMPARE(squares.at(index).getNameOfPiece(), after);
 }
 
 // End of Tests
