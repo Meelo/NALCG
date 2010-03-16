@@ -50,12 +50,12 @@ public:
             break;
 
         case OIS::KC_PGDOWN:
-        case OIS::KC_E:
+        case OIS::KC_F:
             mDirection.y -= mMove;
             break;
 
         case OIS::KC_PGUP:
-        case OIS::KC_Q:
+        case OIS::KC_R:
             mDirection.y += mMove;
             break;
         }
@@ -89,15 +89,15 @@ public:
             break;
 
         case OIS::KC_PGDOWN:
-        case OIS::KC_E:
+        case OIS::KC_F:
             mDirection.y += mMove;
             break;
 
         case OIS::KC_PGUP:
-        case OIS::KC_Q:
+        case OIS::KC_R:
             mDirection.y -= mMove;
             break;
-        } // switch
+        }
         return true;
     }
 
@@ -375,8 +375,8 @@ class View
 {
 public:
     View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
-        mRenderer(0), mSystem(0), mListener(0),
-        mEntityCount(0)
+        mRenderer(0), mSystem(0), mListener(0), mDecalFrustum(0),
+        mFilterFrustum(0), mProjectorNode(0), mEntityCount(0)
     {
     }
 
@@ -421,6 +421,9 @@ protected:
     SceneManager *mSceneMgr;
     Camera *mCamera;
     RenderWindow *mWindow;
+    SceneNode *mProjectorNode;
+    Frustum *mDecalFrustum;
+    Frustum *mFilterFrustum;
 
     int mEntityCount;
 
@@ -541,6 +544,20 @@ protected:
         vp->setBackgroundColour(ColourValue(0,0,0));
         // Alter the camera aspect ratio to match the viewport
         mCamera->setAspectRatio(Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
+    }
+
+    // The function to create our decal projector
+    void createProjector()
+    {
+       mDecalFrustum = new Frustum();
+       mProjectorNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("DecalProjectorNode");
+       mProjectorNode->attachObject(mDecalFrustum);
+       mProjectorNode->setPosition(0,5,0);
+    }
+
+    // A function to take an existing material and make it receive the projected decal
+    void makeMaterialReceiveDecal(const String &matName)
+    {
     }
 
     virtual void createPiece(const std::string& modelName, const Vector3& location)
