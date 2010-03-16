@@ -32,7 +32,7 @@ class BishopMovementAnimation : public MovementAnimation
 
     virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode)
     {
-        Real distanceMoved = mMovementSpeed * timeSinceLastFrame;
+        Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
         Vector3 path = mDestination - movingNode->getPosition();
         
         if (path.length() > distanceMoved)
@@ -51,7 +51,7 @@ class BishopMovementAnimation : public MovementAnimation
         return false; // Animation finished.
     }
 protected:
-    static const int mMovementSpeed = 500;
+    static const int MOVEMENT_SPEED = 500;
     Real mAttackDuration;
 };
 
@@ -59,23 +59,51 @@ class QueenMovementAnimation : public MovementAnimation
 {
 public:
     QueenMovementAnimation(const Vector3& destination, const Real& attackDuration = -1)
-        : MovementAnimation(destination), mAttackDuration(attackDuration)
+        : MovementAnimation(destination), mAttackDuration(attackDuration), mPhase(1)
     {
     }
 
     virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode)
     {
-        Real distanceMoved = mMovementSpeed * timeSinceLastFrame;
+        Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
         Vector3 path = mDestination - movingNode->getPosition();
-        
         if (path.length() > distanceMoved)
         {
+
+            bool flyHigher = movingNode->getPosition().y < 500;
+            switch (mPhase)
+            {
+            case 1:
+                // Fly higher in steep angle until flying altitude is reached.
+                if (movingNode->getPosition().y > FLYING_ALTITUDE)
+                {
+                    mPhase = 2;
+                }
+                path += Vector3(0, FLYING_ALTITUDE * 4, 0);
+                break;
+            case 2:
+                // Continue flying on the same altitude until almost above target.
+                if (path.length() < distanceMoved + FLYING_ALTITUDE * 1.1)
+                {
+                    mPhase = 3;
+                }
+                path += Vector3(0, FLYING_ALTITUDE, 0);
+                break;
+            case 3:
+                break;
+            }
+
             // Normalising the vector so the speed remains constant.
             path.normalise();
             movingNode->translate(path * distanceMoved);
 
-            Vector3 src = movingNode->getOrientation() * Vector3::UNIT_Z;
-            movingNode->rotate(src.getRotationTo(path));
+            /*if (flyHigher)
+            {
+                movingNode->setOrientation(movingNode->getInitialOrientation());
+                Vector3 src = movingNode->getOrientation() * Vector3::UNIT_Z;
+                movingNode->rotate(src.getRotationTo(path));
+            }*/
+
             return true; // Animation still running.
         }
         
@@ -84,8 +112,10 @@ public:
         return false; // Animation finished.
     }
 protected:
-    static const int mMovementSpeed = 500;
+    static const int MOVEMENT_SPEED = 500;
+    static const int FLYING_ALTITUDE = 500;
     Real mAttackDuration;
+    int mPhase;
 };
 
 class MovementAnimationFactory
@@ -131,32 +161,32 @@ public:
         {
         case OIS::KC_UP:
         case OIS::KC_W:
-            mDirection.z -= mMove;
+            mDirection.z -= CAMERA_MOVEMENT_SPEED;
             break;
 
         case OIS::KC_DOWN:
         case OIS::KC_S:
-            mDirection.z += mMove;
+            mDirection.z += CAMERA_MOVEMENT_SPEED;
             break;
 
         case OIS::KC_LEFT:
         case OIS::KC_A:
-            mDirection.x -= mMove;
+            mDirection.x -= CAMERA_MOVEMENT_SPEED;
             break;
 
         case OIS::KC_RIGHT:
         case OIS::KC_D:
-            mDirection.x += mMove;
+            mDirection.x += CAMERA_MOVEMENT_SPEED;
             break;
 
         case OIS::KC_PGDOWN:
         case OIS::KC_F:
-            mDirection.y -= mMove;
+            mDirection.y -= CAMERA_MOVEMENT_SPEED;
             break;
 
         case OIS::KC_PGUP:
         case OIS::KC_R:
-            mDirection.y += mMove;
+            mDirection.y += CAMERA_MOVEMENT_SPEED;
             break;
         }
         return true;
@@ -170,32 +200,32 @@ public:
         {
         case OIS::KC_UP:
         case OIS::KC_W:
-            mDirection.z += mMove;
+            mDirection.z += CAMERA_MOVEMENT_SPEED;
             break;
 
         case OIS::KC_DOWN:
         case OIS::KC_S:
-            mDirection.z -= mMove;
+            mDirection.z -= CAMERA_MOVEMENT_SPEED;
             break;
 
         case OIS::KC_LEFT:
         case OIS::KC_A:
-            mDirection.x += mMove;
+            mDirection.x += CAMERA_MOVEMENT_SPEED;
             break;
 
         case OIS::KC_RIGHT:
         case OIS::KC_D:
-            mDirection.x -= mMove;
+            mDirection.x -= CAMERA_MOVEMENT_SPEED;
             break;
 
         case OIS::KC_PGDOWN:
         case OIS::KC_F:
-            mDirection.y += mMove;
+            mDirection.y += CAMERA_MOVEMENT_SPEED;
             break;
 
         case OIS::KC_PGUP:
         case OIS::KC_R:
-            mDirection.y -= mMove;
+            mDirection.y -= CAMERA_MOVEMENT_SPEED;
             break;
         }
         return true;
@@ -297,7 +327,7 @@ protected:
     RaySceneQuery *mRaySceneQuery;     // The ray scene query pointer
     SceneNode *mSelectedObject;         // The selected object
     Vector3 mDirection;     // Value to move in the correct direction
-    static const int mMove = 500;
+    static const int CAMERA_MOVEMENT_SPEED = 500;
     std::map<SceneNode*, MovementAnimation*> mMovementAnimations;
     //CEGUI::Renderer *mGUIRenderer;     // CEGUI renderer
     //bool mRobotMode;                   // The current state
