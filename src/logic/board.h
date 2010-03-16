@@ -26,6 +26,7 @@ public:
 
     // Methods
     static std::vector<Square> createBoard(std::size_t width = 8, std::size_t height = 8);
+    std::vector<std::size_t> getValidMoves(std::size_t location);
 
     // Getters
     std::size_t getWidth() const { return width; }

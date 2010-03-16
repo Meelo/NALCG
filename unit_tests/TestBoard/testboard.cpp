@@ -42,6 +42,8 @@ void TestBoard::boardSize()
     QCOMPARE(board->getWidth(), width);
     QCOMPARE(board->getHeight(), height);
     QCOMPARE(board->getTotalSize(), total_size);
+
+    delete board;
 }
 
 // End of Tests

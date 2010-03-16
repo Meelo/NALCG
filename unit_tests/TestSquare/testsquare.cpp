@@ -21,10 +21,13 @@ private slots:
     void addingPiecesToSquare();
     void removingPiecesFromSquare_data();
     void removingPiecesFromSquare();
+    void getPiece_data();
+    void getPiece();
 };
 
 // Use Q_DECLARE_METATYPE in order to use 'custom' types in _data() functions.
 Q_DECLARE_METATYPE(std::string)
+Q_DECLARE_METATYPE(Square)
 Q_DECLARE_METATYPE(Piece::Colour)
 Q_DECLARE_METATYPE(Piece*)
 
@@ -153,6 +156,33 @@ void TestSquare::removingPiecesFromSquare()
         delete piece;
     }
     QCOMPARE(squares.at(index).getNameOfPiece(), after);
+}
+
+void TestSquare::getPiece_data()
+{
+    std::string empty = "empty";
+    std::string pawn = "Pawn";
+    std::string king = "King";
+    QTest::addColumn<Square>("square");
+    QTest::addColumn<std::string>("expected");
+
+    QTest::newRow("get, expect pawn") << Square(new Pawn(Piece::WHITE)) << pawn;
+    QTest::newRow("get, expect king") << Square(new King(Piece::BLACK)) << king;
+    QTest::newRow("get, expect nothing") << Square() << empty;
+}
+
+void TestSquare::getPiece()
+{
+    QFETCH(Square, square);
+    QFETCH(std::string, expected);
+    if (expected == "empty")
+    {
+        QVERIFY(square.getPiece() == 0);
+    }
+    else
+    {
+        QCOMPARE(square.getPiece()->getName(), expected);
+    }
 }
 
 // End of Tests

@@ -3,9 +3,11 @@
 
 // system includes
 #include <string>
+#include <vector>
 
 // class includes
 
+class Square;
 class Piece
 {
 public:
@@ -16,7 +18,7 @@ public:
         BLACK
     };
 
-private:
+protected:
     // Constants
 
     // Members
@@ -30,6 +32,7 @@ public:
     virtual ~Piece() { }
 
     // Methods
+    virtual std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& square) const;
 
     // Getters
     const Colour& getColour() const { return colour; }
