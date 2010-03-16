@@ -1,4 +1,26 @@
 
+material 06-Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture leather.jpg
+			}
+		}
+
+	}
+
+}
+
+
+
 material 08-Default
 {
 	technique
@@ -43,7 +65,7 @@ material asdfasf
 
 
 
-material 06-Default
+material 17-Default
 {
 	technique
 	{
@@ -55,7 +77,7 @@ material 06-Default
 
 			texture_unit
 			{
-				texture leather.jpg
+				texture skin.jpg
 			}
 		}
 
@@ -100,28 +122,6 @@ material 22-Default
 			texture_unit
 			{
 				texture metal.jpg
-			}
-		}
-
-	}
-
-}
-
-
-
-material 17-Default
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.588235 0.588235 0.588235 1
-			diffuse 0.588235 0.588235 0.588235 1
-			specular 0 0 0 10 0
-
-			texture_unit
-			{
-				texture skin.jpg
 			}
 		}
 

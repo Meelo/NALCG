@@ -1,26 +1,4 @@
 
-material 05-Default
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.588235 0.588235 0.588235 1
-			diffuse 0.588235 0.588235 0.588235 1
-			specular 0 0 0 10 0
-
-			texture_unit
-			{
-				texture color_red.png
-			}
-		}
-
-	}
-
-}
-
-
-
 material default
 {
 	technique
@@ -43,7 +21,7 @@ material default
 
 
 
-material 04-Default
+material 05-Default
 {
 	technique
 	{
@@ -78,6 +56,28 @@ material 17-Default
 			texture_unit
 			{
 				texture skin.jpg
+			}
+		}
+
+	}
+
+}
+
+
+
+material 04-Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture color_red.png
 			}
 		}
 

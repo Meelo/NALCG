@@ -31,11 +31,26 @@ public:
 
     virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode)
     {
-        // TODO: implement non-instant move
+        Real distanceMoved = mMovementSpeed * timeSinceLastFrame;
+        Vector3 path = mDestination - movingNode->getPosition();
+        
+        if (path.length() > distanceMoved)
+        {
+            // Normalising the vector so the speed remains constant.
+            path.normalise();
+            movingNode->translate(path * distanceMoved);
+
+            Vector3 src = movingNode->getOrientation() * Vector3::UNIT_Z;
+            movingNode->rotate(src.getRotationTo(path));
+            return true; // Animation still running.
+        }
+        
         movingNode->setPosition(mDestination);
-        return false;
+        movingNode->setOrientation(movingNode->getInitialOrientation());
+        return false; // Animation finished.
     }
 protected:
+    static const int mMovementSpeed = 300;
     Real mAttackDuration;
 };
 
@@ -630,7 +645,15 @@ protected:
         //ent->setCastShadows(true);
         ent->setQueryFlags(0);
 
-        mSceneMgr->getRootSceneNode()->createChildSceneNode(location)->attachObject(ent);
+        SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(location);
+        node->attachObject(ent);
+        
+        // Make white models face the opposite direction.
+        if (modelName.find("white") == 0)
+        {
+            node->yaw(Degree(180));
+        }
+        node->setInitialState();
     }
 
     void createScene()
