@@ -66,8 +66,8 @@ class QueenMovementAnimation : public MovementAnimation
 {
 public:
     QueenMovementAnimation(const Vector3& destination, bool occupied, SceneManager *sceneMgr)
-        : MovementAnimation(destination), mAttackDuration(occupied ? 1000 : -1),
-        mPhase(1), mSceneMgr(sceneMgr), mTrail(0)
+        : MovementAnimation(destination), mAttackCount(occupied ? ATTACK_COUNT : 0),
+        mPhase(1), mSceneMgr(sceneMgr), mTrail(0), mAttackCooldown(0)
     {
         assert(sceneMgr != 0);
         createBlasts();
@@ -102,19 +102,69 @@ public:
                 break;
             case 3:
                 {
-                    if (mAttackDuration < 0)
+                    if (mAttackCount <= 0)
                     {
                         mPhase = 4;
                         restoreLights();
                     }
-
-                    std::vector<AnimationState*>::iterator animi;
-                    for (animi = mAnimStateList.begin(); animi != mAnimStateList.end(); ++animi)
+                    else
                     {
-                        (*animi)->addTime(timeSinceLastFrame);
+                        if (mAttackCooldown <= 0)
+                        {
+                            SceneNode* animNode = movingNode->createChildSceneNode();
+                            //animNode->setPosition(50,30,0);
+
+                            Animation* anim = mSceneMgr->createAnimation(nextName(), 10);
+                            anim->setInterpolationMode(Animation::IM_SPLINE);
+
+                            NodeAnimationTrack* track = anim->createNodeTrack(1, animNode);
+                            TransformKeyFrame* kf = track->createNodeKeyFrame(0);
+                            ////kf->setTranslate(Vector3(50,30,0));
+                            
+                            int waypoint = mAttackCount % 2 == 0 ? 100 : -100;
+                            int waypoint2 = mAttackCount % 4 <= 1 ? 100 : -100;
+                            kf = track->createNodeKeyFrame(0.5);
+                            kf->setTranslate(Vector3(waypoint, 0, waypoint2));
+                            kf = track->createNodeKeyFrame(1);
+                            kf->setTranslate(Vector3(0, -200, 0));
+                            kf = track->createNodeKeyFrame(1.5);
+                            kf->setTranslate(Vector3(0, -600, 0));
+                            kf = track->createNodeKeyFrame(10);
+                            kf->setTranslate(Vector3(0, -600, 0));
+
+                            AnimationState* animState = mSceneMgr->createAnimationState(anim->getName());
+                            animState->setEnabled(true);
+                            mAnimStateList.push_back(animState);
+
+                            int nAttack = ATTACK_COUNT - mAttackCount;
+                            mTrail->setInitialColour(nAttack, 0.3, 0.5, 1.0);
+                            mTrail->setColourChange(nAttack, 0.5, 0.5, 0.5, 0.5);
+                            mTrail->setInitialWidth(nAttack, 10);
+                            mTrail->addNode(animNode);
+
+                            // Add light
+                            Light* l2 = mSceneMgr->createLight(nextName());
+                            l2->setDiffuseColour(mTrail->getInitialColour(0));
+                            animNode->attachObject(l2);
+
+                            // Add billboard
+                            BillboardSet* bbs = mSceneMgr->createBillboardSet(nextName(), 1);
+                            bbs->createBillboard(Vector3::ZERO, mTrail->getInitialColour(0));
+                            bbs->setMaterialName("Examples/Flare");
+                            bbs->setQueryFlags(0);
+                            animNode->attachObject(bbs);
+
+                            mAttackCooldown = 0.3;
+                            mAttackCount--;
+                        }
+                        std::vector<AnimationState*>::iterator animi;
+                        for (animi = mAnimStateList.begin(); animi != mAnimStateList.end(); ++animi)
+                        {
+                            (*animi)->addTime(timeSinceLastFrame);
+                        }
+                        path += Vector3(0, FLYING_ALTITUDE, 0);
+                        mAttackCooldown -= timeSinceLastFrame;
                     }
-                    path += Vector3(0, FLYING_ALTITUDE, 0);
-                    mAttackDuration -= timeSinceLastFrame;
                     break;
                 }
             case 4:
@@ -143,62 +193,16 @@ public:
     virtual void createBlasts()
     {
         NameValuePairList pairList;
-        pairList["numberOfChains"] = "5";
+        pairList["numberOfChains"] = StringConverter::toString(mAttackCount);
         pairList["maxElements"] = "80";
 
-        std::ostringstream trailName;
-        trailName << "Trail" << trailId;
-        trailId++;
-
         mTrail = static_cast<RibbonTrail*>(
-            mSceneMgr->createMovableObject(trailName.str(), "RibbonTrail", &pairList));
+            mSceneMgr->createMovableObject(nextName(), "RibbonTrail", &pairList));
         mTrail->setMaterialName("Examples/LightRibbonTrail");
         mTrail->setTrailLength(400);
+        mTrail->setQueryFlags(0);
 
         mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(mTrail);
-
-        // Create 3 nodes for trail to follow
-        SceneNode* animNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-        animNode->setPosition(50,30,0);
-        Animation* anim = mSceneMgr->createAnimation("an1", 14);
-        anim->setInterpolationMode(Animation::IM_SPLINE);
-        NodeAnimationTrack* track = anim->createNodeTrack(1, animNode);
-        TransformKeyFrame* kf = track->createNodeKeyFrame(0);
-        kf->setTranslate(Vector3(50,30,0));
-        kf = track->createNodeKeyFrame(2);
-        kf->setTranslate(Vector3(100, 30, 0));
-        kf = track->createNodeKeyFrame(4);
-        kf->setTranslate(Vector3(120, 100, 150));
-        kf = track->createNodeKeyFrame(6);
-        kf->setTranslate(Vector3(30, 100, 50));
-        kf = track->createNodeKeyFrame(8);
-        kf->setTranslate(Vector3(-50, 130, -50));
-        kf = track->createNodeKeyFrame(10);
-        kf->setTranslate(Vector3(-150, 20, -100));
-        kf = track->createNodeKeyFrame(12);
-        kf->setTranslate(Vector3(-50, 30, 0));
-        kf = track->createNodeKeyFrame(14);
-        kf->setTranslate(Vector3(50,30,0));
-
-        AnimationState* animState = mSceneMgr->createAnimationState("an1");
-        animState->setEnabled(true);
-        mAnimStateList.push_back(animState);
-
-        mTrail->setInitialColour(0, 0.3, 0.5, 1.0);
-        mTrail->setColourChange(0, 0.5, 0.5, 0.5, 0.5);
-        mTrail->setInitialWidth(0, 5);
-        mTrail->addNode(animNode);
-
-        // Add light
-        Light* l2 = mSceneMgr->createLight("l2");
-        l2->setDiffuseColour(mTrail->getInitialColour(0));
-        animNode->attachObject(l2);
-
-        // Add billboard
-        BillboardSet* bbs = mSceneMgr->createBillboardSet("bb", 1);
-        bbs->createBillboard(Vector3::ZERO, mTrail->getInitialColour(0));
-        bbs->setMaterialName("Examples/Flare");
-        animNode->attachObject(bbs);
     }
 
     virtual void dimLights()
@@ -215,19 +219,29 @@ public:
         mSceneMgr->getLight("Blue")->setDiffuseColour(ViewConstants::BLUE_COLOUR);
     }
 
+    // TODO: Move this to more global place if others need it too.
+    std::string nextName()
+    {
+        std::ostringstream name;
+        name << "NALCG" << id++;
+        return name.str();
+    }
+
 protected:
     static const int MOVEMENT_SPEED = 500;
     static const int FLYING_ALTITUDE = 500;
-    static int trailId;
+    static const int ATTACK_COUNT = 20;
+    static int id;
 
-    Real mAttackDuration;
+    int mAttackCount;
     int mPhase;
     SceneManager *mSceneMgr;
     std::vector<AnimationState*> mAnimStateList;
     RibbonTrail* mTrail;
+    Real mAttackCooldown;
 };
 
-int QueenMovementAnimation::trailId = 1;
+int QueenMovementAnimation::id = 1;
 
 class MovementAnimationFactory
 {
@@ -490,18 +504,17 @@ protected:
                         std::cout << mSelectedObject->getName() << " -> " << targetNode->getName() << std::endl;
 
                         SceneNode *targetPiece = findPieceAbove(targetNode);
-                        if (targetPiece)
-                        {
-                            mSceneMgr->getRootSceneNode()->removeAndDestroyChild(targetPiece->getName());
-                        }
-
-                        //pieceNode->setPosition(targetNode->getPosition());
 
                         mMovementAnimations[pieceNode] = 
                             MovementAnimationFactory::createAnimation(
                             *pieceNode->getName().begin(),
                             targetNode->getPosition(), targetPiece != 0,
                             mSceneMgr);
+
+                        if (targetPiece)
+                        {
+                            mSceneMgr->getRootSceneNode()->removeAndDestroyChild(targetPiece->getName());
+                        }
                     }
                     mSelectedObject->showBoundingBox(false);
                     pieceNode->showBoundingBox(false);
