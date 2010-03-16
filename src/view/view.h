@@ -5,6 +5,13 @@
 
 using namespace Ogre;
 
+namespace ViewConstants
+{
+    static const ColourValue AMBIENT_COLOUR(ColourValue(0.4, 0.4, 0.4));
+    static const ColourValue YELLOW_COLOUR(ColourValue(1.0, 1.0, 0.4));
+    static const ColourValue BLUE_COLOUR(ColourValue(0.4, 0.4, 1.0));
+};
+
 class MovementAnimation
 {
 public:
@@ -24,9 +31,9 @@ protected:
 
 class BishopMovementAnimation : public MovementAnimation
 {
-    public:
-    BishopMovementAnimation(const Vector3& destination, const Real& attackDuration = -1)
-        : MovementAnimation(destination), mAttackDuration(attackDuration)
+public:
+    BishopMovementAnimation(const Vector3& destination)
+        : MovementAnimation(destination)
     {
     }
 
@@ -34,7 +41,7 @@ class BishopMovementAnimation : public MovementAnimation
     {
         Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
         Vector3 path = mDestination - movingNode->getPosition();
-        
+
         if (path.length() > distanceMoved)
         {
             // Normalising the vector so the speed remains constant.
@@ -45,22 +52,25 @@ class BishopMovementAnimation : public MovementAnimation
             movingNode->rotate(src.getRotationTo(path));
             return true; // Animation still running.
         }
-        
+
         movingNode->setPosition(mDestination);
         movingNode->setOrientation(movingNode->getInitialOrientation());
         return false; // Animation finished.
     }
 protected:
     static const int MOVEMENT_SPEED = 500;
-    Real mAttackDuration;
 };
 
+class View;
 class QueenMovementAnimation : public MovementAnimation
 {
 public:
-    QueenMovementAnimation(const Vector3& destination, const Real& attackDuration = -1)
-        : MovementAnimation(destination), mAttackDuration(attackDuration), mPhase(1)
+    QueenMovementAnimation(const Vector3& destination, bool occupied, SceneManager *sceneMgr)
+        : MovementAnimation(destination), mAttackDuration(occupied ? 1000 : -1),
+        mPhase(1), mSceneMgr(sceneMgr), mTrail(0)
     {
+        assert(sceneMgr != 0);
+        createBlasts();
     }
 
     virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode)
@@ -86,10 +96,28 @@ public:
                 if (path.length() < distanceMoved + FLYING_ALTITUDE * 1.1)
                 {
                     mPhase = 3;
+                    dimLights();
                 }
                 path += Vector3(0, FLYING_ALTITUDE, 0);
                 break;
             case 3:
+                {
+                    if (mAttackDuration < 0)
+                    {
+                        mPhase = 4;
+                        restoreLights();
+                    }
+
+                    std::vector<AnimationState*>::iterator animi;
+                    for (animi = mAnimStateList.begin(); animi != mAnimStateList.end(); ++animi)
+                    {
+                        (*animi)->addTime(timeSinceLastFrame);
+                    }
+                    path += Vector3(0, FLYING_ALTITUDE, 0);
+                    mAttackDuration -= timeSinceLastFrame;
+                    break;
+                }
+            case 4:
                 break;
             }
 
@@ -99,38 +127,122 @@ public:
 
             /*if (flyHigher)
             {
-                movingNode->setOrientation(movingNode->getInitialOrientation());
-                Vector3 src = movingNode->getOrientation() * Vector3::UNIT_Z;
-                movingNode->rotate(src.getRotationTo(path));
+            movingNode->setOrientation(movingNode->getInitialOrientation());
+            Vector3 src = movingNode->getOrientation() * Vector3::UNIT_Z;
+            movingNode->rotate(src.getRotationTo(path));
             }*/
 
             return true; // Animation still running.
         }
-        
+
         movingNode->setPosition(mDestination);
         movingNode->setOrientation(movingNode->getInitialOrientation());
         return false; // Animation finished.
     }
+
+    virtual void createBlasts()
+    {
+        NameValuePairList pairList;
+        pairList["numberOfChains"] = "5";
+        pairList["maxElements"] = "80";
+
+        std::ostringstream trailName;
+        trailName << "Trail" << trailId;
+        trailId++;
+
+        mTrail = static_cast<RibbonTrail*>(
+            mSceneMgr->createMovableObject(trailName.str(), "RibbonTrail", &pairList));
+        mTrail->setMaterialName("Examples/LightRibbonTrail");
+        mTrail->setTrailLength(400);
+
+        mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(mTrail);
+
+        // Create 3 nodes for trail to follow
+        SceneNode* animNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+        animNode->setPosition(50,30,0);
+        Animation* anim = mSceneMgr->createAnimation("an1", 14);
+        anim->setInterpolationMode(Animation::IM_SPLINE);
+        NodeAnimationTrack* track = anim->createNodeTrack(1, animNode);
+        TransformKeyFrame* kf = track->createNodeKeyFrame(0);
+        kf->setTranslate(Vector3(50,30,0));
+        kf = track->createNodeKeyFrame(2);
+        kf->setTranslate(Vector3(100, 30, 0));
+        kf = track->createNodeKeyFrame(4);
+        kf->setTranslate(Vector3(120, 100, 150));
+        kf = track->createNodeKeyFrame(6);
+        kf->setTranslate(Vector3(30, 100, 50));
+        kf = track->createNodeKeyFrame(8);
+        kf->setTranslate(Vector3(-50, 130, -50));
+        kf = track->createNodeKeyFrame(10);
+        kf->setTranslate(Vector3(-150, 20, -100));
+        kf = track->createNodeKeyFrame(12);
+        kf->setTranslate(Vector3(-50, 30, 0));
+        kf = track->createNodeKeyFrame(14);
+        kf->setTranslate(Vector3(50,30,0));
+
+        AnimationState* animState = mSceneMgr->createAnimationState("an1");
+        animState->setEnabled(true);
+        mAnimStateList.push_back(animState);
+
+        mTrail->setInitialColour(0, 0.3, 0.5, 1.0);
+        mTrail->setColourChange(0, 0.5, 0.5, 0.5, 0.5);
+        mTrail->setInitialWidth(0, 5);
+        mTrail->addNode(animNode);
+
+        // Add light
+        Light* l2 = mSceneMgr->createLight("l2");
+        l2->setDiffuseColour(mTrail->getInitialColour(0));
+        animNode->attachObject(l2);
+
+        // Add billboard
+        BillboardSet* bbs = mSceneMgr->createBillboardSet("bb", 1);
+        bbs->createBillboard(Vector3::ZERO, mTrail->getInitialColour(0));
+        bbs->setMaterialName("Examples/Flare");
+        animNode->attachObject(bbs);
+    }
+
+    virtual void dimLights()
+    {
+        mSceneMgr->setAmbientLight(ColourValue(0.05, 0.05, 0.05));
+        mSceneMgr->getLight("Yellow")->setDiffuseColour(0.05, 0.05, 0);
+        mSceneMgr->getLight("Blue")->setDiffuseColour(0.0, 0.0, 0.05);
+    }
+
+    virtual void restoreLights()
+    {
+        mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
+        mSceneMgr->getLight("Yellow")->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
+        mSceneMgr->getLight("Blue")->setDiffuseColour(ViewConstants::BLUE_COLOUR);
+    }
+
 protected:
     static const int MOVEMENT_SPEED = 500;
     static const int FLYING_ALTITUDE = 500;
+    static int trailId;
+
     Real mAttackDuration;
     int mPhase;
+    SceneManager *mSceneMgr;
+    std::vector<AnimationState*> mAnimStateList;
+    RibbonTrail* mTrail;
 };
+
+int QueenMovementAnimation::trailId = 1;
 
 class MovementAnimationFactory
 {
 public:
-    static MovementAnimation* createAnimation(const char type, const Vector3& destination)
+    static MovementAnimation* createAnimation(const char type, const Vector3& destination, bool occupied, SceneManager *sceneMgr)
     {
         switch (type)
         {
         case 'B':
             return new BishopMovementAnimation(destination);
         case 'Q':
-            return new QueenMovementAnimation(destination);
+            return new QueenMovementAnimation(destination, occupied, sceneMgr);
         default:
-            return 0;
+            // TODO: change this to return 0 for testing when everything should be done.
+            return new BishopMovementAnimation(destination);
         }
     }
 };
@@ -335,7 +447,7 @@ protected:
     virtual void executeAnimations(const Real& timeSinceLastFrame)
     {
         std::vector<SceneNode*> removed;
-        
+
         for (std::map<SceneNode*, MovementAnimation*>::iterator it =
             mMovementAnimations.begin(); it != mMovementAnimations.end(); it++)
         {
@@ -384,10 +496,12 @@ protected:
                         }
 
                         //pieceNode->setPosition(targetNode->getPosition());
-                        
+
                         mMovementAnimations[pieceNode] = 
                             MovementAnimationFactory::createAnimation(
-                            *pieceNode->getName().begin(), targetNode->getPosition());
+                            *pieceNode->getName().begin(),
+                            targetNode->getPosition(), targetPiece != 0,
+                            mSceneMgr);
                     }
                     mSelectedObject->showBoundingBox(false);
                     pieceNode->showBoundingBox(false);
@@ -707,10 +821,10 @@ protected:
     // The function to create our decal projector
     void createProjector()
     {
-       mDecalFrustum = new Frustum();
-       mProjectorNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("DecalProjectorNode");
-       mProjectorNode->attachObject(mDecalFrustum);
-       mProjectorNode->setPosition(0,5,0);
+        mDecalFrustum = new Frustum();
+        mProjectorNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("DecalProjectorNode");
+        mProjectorNode->attachObject(mDecalFrustum);
+        mProjectorNode->setPosition(0,5,0);
     }
 
     // A function to take an existing material and make it receive the projected decal
@@ -731,7 +845,7 @@ protected:
 
         SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(entityName.str(), location);
         node->attachObject(ent);
-        
+
         // Make white models face the opposite direction.
         if (modelName.find("white") == 0)
         {
@@ -745,7 +859,7 @@ protected:
         Entity *ent;
         Light *light;
 
-        mSceneMgr->setAmbientLight(ColourValue(0.5, 0.5, 0.5));
+        mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
         //mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
 
         for (int i = 0; i < 8; i++)
@@ -806,16 +920,16 @@ protected:
             }
         }
 
-        light = mSceneMgr->createLight("Light1");
+        light = mSceneMgr->createLight("Yellow");
         light->setType(Light::LT_POINT);
         light->setPosition(Vector3(150, 250, 150));
-        light->setDiffuseColour(1.0, 1.0, 0.4);
+        light->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
         light->setSpecularColour(1.0, 1.0, 1.0);
 
-        light = mSceneMgr->createLight("Light2");
+        light = mSceneMgr->createLight("Blue");
         light->setType(Light::LT_POINT);
         light->setPosition(Vector3(-150, 250, -150));
-        light->setDiffuseColour(0.4, 0.4, 1.0);
+        light->setDiffuseColour(ViewConstants::BLUE_COLOUR);
         light->setSpecularColour(1.0, 1.0, 1.0);
 
         CEGUI::WindowManager *win = CEGUI::WindowManager::getSingletonPtr();
