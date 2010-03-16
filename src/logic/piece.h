@@ -26,6 +26,8 @@ protected:
     const std::string name;
 
     // Methods
+    Piece::Colour getOppositeColour() const;
+    bool isOppositeColour(const Piece::Colour& colour) const;
 
 public:
     Piece(const Colour& colour, const std::string& name);

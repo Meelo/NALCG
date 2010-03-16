@@ -5,13 +5,15 @@
 #include <vector>
 
 // class includes
-#include "chessboard.h"
+#include "board.h"
 #include "piece.h"
 #include "square.h"
 
 class Pawn : public Piece
 {
     // Constants
+    const std::size_t DIAGONAL_MOVE_LEFT;
+    const std::size_t DIAGONAL_MOVE_RIGHT;
 
     // Members
 

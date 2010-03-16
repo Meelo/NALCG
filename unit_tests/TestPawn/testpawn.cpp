@@ -54,7 +54,13 @@ void TestPawn::whiteValidMoves_data()
     PieceHolder createUnitsAt05[] = { PieceHolder(32, new Pawn(Piece::BLACK)) };
     PieceHolder createUnitsAt06[] = { PieceHolder(40, new Pawn(Piece::BLACK)) };
     PieceHolder createUnitsAt07[] = {   PieceHolder(43, new Pawn(Piece::WHITE)),
-                                        PieceHolder(34, new Pawn(Piece::BLACK)) };
+                                        PieceHolder(34, new Pawn(Piece::BLACK))};
+    PieceHolder createUnitsAt08[] = {   PieceHolder(43, new Pawn(Piece::WHITE)),
+                                        PieceHolder(36, new Pawn(Piece::BLACK))};
+    PieceHolder createUnitsAt09[] = {   PieceHolder(43, new Pawn(Piece::WHITE)),
+                                        PieceHolder(34, new Pawn(Piece::WHITE))};
+    PieceHolder createUnitsAt10[] = {   PieceHolder(43, new Pawn(Piece::WHITE)),
+                                        PieceHolder(36, new Pawn(Piece::WHITE))};
 
     // These are the expected valid move indices.
     std::size_t case01[] = { 32, 40 };
@@ -64,6 +70,9 @@ void TestPawn::whiteValidMoves_data()
     std::size_t case05[] = { 40 };
     std::size_t case06[] = { };
     std::size_t case07[] = { 34, 35 };
+    std::size_t case08[] = { 35, 36 };
+    std::size_t case09[] = { 35 };
+    std::size_t case10[] = { 35 };
 
     QTest::newRow("starting positions, a2") << std::size_t(48) 
         << std::vector<PieceHolder>
@@ -99,6 +108,21 @@ void TestPawn::whiteValidMoves_data()
         << std::vector<PieceHolder>
             (createUnitsAt07, createUnitsAt07 + sizeof(createUnitsAt07) / sizeph)
         << std::vector<std::size_t>(case07, case07 + sizeof(case07) / sizet);
+    
+    QTest::newRow("starting positions, d3, edible black e4") << std::size_t(43)
+        << std::vector<PieceHolder>
+            (createUnitsAt08, createUnitsAt08 + sizeof(createUnitsAt08) / sizeph)
+        << std::vector<std::size_t>(case08, case08 + sizeof(case08) / sizet);
+    
+    QTest::newRow("starting positions, d3, ally at c4") << std::size_t(43)
+        << std::vector<PieceHolder>
+            (createUnitsAt09, createUnitsAt09 + sizeof(createUnitsAt09) / sizeph)
+        << std::vector<std::size_t>(case09, case09 + sizeof(case09) / sizet);
+
+    QTest::newRow("starting positions, d3, ally at e4") << std::size_t(43)
+        << std::vector<PieceHolder>
+            (createUnitsAt10, createUnitsAt10 + sizeof(createUnitsAt10) / sizeph)
+        << std::vector<std::size_t>(case10, case10 + sizeof(case10) / sizet);
 
 }
 
