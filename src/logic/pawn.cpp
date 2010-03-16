@@ -20,16 +20,16 @@ std::vector<std::size_t> Pawn::getValidMoves(std::size_t location, const std::ve
     if (possibility < squares.size() && !squares.at(possibility).hasPiece())
     {
         validMoves.push_back(possibility);
-    }
-    
-    if ((colour == Piece::WHITE && y == ChessBoard::WHITE_PAWN_ROW) || (colour == Piece::BLACK && y == ChessBoard::BLACK_PAWN_ROW))
-    {
-        possibility += (direction * ChessBoard::WIDTH);
-        if (possibility < squares.size() && !squares.at(possibility).hasPiece())
+        
+        if ((colour == Piece::WHITE && y == ChessBoard::WHITE_PAWN_ROW) || (colour == Piece::BLACK && y == ChessBoard::BLACK_PAWN_ROW))
         {
-            validMoves.push_back(possibility);
+            possibility += (direction * ChessBoard::WIDTH);
+            if (possibility < squares.size() && !squares.at(possibility).hasPiece())
+            {
+                validMoves.push_back(possibility);
+            }
         }
     }
-
+    
     return validMoves;
 }
