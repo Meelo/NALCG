@@ -2,9 +2,12 @@
 #define _NALCG_PAWN_H_
 
 // system includes
+#include <vector>
 
 // class includes
+#include "chessboard.h"
 #include "piece.h"
+#include "square.h"
 
 class Pawn : public Piece
 {
@@ -19,7 +22,7 @@ public:
     virtual ~Pawn() { }
 
     // Methods
-//    std::vector<std::size_t> get
+    std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& square) const;
 
     // Getters
     
