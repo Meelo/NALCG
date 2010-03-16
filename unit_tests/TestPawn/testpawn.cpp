@@ -62,14 +62,17 @@ void TestPawn::whiteValidMoves_data()
         << std::vector<PieceHolder>
             (createUnitsAt01, createUnitsAt01 + sizeof(createUnitsAt01) / sizeph)
         << std::vector<std::size_t>(case01, case01 + sizeof(case01) / sizet);
+    
     QTest::newRow("starting positions, e2") << std::size_t(52)
         << std::vector<PieceHolder>
             (createUnitsAt02, createUnitsAt02 + sizeof(createUnitsAt02) / sizeph)
         << std::vector<std::size_t>(case02, case02 + sizeof(case02) / sizet);
+    
     QTest::newRow("starting positions, a2 blocked by a4") << std::size_t(48)
         << std::vector<PieceHolder>
             (createUnitsAt03, createUnitsAt03 + sizeof(createUnitsAt03) / sizeph)
         << std::vector<std::size_t>(case03, case03 + sizeof(case03) / sizet);
+
     QTest::newRow("starting positions, a2 blocked by a3") << std::size_t(48)
         << std::vector<PieceHolder>
             (createUnitsAt04, createUnitsAt04 + sizeof(createUnitsAt04) / sizeph)
