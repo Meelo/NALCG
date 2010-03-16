@@ -5,6 +5,40 @@
 
 using namespace Ogre;
 
+class MovementAnimation
+{
+public:
+    MovementAnimation(const Vector3& destination) : mDestination(destination)
+    {
+    }
+
+    virtual ~MovementAnimation()
+    {
+    }
+
+    virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode) = 0;
+protected:
+    Vector3 mDestination;
+};
+
+class QueenMovementAnimation : public MovementAnimation
+{
+public:
+    QueenMovementAnimation(const Vector3& destination, const Real& attackDuration = -1)
+        : MovementAnimation(destination), mAttackDuration(attackDuration)
+    {
+    }
+
+    virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode)
+    {
+        // TODO: implement non-instant move
+        movingNode->setPosition(mDestination);
+        return false;
+    }
+protected:
+    Real mAttackDuration;
+};
+
 class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
 {
 public:
@@ -181,10 +215,12 @@ public:
         return true;
     }
 
-    virtual void moveCamera(Real timeSinceLastFrame)
+    virtual void executeActions(const Real& timeSinceLastFrame)
     {
         mCamera->setPosition(mCamera->getPosition() + 
             mCamera->getOrientation() * mDirection * timeSinceLastFrame);
+
+        executeAnimations(timeSinceLastFrame);
     }
 
 protected:
@@ -196,8 +232,29 @@ protected:
     SceneNode *mSelectedObject;         // The selected object
     Vector3 mDirection;     // Value to move in the correct direction
     static const int mMove = 500;
+    std::map<SceneNode*, MovementAnimation*> mMovementAnimations;
     //CEGUI::Renderer *mGUIRenderer;     // CEGUI renderer
     //bool mRobotMode;                   // The current state
+
+    virtual void executeAnimations(const Real& timeSinceLastFrame)
+    {
+        std::vector<SceneNode*> removed;
+        
+        for (std::map<SceneNode*, MovementAnimation*>::iterator it =
+            mMovementAnimations.begin(); it != mMovementAnimations.end(); it++)
+        {
+            if (!it->second->animate(timeSinceLastFrame, it->first))
+            {
+                removed.push_back(it->first);
+                delete it->second;
+            }
+        }
+
+        for (std::size_t i = 0; i < removed.size(); i++)
+        {
+            mMovementAnimations.erase(removed.at(i));
+        }
+    }
 
     virtual void onLeftPressed(const OIS::MouseEvent &arg)
     {
@@ -229,7 +286,10 @@ protected:
                         {
                             mSceneMgr->getRootSceneNode()->removeAndDestroyChild(targetPiece->getName());
                         }
-                        pieceNode->setPosition(targetNode->getPosition());
+
+                        //pieceNode->setPosition(targetNode->getPosition());
+                        mMovementAnimations[pieceNode] =
+                            new QueenMovementAnimation(targetNode->getPosition());
                     }
                     mSelectedObject->showBoundingBox(false);
                     pieceNode->showBoundingBox(false);
@@ -296,7 +356,7 @@ public:
     {
         mKeyboard->capture();
         mMouse->capture();
-        mHandler.moveCamera(evt.timeSinceLastFrame);
+        mHandler.executeActions(evt.timeSinceLastFrame);
         return mContinue && !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
     }
 
@@ -614,7 +674,7 @@ protected:
 
         MeshManager::getSingleton().createPlane("square",
             ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
-            200,200,1,1,true,1,1,1,Vector3::UNIT_Z);
+            200, 200, 1, 1, true, 1, 1, 1, Vector3::UNIT_Z);
         for (int j = 0; j < 8; j++)
         {
             for (int i = 0; i < 8; i++)
