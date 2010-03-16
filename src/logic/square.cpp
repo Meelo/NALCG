@@ -29,6 +29,11 @@ Piece::Colour Square::getColourOfPiece() const
     return Piece::UNDEFINED;
 }
 
+void Square::addPiece(Piece* newPiece)
+{
+    delete piece;
+    piece = newPiece; 
+}
 
 Piece* Square::removePiece()
 {

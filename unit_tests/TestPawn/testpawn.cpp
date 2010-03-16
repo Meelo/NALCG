@@ -62,6 +62,9 @@ void TestPawn::whiteValidMoves_data()
                                         PieceHolder(34, new Pawn(Piece::WHITE))};
     PieceHolder createUnitsAt10[] = {   PieceHolder(43, new Pawn(Piece::WHITE)),
                                         PieceHolder(36, new Pawn(Piece::WHITE))};
+    PieceHolder createUnitsAt11[] = {   PieceHolder(8, new Pawn(Piece::WHITE)),
+                                        PieceHolder(1, new Pawn(Piece::WHITE)),
+                                        PieceHolder(0, 0)};
 
     // These are the expected valid move indices.
     std::size_t case01[] = { 32, 40 };
@@ -74,6 +77,7 @@ void TestPawn::whiteValidMoves_data()
     std::size_t case08[] = { 35, 36 };
     std::size_t case09[] = { 35 };
     std::size_t case10[] = { 35 };
+    std::size_t case11[] = { 0 };
 
     QTest::newRow("starting positions, a2") << std::size_t(48) 
         << std::vector<PieceHolder>
@@ -124,7 +128,11 @@ void TestPawn::whiteValidMoves_data()
         << std::vector<PieceHolder>
             (createUnitsAt10, createUnitsAt10 + sizeof(createUnitsAt10) / sizeph)
         << std::vector<std::size_t>(case10, case10 + sizeof(case10) / sizet);
-
+    
+    QTest::newRow("pawn at a7, empty at a8, ally at b8") << std::size_t(8)
+        << std::vector<PieceHolder>
+            (createUnitsAt11, createUnitsAt11 + sizeof(createUnitsAt11) / sizeph)
+        << std::vector<std::size_t>(case11, case11 + sizeof(case11) / sizet);
 }
 
 void TestPawn::whiteValidMoves()
@@ -140,7 +148,7 @@ void TestPawn::whiteValidMoves()
         PieceHolder ph = new_units.at(i);
         std::size_t location = ph.location;
         squares.at(location).addPiece(ph.piece);
-        QVERIFY(squares.at(location).hasPiece());
+        if (ph.piece) QVERIFY(squares.at(location).hasPiece());
     }
 
     Board* board = new ChessBoard(squares);

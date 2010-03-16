@@ -22,7 +22,7 @@ public:
 
     // Methods
     bool hasPiece() const { return piece != 0; }
-    void addPiece(Piece* newPiece) { piece = newPiece; }
+    void addPiece(Piece* newPiece);
     Piece* removePiece();
     Piece* getPiece() const { return piece; }
 
