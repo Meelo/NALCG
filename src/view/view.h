@@ -17,8 +17,42 @@ public:
     }
 
     virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode) = 0;
+
 protected:
     Vector3 mDestination;
+};
+
+class BishopMovementAnimation : public MovementAnimation
+{
+    public:
+    BishopMovementAnimation(const Vector3& destination, const Real& attackDuration = -1)
+        : MovementAnimation(destination), mAttackDuration(attackDuration)
+    {
+    }
+
+    virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode)
+    {
+        Real distanceMoved = mMovementSpeed * timeSinceLastFrame;
+        Vector3 path = mDestination - movingNode->getPosition();
+        
+        if (path.length() > distanceMoved)
+        {
+            // Normalising the vector so the speed remains constant.
+            path.normalise();
+            movingNode->translate(path * distanceMoved);
+
+            Vector3 src = movingNode->getOrientation() * Vector3::UNIT_Z;
+            movingNode->rotate(src.getRotationTo(path));
+            return true; // Animation still running.
+        }
+        
+        movingNode->setPosition(mDestination);
+        movingNode->setOrientation(movingNode->getInitialOrientation());
+        return false; // Animation finished.
+    }
+protected:
+    static const int mMovementSpeed = 500;
+    Real mAttackDuration;
 };
 
 class QueenMovementAnimation : public MovementAnimation
@@ -50,8 +84,25 @@ public:
         return false; // Animation finished.
     }
 protected:
-    static const int mMovementSpeed = 300;
+    static const int mMovementSpeed = 500;
     Real mAttackDuration;
+};
+
+class MovementAnimationFactory
+{
+public:
+    static MovementAnimation* createAnimation(const char type, const Vector3& destination)
+    {
+        switch (type)
+        {
+        case 'B':
+            return new BishopMovementAnimation(destination);
+        case 'Q':
+            return new QueenMovementAnimation(destination);
+        default:
+            return 0;
+        }
+    }
 };
 
 class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
@@ -303,8 +354,10 @@ protected:
                         }
 
                         //pieceNode->setPosition(targetNode->getPosition());
-                        mMovementAnimations[pieceNode] =
-                            new QueenMovementAnimation(targetNode->getPosition());
+                        
+                        mMovementAnimations[pieceNode] = 
+                            MovementAnimationFactory::createAnimation(
+                            *pieceNode->getName().begin(), targetNode->getPosition());
                     }
                     mSelectedObject->showBoundingBox(false);
                     pieceNode->showBoundingBox(false);
@@ -635,17 +688,18 @@ protected:
     {
     }
 
-    virtual void createPiece(const std::string& modelName, const Vector3& location)
+    virtual void createPiece(char type, const std::string& modelName,
+        const Vector3& location)
     {
         std::ostringstream entityName;
-        entityName << modelName << mEntityCount;
+        entityName << type << modelName << mEntityCount;
         mEntityCount++;
 
         Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName);
         //ent->setCastShadows(true);
         ent->setQueryFlags(0);
 
-        SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(location);
+        SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(entityName.str(), location);
         node->attachObject(ent);
         
         // Make white models face the opposite direction.
@@ -666,29 +720,29 @@ protected:
 
         for (int i = 0; i < 8; i++)
         {
-            createPiece("black_pawn.mesh", Vector3(-700 + i*200, 0, -500));
+            createPiece('P', "black_pawn.mesh", Vector3(-700 + i*200, 0, -500));
         }
-        createPiece("black_rook.mesh", Vector3(-700, 0, -700));
-        createPiece("black_knight.mesh", Vector3(-500, 0, -700));
-        createPiece("black_bishop.mesh", Vector3(-300, 0, -700));
-        createPiece("black_queen.mesh", Vector3(-100, 0, -700));
-        createPiece("black_king.mesh", Vector3(100, 0, -700));
-        createPiece("black_bishop.mesh", Vector3(300, 0, -700));
-        createPiece("black_knight.mesh", Vector3(500, 0, -700));
-        createPiece("black_rook.mesh", Vector3(700, 0, -700));
+        createPiece('R', "black_rook.mesh", Vector3(-700, 0, -700));
+        createPiece('N', "black_knight.mesh", Vector3(-500, 0, -700));
+        createPiece('B', "black_bishop.mesh", Vector3(-300, 0, -700));
+        createPiece('Q', "black_queen.mesh", Vector3(-100, 0, -700));
+        createPiece('K', "black_king.mesh", Vector3(100, 0, -700));
+        createPiece('B', "black_bishop.mesh", Vector3(300, 0, -700));
+        createPiece('N', "black_knight.mesh", Vector3(500, 0, -700));
+        createPiece('R', "black_rook.mesh", Vector3(700, 0, -700));
 
         for (int i = 0; i < 8; i++)
         {
-            createPiece("white_pawn.mesh", Vector3(-700 + i*200, 0, 500));
+            createPiece('P', "white_pawn.mesh", Vector3(-700 + i*200, 0, 500));
         }
-        createPiece("white_rook.mesh", Vector3(-700, 0, 700));
-        createPiece("white_knight.mesh", Vector3(-500, 0, 700));
-        createPiece("white_bishop.mesh", Vector3(-300, 0, 700));
-        createPiece("white_queen.mesh", Vector3(-100, 0, 700));
-        createPiece("white_king.mesh", Vector3(100, 0, 700));
-        createPiece("white_bishop.mesh", Vector3(300, 0, 700));
-        createPiece("white_knight.mesh", Vector3(500, 0, 700));
-        createPiece("white_rook.mesh", Vector3(700, 0, 700));
+        createPiece('R', "white_rook.mesh", Vector3(-700, 0, 700));
+        createPiece('N', "white_knight.mesh", Vector3(-500, 0, 700));
+        createPiece('B', "white_bishop.mesh", Vector3(-300, 0, 700));
+        createPiece('Q', "white_queen.mesh", Vector3(-100, 0, 700));
+        createPiece('K', "white_king.mesh", Vector3(100, 0, 700));
+        createPiece('B', "white_bishop.mesh", Vector3(300, 0, 700));
+        createPiece('N', "white_knight.mesh", Vector3(500, 0, 700));
+        createPiece('R', "white_rook.mesh", Vector3(700, 0, 700));
 
         //ent = mSceneMgr->createEntity("BoardEntity", "board.mesh");
         //mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ent);
