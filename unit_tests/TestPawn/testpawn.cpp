@@ -51,12 +51,16 @@ void TestPawn::whiteValidMoves_data()
     PieceHolder createUnitsAt02[] = { };
     PieceHolder createUnitsAt03[] = { PieceHolder(32, new Pawn(Piece::WHITE)) };
     PieceHolder createUnitsAt04[] = { PieceHolder(40, new Pawn(Piece::WHITE)) };
+    PieceHolder createUnitsAt05[] = { PieceHolder(32, new Pawn(Piece::BLACK)) };
+    PieceHolder createUnitsAt06[] = { PieceHolder(40, new Pawn(Piece::BLACK)) };
 
     // These are the expected valid move indices.
     std::size_t case01[] = { 32, 40 };
     std::size_t case02[] = { 36, 44 };
     std::size_t case03[] = { 40 };
     std::size_t case04[] = { };
+    std::size_t case05[] = { 40 };
+    std::size_t case06[] = { };
 
     QTest::newRow("starting positions, a2") << std::size_t(48) 
         << std::vector<PieceHolder>
@@ -77,7 +81,16 @@ void TestPawn::whiteValidMoves_data()
         << std::vector<PieceHolder>
             (createUnitsAt04, createUnitsAt04 + sizeof(createUnitsAt04) / sizeph)
         << std::vector<std::size_t>(case04, case04 + sizeof(case04) / sizet);
+    
+    QTest::newRow("starting positions, a2 blocked by black a4") << std::size_t(48)
+        << std::vector<PieceHolder>
+            (createUnitsAt05, createUnitsAt05 + sizeof(createUnitsAt05) / sizeph)
+        << std::vector<std::size_t>(case05, case05 + sizeof(case05) / sizet);
 
+    QTest::newRow("starting positions, a2 blocked by black a3") << std::size_t(48)
+        << std::vector<PieceHolder>
+            (createUnitsAt06, createUnitsAt06 + sizeof(createUnitsAt06) / sizeph)
+        << std::vector<std::size_t>(case06, case06 + sizeof(case06) / sizet);
 }
 
 void TestPawn::whiteValidMoves()
