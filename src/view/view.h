@@ -105,7 +105,10 @@ public:
                 if (path.length() < distanceMoved + FLYING_ALTITUDE * 1.1)
                 {
                     mPhase = 3;
-                    dimLights();
+                    if (mAttackCount > 0)
+                    {
+                        dimLights();
+                    }
                 }
                 path += Vector3(0, FLYING_ALTITUDE, 0);
                 break;
