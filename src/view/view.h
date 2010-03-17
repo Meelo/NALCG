@@ -78,12 +78,20 @@ public:
 
     virtual ~QueenMovementAnimation()
     {
-        //delete mTrail;
-        mMovingNode->removeAllChildren();
-        /*for (std::size_t i = 0; i < mAnimStateList.size(); i++)
+        // FIXME: this destruction method is too excessive.
+        // Causes the game to crash if this animation ends while others are playing.
+        mSceneMgr->destroyAllAnimations();
+        mSceneMgr->destroyAllAnimationStates();
+        mSceneMgr->destroyAllBillboardChains();
+        mSceneMgr->destroyAllBillboardSets();
+        mSceneMgr->destroyAllRibbonTrails();
+
+        mMovingNode->removeAndDestroyAllChildren();
+
+        for (std::size_t i = 0; i < mLights.size(); i++)
         {
-            delete mAnimStateList.at(i);
-        }*/
+            mSceneMgr->destroyLight(mLights.at(i)->getName());
+        }
         restoreLights();
     }
 
@@ -160,6 +168,7 @@ public:
                             Light* l2 = mSceneMgr->createLight(nextName());
                             l2->setDiffuseColour(mTrail->getInitialColour(0));
                             animNode->attachObject(l2);
+                            mLights.push_back(l2);
 
                             // Add billboard
                             BillboardSet* bbs = mSceneMgr->createBillboardSet(nextName(), 20);
@@ -254,6 +263,7 @@ protected:
     std::vector<AnimationState*> mAnimStateList;
     RibbonTrail* mTrail;
     Real mAttackCooldown;
+    std::vector<Light*> mLights;
 
 };
 
