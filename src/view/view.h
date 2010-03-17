@@ -80,10 +80,10 @@ public:
     {
         //delete mTrail;
         mMovingNode->removeAllChildren();
-        for (std::size_t i = 0; i < mAnimStateList.size(); i++)
+        /*for (std::size_t i = 0; i < mAnimStateList.size(); i++)
         {
             delete mAnimStateList.at(i);
-        }
+        }*/
         restoreLights();
     }
 
