@@ -120,11 +120,14 @@ void TestBishop::blackValidMoves_data()
     PieceHolder createUnitsAt03[] = {   PieceHolder(46, new Bishop(Piece::WHITE)),
                                         PieceHolder(39, new Bishop(Piece::WHITE)),
                                         PieceHolder(28, new Bishop(Piece::WHITE))};
+    PieceHolder createUnitsAt04[] = {   PieceHolder(39, new Bishop(Piece::WHITE)),
+                                        PieceHolder(30, new Bishop(Piece::WHITE))};
 
     // These are the expected valid move indices.
     std::size_t case01[] = { };
     std::size_t case02[] = { 39 };
     std::size_t case03[] = { 37 };
+    std::size_t case04[] = { 46 };
 
     QTest::newRow("starting positions, a2") << std::size_t(2) 
         << std::vector<PieceHolder>
@@ -140,7 +143,11 @@ void TestBishop::blackValidMoves_data()
         << std::vector<PieceHolder>
             (createUnitsAt03, createUnitsAt03 + sizeof(createUnitsAt03) / sizeph)
         << std::vector<std::size_t>(case03, case03 + sizeof(case03) / sizet);   
-
+    
+    QTest::newRow("bishop at h4, empty g3") << std::size_t(39) 
+        << std::vector<PieceHolder>
+            (createUnitsAt04, createUnitsAt04 + sizeof(createUnitsAt04) / sizeph)
+        << std::vector<std::size_t>(case04, case04 + sizeof(case04) / sizet);   
 }
 
 void TestBishop::blackValidMoves()
@@ -162,6 +169,12 @@ void TestBishop::blackValidMoves()
     Board* board = new ChessBoard(squares);
     
     std::vector<std::size_t> bishopMoves = board->getValidMoves(unit_location);
+    static int counter = 1;
+    for (std::size_t i = 0; i < bishopMoves.size(); ++i)
+    {
+        std::cerr << counter << ". " <<  bishopMoves.at(i) << std::endl;
+    }
+    ++counter;
 
     QCOMPARE(bishopMoves.size(), valid_moves.size());
 
