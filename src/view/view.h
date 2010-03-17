@@ -78,7 +78,12 @@ public:
 
     virtual ~QueenMovementAnimation()
     {
+        //delete mTrail;
         mMovingNode->removeAllChildren();
+        for (std::size_t i = 0; i < mAnimStateList.size(); i++)
+        {
+            delete mAnimStateList.at(i);
+        }
         restoreLights();
     }
 
@@ -123,14 +128,13 @@ public:
                         if (mAttackCooldown <= 0)
                         {
                             SceneNode* animNode = mMovingNode->createChildSceneNode();
-                            //animNode->setPosition(50,30,0);
 
                             Animation* anim = mSceneMgr->createAnimation(nextName(), 10);
                             anim->setInterpolationMode(Animation::IM_SPLINE);
+                            //mAnimations.push_back(anim);
 
                             NodeAnimationTrack* track = anim->createNodeTrack(1, animNode);
                             TransformKeyFrame* kf = track->createNodeKeyFrame(0);
-                            ////kf->setTranslate(Vector3(50,30,0));
                             
                             int waypoint = mAttackCount % 2 == 0 ? 100 : -100;
                             int waypoint2 = mAttackCount % 4 <= 1 ? 100 : -100;
@@ -140,11 +144,10 @@ public:
                             kf->setTranslate(Vector3(0, -200, 0));
                             kf = track->createNodeKeyFrame(1.5);
                             kf->setTranslate(Vector3(0, -600, 0));
-                            kf = track->createNodeKeyFrame(10);
-                            kf->setTranslate(Vector3(0, -600, 0));
 
                             AnimationState* animState = mSceneMgr->createAnimationState(anim->getName());
                             animState->setEnabled(true);
+                            animState->setLoop(false);
                             mAnimStateList.push_back(animState);
 
                             int nAttack = ATTACK_COUNT - mAttackCount;
@@ -165,7 +168,7 @@ public:
                             bbs->setQueryFlags(0);
                             animNode->attachObject(bbs);
 
-                            mAttackCooldown = 0.3;
+                            mAttackCooldown = ATTACK_COOLDOWN;
                             mAttackCount--;
                         }
                         std::vector<AnimationState*>::iterator animi;
@@ -241,7 +244,8 @@ public:
 protected:
     static const int MOVEMENT_SPEED = 500;
     static const int FLYING_ALTITUDE = 500;
-    static const int ATTACK_COUNT = 20;
+    static const int ATTACK_COUNT = 300;
+    static const Real ATTACK_COOLDOWN;
     static int id;
 
     int mAttackCount;
@@ -250,9 +254,11 @@ protected:
     std::vector<AnimationState*> mAnimStateList;
     RibbonTrail* mTrail;
     Real mAttackCooldown;
+
 };
 
 int QueenMovementAnimation::id = 1;
+const Real QueenMovementAnimation::ATTACK_COOLDOWN = 0.001;
 
 class MovementAnimationFactory
 {
