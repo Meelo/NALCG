@@ -115,15 +115,32 @@ void TestBishop::blackValidMoves_data()
     // These will be handled as instructions for creating new units
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
+    PieceHolder createUnitsAt02[] = {   PieceHolder(46, new Bishop(Piece::WHITE)),
+                                        PieceHolder(37, new Bishop(Piece::WHITE))};
+    PieceHolder createUnitsAt03[] = {   PieceHolder(46, new Bishop(Piece::WHITE)),
+                                        PieceHolder(39, new Bishop(Piece::WHITE)),
+                                        PieceHolder(28, new Bishop(Piece::WHITE))};
 
     // These are the expected valid move indices.
     std::size_t case01[] = { };
+    std::size_t case02[] = { 39 };
+    std::size_t case03[] = { 37 };
 
     QTest::newRow("starting positions, a2") << std::size_t(2) 
         << std::vector<PieceHolder>
             (createUnitsAt01, createUnitsAt01 + sizeof(createUnitsAt01) / sizeph)
         << std::vector<std::size_t>(case01, case01 + sizeof(case01) / sizet);
+     
+    QTest::newRow("bishop at g3, empty h4") << std::size_t(46) 
+        << std::vector<PieceHolder>
+            (createUnitsAt02, createUnitsAt02 + sizeof(createUnitsAt02) / sizeph)
+        << std::vector<std::size_t>(case02, case02 + sizeof(case02) / sizet);   
     
+    QTest::newRow("bishop at g3, empty f4") << std::size_t(46) 
+        << std::vector<PieceHolder>
+            (createUnitsAt03, createUnitsAt03 + sizeof(createUnitsAt03) / sizeph)
+        << std::vector<std::size_t>(case03, case03 + sizeof(case03) / sizet);   
+
 }
 
 void TestBishop::blackValidMoves()
