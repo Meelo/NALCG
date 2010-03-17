@@ -15,7 +15,8 @@ namespace ViewConstants
 class MovementAnimation
 {
 public:
-    MovementAnimation(const Vector3& destination) : mDestination(destination)
+    MovementAnimation(const Vector3& destination, SceneNode *movingNode)
+        : mDestination(destination), mMovingNode(movingNode)
     {
     }
 
@@ -23,38 +24,39 @@ public:
     {
     }
 
-    virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode) = 0;
+    virtual bool animate(const Real& timeSinceLastFrame) = 0;
 
 protected:
     Vector3 mDestination;
+    SceneNode *mMovingNode;
 };
 
 class BishopMovementAnimation : public MovementAnimation
 {
 public:
-    BishopMovementAnimation(const Vector3& destination)
-        : MovementAnimation(destination)
+    BishopMovementAnimation(const Vector3& destination, SceneNode *movingNode)
+        : MovementAnimation(destination, movingNode)
     {
     }
 
-    virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode)
+    virtual bool animate(const Real& timeSinceLastFrame)
     {
         Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
-        Vector3 path = mDestination - movingNode->getPosition();
+        Vector3 path = mDestination - mMovingNode->getPosition();
 
         if (path.length() > distanceMoved)
         {
             // Normalising the vector so the speed remains constant.
             path.normalise();
-            movingNode->translate(path * distanceMoved);
+            mMovingNode->translate(path * distanceMoved);
 
-            Vector3 src = movingNode->getOrientation() * Vector3::UNIT_Z;
-            movingNode->rotate(src.getRotationTo(path));
+            Vector3 src = mMovingNode->getOrientation() * Vector3::UNIT_Z;
+            mMovingNode->rotate(src.getRotationTo(path));
             return true; // Animation still running.
         }
 
-        movingNode->setPosition(mDestination);
-        movingNode->setOrientation(movingNode->getInitialOrientation());
+        mMovingNode->setPosition(mDestination);
+        mMovingNode->setOrientation(mMovingNode->getInitialOrientation());
         return false; // Animation finished.
     }
 protected:
@@ -65,27 +67,34 @@ class View;
 class QueenMovementAnimation : public MovementAnimation
 {
 public:
-    QueenMovementAnimation(const Vector3& destination, bool occupied, SceneManager *sceneMgr)
-        : MovementAnimation(destination), mAttackCount(occupied ? ATTACK_COUNT : 0),
+    QueenMovementAnimation(const Vector3& destination, SceneNode *movingNode,
+        bool occupied, SceneManager *sceneMgr)
+        : MovementAnimation(destination, movingNode), mAttackCount(occupied ? ATTACK_COUNT : 0),
         mPhase(1), mSceneMgr(sceneMgr), mTrail(0), mAttackCooldown(0)
     {
         assert(sceneMgr != 0);
         createBlasts();
     }
 
-    virtual bool animate(const Real& timeSinceLastFrame, SceneNode *movingNode)
+    virtual ~QueenMovementAnimation()
+    {
+        mMovingNode->removeAllChildren();
+        restoreLights();
+    }
+
+    virtual bool animate(const Real& timeSinceLastFrame)
     {
         Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
-        Vector3 path = mDestination - movingNode->getPosition();
+        Vector3 path = mDestination - mMovingNode->getPosition();
         if (path.length() > distanceMoved)
         {
 
-            bool flyHigher = movingNode->getPosition().y < 500;
+            bool flyHigher = mMovingNode->getPosition().y < 500;
             switch (mPhase)
             {
             case 1:
                 // Fly higher in steep angle until flying altitude is reached.
-                if (movingNode->getPosition().y > FLYING_ALTITUDE)
+                if (mMovingNode->getPosition().y > FLYING_ALTITUDE)
                 {
                     mPhase = 2;
                 }
@@ -105,13 +114,12 @@ public:
                     if (mAttackCount <= 0)
                     {
                         mPhase = 4;
-                        restoreLights();
                     }
                     else
                     {
                         if (mAttackCooldown <= 0)
                         {
-                            SceneNode* animNode = movingNode->createChildSceneNode();
+                            SceneNode* animNode = mMovingNode->createChildSceneNode();
                             //animNode->setPosition(50,30,0);
 
                             Animation* anim = mSceneMgr->createAnimation(nextName(), 10);
@@ -148,7 +156,7 @@ public:
                             animNode->attachObject(l2);
 
                             // Add billboard
-                            BillboardSet* bbs = mSceneMgr->createBillboardSet(nextName(), 1);
+                            BillboardSet* bbs = mSceneMgr->createBillboardSet(nextName(), 20);
                             bbs->createBillboard(Vector3::ZERO, mTrail->getInitialColour(0));
                             bbs->setMaterialName("Examples/Flare");
                             bbs->setQueryFlags(0);
@@ -173,7 +181,7 @@ public:
 
             // Normalising the vector so the speed remains constant.
             path.normalise();
-            movingNode->translate(path * distanceMoved);
+            mMovingNode->translate(path * distanceMoved);
 
             /*if (flyHigher)
             {
@@ -185,8 +193,8 @@ public:
             return true; // Animation still running.
         }
 
-        movingNode->setPosition(mDestination);
-        movingNode->setOrientation(movingNode->getInitialOrientation());
+        mMovingNode->setPosition(mDestination);
+        mMovingNode->setOrientation(mMovingNode->getInitialOrientation());
         return false; // Animation finished.
     }
 
@@ -246,17 +254,19 @@ int QueenMovementAnimation::id = 1;
 class MovementAnimationFactory
 {
 public:
-    static MovementAnimation* createAnimation(const char type, const Vector3& destination, bool occupied, SceneManager *sceneMgr)
+    static MovementAnimation* createAnimation(const char type,
+        const Vector3& destination, SceneNode *movingNode,
+        bool occupied, SceneManager *sceneMgr)
     {
         switch (type)
         {
         case 'B':
-            return new BishopMovementAnimation(destination);
+            return new BishopMovementAnimation(destination, movingNode);
         case 'Q':
-            return new QueenMovementAnimation(destination, occupied, sceneMgr);
+            return new QueenMovementAnimation(destination, movingNode, occupied, sceneMgr);
         default:
             // TODO: change this to return 0 for testing when everything should be done.
-            return new BishopMovementAnimation(destination);
+            return new BishopMovementAnimation(destination, movingNode);
         }
     }
 };
@@ -465,7 +475,7 @@ protected:
         for (std::map<SceneNode*, MovementAnimation*>::iterator it =
             mMovementAnimations.begin(); it != mMovementAnimations.end(); it++)
         {
-            if (!it->second->animate(timeSinceLastFrame, it->first))
+            if (!it->second->animate(timeSinceLastFrame))
             {
                 removed.push_back(it->first);
                 delete it->second;
@@ -507,9 +517,8 @@ protected:
 
                         mMovementAnimations[pieceNode] = 
                             MovementAnimationFactory::createAnimation(
-                            *pieceNode->getName().begin(),
-                            targetNode->getPosition(), targetPiece != 0,
-                            mSceneMgr);
+                            *pieceNode->getName().begin(), targetNode->getPosition(),
+                            pieceNode, targetPiece != 0, mSceneMgr);
 
                         if (targetPiece)
                         {
