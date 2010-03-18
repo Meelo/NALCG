@@ -92,6 +92,7 @@ public:
         {
             mSceneMgr->destroyLight(mLights.at(i)->getName());
         }
+
         restoreLights();
     }
 
@@ -408,7 +409,8 @@ public:
     virtual bool mouseMoved(const OIS::MouseEvent &arg)
     {
         if (!mRMouseDown) {
-            CEGUI::System::getSingleton().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+            CEGUI::System::getSingleton().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
+            //CEGUI::System::getSingleton().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
         }
 
         // If we are dragging the left mouse button.
@@ -511,8 +513,8 @@ protected:
     {
         CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
 
-        // Not using arg.state.width since it won't be updated.
-        Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/mWindow->getWidth(), mousePos.d_y/mWindow->getHeight());
+        Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/arg.state.width, mousePos.d_y/arg.state.height);
+
         mRaySceneQuery->setRay(mouseRay);
         mRaySceneQuery->setSortByDistance(true);
         mRaySceneQuery->setQueryMask(1 << 0);
@@ -803,6 +805,8 @@ protected:
         mWindow->getCustomAttribute("WINDOW", &windowHnd);
         windowHndStr << windowHnd;
         pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
+        pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND")));
+        pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
         mInputManager = OIS::InputManager::createInputSystem(pl);
 
         try
@@ -815,6 +819,9 @@ protected:
         {
             throw Exception(42, e.eText, "Application::setupInputSystem");
         }
+        const OIS::MouseState &ms = mMouse->getMouseState();
+        ms.width = mWindow->getWidth();
+        ms.height = mWindow->getHeight();
     }
 
     void setupCEGUI()
@@ -828,6 +835,8 @@ protected:
         mSystem->setDefaultFont("BlueHighway-12");
 
         CEGUI::MouseCursor::getSingleton().setImage(CEGUI::System::getSingleton().getDefaultMouseCursor());
+
+        //CEGUI::MouseCursor::getSingleton().setVisible(false);
     }
 
     void createFrameListener()
