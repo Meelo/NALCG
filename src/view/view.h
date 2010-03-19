@@ -15,13 +15,20 @@ namespace ViewConstants
 class MovementAnimation
 {
 public:
-    MovementAnimation(const Vector3& destination, SceneNode *movingNode)
-        : mDestination(destination), mMovingNode(movingNode)
+    MovementAnimation(const Vector3& destination, SceneNode *movingNode,
+        SceneNode *targetPiece, SceneManager *sceneMgr)
+        : mDestination(destination), mMovingNode(movingNode),
+        mTargetPiece(targetPiece), mSceneMgr(sceneMgr)
     {
     }
 
     virtual ~MovementAnimation()
     {
+        // Make sure another shorter animation hasn't already destroyed the piece.
+        if (mSceneMgr->hasSceneNode(mTargetPiece->getName()))
+        {
+            mSceneMgr->getRootSceneNode()->removeAndDestroyChild(mTargetPiece->getName());
+        }
     }
 
     virtual bool animate(const Real& timeSinceLastFrame) = 0;
@@ -29,13 +36,16 @@ public:
 protected:
     Vector3 mDestination;
     SceneNode *mMovingNode;
+    SceneNode *mTargetPiece;
+    SceneManager *mSceneMgr;
 };
 
 class BishopMovementAnimation : public MovementAnimation
 {
 public:
-    BishopMovementAnimation(const Vector3& destination, SceneNode *movingNode)
-        : MovementAnimation(destination, movingNode)
+    BishopMovementAnimation(const Vector3& destination, SceneNode *movingNode,
+        SceneNode *targetPiece, SceneManager *sceneMgr)
+        : MovementAnimation(destination, movingNode, targetPiece, sceneMgr)
     {
     }
 
@@ -68,9 +78,9 @@ class QueenMovementAnimation : public MovementAnimation
 {
 public:
     QueenMovementAnimation(const Vector3& destination, SceneNode *movingNode,
-        bool occupied, SceneManager *sceneMgr)
-        : MovementAnimation(destination, movingNode), mAttackCount(occupied ? ATTACK_COUNT : 0),
-        mPhase(1), mSceneMgr(sceneMgr), mTrail(0), mAttackCooldown(0)
+        SceneNode *targetPiece, SceneManager *sceneMgr)
+        : MovementAnimation(destination, movingNode, targetPiece, sceneMgr),
+        mAttackCount(targetPiece ? ATTACK_COUNT : 0), mPhase(1), mTrail(0), mAttackCooldown(0)
     {
         assert(sceneMgr != 0);
         createBlasts();
@@ -260,7 +270,6 @@ protected:
 
     int mAttackCount;
     int mPhase;
-    SceneManager *mSceneMgr;
     std::vector<AnimationState*> mAnimStateList;
     RibbonTrail* mTrail;
     Real mAttackCooldown;
@@ -276,17 +285,17 @@ class MovementAnimationFactory
 public:
     static MovementAnimation* createAnimation(const char type,
         const Vector3& destination, SceneNode *movingNode,
-        bool occupied, SceneManager *sceneMgr)
+        SceneNode *targetPiece, SceneManager *sceneMgr)
     {
         switch (type)
         {
         case 'B':
-            return new BishopMovementAnimation(destination, movingNode);
+            return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr);
         case 'Q':
-            return new QueenMovementAnimation(destination, movingNode, occupied, sceneMgr);
+            return new QueenMovementAnimation(destination, movingNode, targetPiece, sceneMgr);
         default:
             // TODO: change this to return 0 for testing when everything should be done.
-            return new BishopMovementAnimation(destination, movingNode);
+            return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr);
         }
     }
 };
@@ -539,12 +548,7 @@ protected:
                         mMovementAnimations[pieceNode] = 
                             MovementAnimationFactory::createAnimation(
                             *pieceNode->getName().begin(), targetNode->getPosition(),
-                            pieceNode, targetPiece != 0, mSceneMgr);
-
-                        if (targetPiece)
-                        {
-                            mSceneMgr->getRootSceneNode()->removeAndDestroyChild(targetPiece->getName());
-                        }
+                            pieceNode, targetPiece, mSceneMgr);
                     }
                     mSelectedObject->showBoundingBox(false);
                     pieceNode->showBoundingBox(false);
