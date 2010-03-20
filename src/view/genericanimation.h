@@ -14,7 +14,7 @@ public:
     virtual ~GenericAnimation() { }
 
     virtual bool animate(const Real& timeSinceLastFrame) = 0;
-
+    virtual SceneNode *getAnimatedNode() const { return mAnimatedNode; }
     static std::string nextName()
     {
         std::ostringstream name;

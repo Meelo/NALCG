@@ -5,14 +5,19 @@
 class BleedingAnimation : public GenericAnimation
 {
 public:
-    BleedingAnimation(SceneNode *particleNode, SceneManager *sceneMgr, const Real& duration)
-        : GenericAnimation(particleNode, sceneMgr), mDuration(duration)
+    BleedingAnimation(SceneNode *pieceNode, SceneManager *sceneMgr,
+        const Real& duration, SceneNode *particleNode)
+        : GenericAnimation(pieceNode, sceneMgr), mDuration(duration),
+        mParticleNode(particleNode), mAnimatedNodeName(pieceNode->getName())
     {
     }
 
     ~BleedingAnimation()
     {
-        mSceneMgr->getRootSceneNode()->removeAndDestroyChild(mAnimatedNode->getName());
+        if (mSceneMgr->hasSceneNode(mAnimatedNodeName))
+        {
+            mAnimatedNode->removeAndDestroyChild(mParticleNode->getName());
+        }
     }
 
     virtual bool animate(const Real& timeSinceLastFrame)
@@ -23,5 +28,7 @@ public:
 
 protected:
     Real mDuration;
+    SceneNode *mParticleNode;
+    std::string mAnimatedNodeName;
 };
 

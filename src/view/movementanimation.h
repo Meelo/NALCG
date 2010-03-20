@@ -1,8 +1,8 @@
 #pragma once
 
 #include "genericanimation.h"
+#include "animationmanager.h"
 
-class AnimationManager;
 class MovementAnimation : public GenericAnimation
 {
 public:
@@ -21,6 +21,7 @@ public:
         // and isn't safe to call.
         if (mSceneMgr->hasSceneNode(mTargetPieceName))
         {
+            mAnimationManager->stopAllAnimationsBelongingTo(mTargetPiece);
             mSceneMgr->getRootSceneNode()->removeAndDestroyChild(mTargetPieceName);
         }
     }

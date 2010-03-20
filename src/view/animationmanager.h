@@ -2,6 +2,10 @@
 
 #include <vector>
 
+#include <Ogre.h>
+
+using namespace Ogre;
+
 class GenericAnimation;
 class AnimationManager
 {
@@ -12,6 +16,9 @@ public:
     }
 
     virtual void executeAnimations(double timeSinceLastFrame);
+    virtual void stopAllAnimationsBelongingTo(SceneNode *targetNode);
+    virtual void endAnimation(std::size_t index);
+
 protected:
     std::vector<GenericAnimation*> mGenericAnimations;
 };

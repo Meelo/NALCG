@@ -2,6 +2,7 @@
 #include "viewconstants.h"
 #include "animationmanager.h"
 #include "animationfactory.h"
+#include "dyinganimation.h"
 
 bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
 {
@@ -100,7 +101,7 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
                 {
                     (*animi)->addTime(timeSinceLastFrame);
                 }
-    
+
                 mBloodCountdown -= timeSinceLastFrame;
                 if (mBloodCountdown < 0 && mSceneMgr->hasSceneNode(mTargetPieceName)
                     && mPhase == 3)
@@ -108,7 +109,12 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
                     mAnimationManager->addAnimation(
                         AnimationFactory::createBleedingAnimation(
                         mTargetPiece, mSceneMgr, ATTACK_COOLDOWN * ATTACK_COUNT));
-                    mBloodCountdown = 9999;
+
+                    mAnimationManager->addAnimation(
+                        AnimationFactory::createDyingAnimation(
+                        mTargetPiece, mSceneMgr, ATTACK_COOLDOWN * ATTACK_COUNT * 2 / 3));
+
+                    mBloodCountdown = std::numeric_limits<double>::infinity();
                 }
 
                 // Stay floating until attack animations have ended.
