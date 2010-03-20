@@ -1,0 +1,39 @@
+// A downpour
+particle_system Effects/Blood
+{
+    material        Examples/Flare2
+    particle_width  50
+    particle_height 50
+    cull_each       true
+    quota           4000
+
+    billboard_type  oriented_self
+    //common_direction 0 -1 0
+    
+	emitter Point
+	{
+		angle 360
+		emission_rate 2000
+        time_to_live    2
+        direction       0 -1 0
+        velocity_min    250
+        velocity_max    400
+        colour_range_start  1 0.3 0.1
+        colour_range_end    0.7 0.0 0.0
+		
+	}
+
+    // Gravity
+    affector LinearForce
+    {
+        force_vector      0 -500 0
+        force_application add
+    }
+	
+	affector ColourFader
+	{
+		red -0.25
+		green -1
+		blue -1
+	}
+}

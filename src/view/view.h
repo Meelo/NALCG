@@ -3,6 +3,7 @@
 #include <CEGUI/CEGUI.h>
 #include <OgreCEGUIRenderer.h>
 
+#include "animationfactory.h"
 using namespace Ogre;
 
 namespace ViewConstants
@@ -12,15 +13,64 @@ namespace ViewConstants
     static const ColourValue BLUE_COLOUR(ColourValue(0.4, 0.4, 1.0));
 };
 
-class AnimationManager;
-class MovementAnimation
+class GenericAnimation
+{
+public:
+    GenericAnimation(SceneNode *animatedNode, SceneManager *sceneMgr)
+        : mAnimatedNode(animatedNode), mSceneMgr(sceneMgr)
+    {
+    }
+    virtual ~GenericAnimation() { }
+
+    virtual bool animate(const Real& timeSinceLastFrame) = 0;
+
+    static std::string nextName()
+    {
+        std::ostringstream name;
+        name << "NALCG" << id++;
+        return name.str();
+    }
+
+protected:
+    SceneNode *mAnimatedNode;
+    SceneManager *mSceneMgr;
+    static int id;
+};
+int GenericAnimation::id = 1;
+
+class AnimationManager
+{
+public:
+    virtual void addAnimation(GenericAnimation *animation)
+    {
+        mGenericAnimations.push_back(animation);
+    }
+
+    virtual void executeAnimations(const Real& timeSinceLastFrame)
+    {
+        for (std::size_t i = mGenericAnimations.size() - 1; i != -1; i--)
+        {
+            GenericAnimation *animation = mGenericAnimations.at(i);
+            if (!animation->animate(timeSinceLastFrame))
+            {
+                std::swap(mGenericAnimations.at(i), mGenericAnimations.back());
+                delete animation;
+                mGenericAnimations.pop_back();
+            }
+        }
+    }
+protected:
+    std::vector<GenericAnimation*> mGenericAnimations;
+};
+
+class MovementAnimation : public GenericAnimation
 {
 public:
     MovementAnimation(const Vector3& destination, SceneNode *movingNode,
         SceneNode *targetPiece, SceneManager *sceneMgr, AnimationManager *animationManager)
-        : mDestination(destination), mMovingNode(movingNode),
+        : GenericAnimation(movingNode, sceneMgr), mDestination(destination),
         mTargetPiece(targetPiece), mTargetPieceName(targetPiece ? targetPiece->getName() : ""),
-        mSceneMgr(sceneMgr), mAnimationManager(animationManager)
+        mAnimationManager(animationManager)
     {
     }
 
@@ -35,14 +85,10 @@ public:
         }
     }
 
-    virtual bool animate(const Real& timeSinceLastFrame) = 0;
-
 protected:
     Vector3 mDestination;
-    SceneNode *mMovingNode;
     SceneNode *mTargetPiece;
     const std::string mTargetPieceName;
-    SceneManager *mSceneMgr;
     AnimationManager *mAnimationManager;
 };
 
@@ -58,28 +104,27 @@ public:
     virtual bool animate(const Real& timeSinceLastFrame)
     {
         Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
-        Vector3 path = mDestination - mMovingNode->getPosition();
+        Vector3 path = mDestination - mAnimatedNode->getPosition();
 
         if (path.length() > distanceMoved)
         {
             // Normalising the vector so the speed remains constant.
             path.normalise();
-            mMovingNode->translate(path * distanceMoved);
+            mAnimatedNode->translate(path * distanceMoved);
 
-            Vector3 src = mMovingNode->getOrientation() * Vector3::UNIT_Z;
-            mMovingNode->rotate(src.getRotationTo(path));
+            Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
+            mAnimatedNode->rotate(src.getRotationTo(path));
             return true; // Animation still running.
         }
 
-        mMovingNode->setPosition(mDestination);
-        mMovingNode->setOrientation(mMovingNode->getInitialOrientation());
+        mAnimatedNode->setPosition(mDestination);
+        mAnimatedNode->setOrientation(mAnimatedNode->getInitialOrientation());
         return false; // Animation finished.
     }
 protected:
     static const int MOVEMENT_SPEED = 500;
 };
 
-class View;
 class QueenMovementAnimation : public MovementAnimation
 {
 public:
@@ -95,7 +140,7 @@ public:
 
     virtual ~QueenMovementAnimation()
     {
-        mMovingNode->removeAndDestroyAllChildren();
+        mAnimatedNode->removeAndDestroyAllChildren();
 
         for (std::size_t i = 0; i < mLights.size(); i++)
         {
@@ -108,14 +153,14 @@ public:
     virtual bool animate(const Real& timeSinceLastFrame)
     {
         Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
-        Vector3 path = mDestination - mMovingNode->getPosition();
+        Vector3 path = mDestination - mAnimatedNode->getPosition();
         if (path.length() > distanceMoved)
         {
             switch (mPhase)
             {
             case 1:
                 // Fly higher in steep angle until flying altitude is reached.
-                if (mMovingNode->getPosition().y > FLYING_ALTITUDE)
+                if (mAnimatedNode->getPosition().y > FLYING_ALTITUDE)
                 {
                     mPhase = 2;
                 }
@@ -138,7 +183,15 @@ public:
                 {
                     if (mAttackCooldown <= 0 && mAttackCount > 0)
                     {
-                        SceneNode* animNode = mMovingNode->createChildSceneNode();
+                        if (mAttackCount < ATTACK_COUNT - ATTACK_ANIMATION_LENGTH / ATTACK_COOLDOWN
+                            && mSceneMgr->hasSceneNode(mTargetPieceName))
+                        {
+                            mAnimationManager->addAnimation(
+                                AnimationFactory::createBleedingAnimation(
+                                mTargetPiece, mSceneMgr, 2));
+                        }
+
+                        SceneNode* animNode = mAnimatedNode->createChildSceneNode();
 
                         Animation* anim = mSceneMgr->createAnimation(nextName(), ATTACK_ANIMATION_LENGTH);
                         anim->setInterpolationMode(Animation::IM_SPLINE);
@@ -208,7 +261,7 @@ public:
                         if (path.length() - FLAT_ATTACKING_DISTANCE < distanceMoved)
                         {
                             distanceMoved = 0;
-                            //mMovingNode->setPosition(mDestination + Vector3(0, FLYING_ALTITUDE, 0));
+                            //mAnimatedNode->setPosition(mDestination + Vector3(0, FLYING_ALTITUDE, 0));
                         }
                     }
                     else if (mPhase == 3)
@@ -230,30 +283,30 @@ public:
             // Normalising the vector so the speed remains constant.
 
 
-            //mMovingNode->setOrientation(mMovingNode->getInitialOrientation());
+            //mAnimatedNode->setOrientation(mAnimatedNode->getInitialOrientation());
             if (distanceMoved > 0)
             {
                 path.normalise();
-                mMovingNode->translate(path * distanceMoved);
+                mAnimatedNode->translate(path * distanceMoved);
 
-                mMovingNode->resetOrientation();
-                Vector3 src = mMovingNode->getOrientation() * Vector3::UNIT_Z;
+                mAnimatedNode->resetOrientation();
+                Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
                 Vector3 flatPath = path;
                 flatPath.y = 0;
-                mMovingNode->rotate(src.getRotationTo(flatPath));
+                mAnimatedNode->rotate(src.getRotationTo(flatPath));
 
-                mMovingNode->pitch(Degree(mMovingNode->getPosition().y * 90.0 / FLYING_ALTITUDE));
+                mAnimatedNode->pitch(Degree(mAnimatedNode->getPosition().y * 90.0 / FLYING_ALTITUDE));
             }
 
-            /*Vector3 src = mMovingNode->getOrientation() * Vector3::UNIT_Z;
-            mMovingNode->rotate(src.getRotationTo(path));*/
+            /*Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
+            mAnimatedNode->rotate(src.getRotationTo(path));*/
 
 
             return true; // Animation still running.
         }
 
-        mMovingNode->setPosition(mDestination);
-        mMovingNode->setOrientation(mMovingNode->getInitialOrientation());
+        mAnimatedNode->setPosition(mDestination);
+        mAnimatedNode->setOrientation(mAnimatedNode->getInitialOrientation());
         return false; // Animation finished.
     }
 
@@ -286,14 +339,6 @@ public:
         mSceneMgr->getLight("Blue")->setDiffuseColour(ViewConstants::BLUE_COLOUR);
     }
 
-    // TODO: Move this to more global place if others need it too.
-    std::string nextName()
-    {
-        std::ostringstream name;
-        name << "NALCG" << id++;
-        return name.str();
-    }
-
 protected:
     static const int MOVEMENT_SPEED = 500;
     static const int FLYING_ALTITUDE = 500;
@@ -301,7 +346,6 @@ protected:
     static const int ATTACK_ANIMATION_LENGTH = 3;
     static const int FLAT_ATTACKING_DISTANCE = 150;
     static const Real ATTACK_COOLDOWN;
-    static int id;
 
     int mAttackCount;
     int mPhase;
@@ -312,59 +356,29 @@ protected:
 
 };
 
-int QueenMovementAnimation::id = 1;
 const Real QueenMovementAnimation::ATTACK_COOLDOWN = 0.1;
 
-class MovementAnimationFactory
+class BleedingAnimation : public GenericAnimation
 {
 public:
-    static MovementAnimation* createAnimation(const char type,
-        const Vector3& destination, SceneNode *movingNode,
-        SceneNode *targetPiece, SceneManager *sceneMgr,
-        AnimationManager *animationManager)
+    BleedingAnimation(SceneNode *particleNode, SceneManager *sceneMgr, const Real& duration)
+        : GenericAnimation(particleNode, sceneMgr), mDuration(duration)
     {
-        switch (type)
-        {
-        case 'B':
-            return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
-        case 'Q':
-            return new QueenMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
-        default:
-            // TODO: change this to return 0 for testing when everything should be done.
-            return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
-        }
-    }
-};
-
-class AnimationManager
-{
-public:
-    virtual void addAnimation(SceneNode *pieceNode, MovementAnimation *animation)
-    {
-        mMovementAnimations[pieceNode] = animation;
     }
 
-    virtual void executeAnimations(const Real& timeSinceLastFrame)
+    ~BleedingAnimation()
     {
-        std::vector<SceneNode*> removed;
-
-        for (std::map<SceneNode*, MovementAnimation*>::iterator it =
-            mMovementAnimations.begin(); it != mMovementAnimations.end(); it++)
-        {
-            if (!it->second->animate(timeSinceLastFrame))
-            {
-                removed.push_back(it->first);
-                delete it->second;
-            }
-        }
-
-        for (std::size_t i = 0; i < removed.size(); i++)
-        {
-            mMovementAnimations.erase(removed.at(i));
-        }
+        mSceneMgr->getRootSceneNode()->removeAndDestroyChild(mAnimatedNode->getName());
     }
+
+    virtual bool animate(const Real& timeSinceLastFrame)
+    {
+        mDuration -= timeSinceLastFrame;
+        return mDuration >= 0;
+    }
+
 protected:
-    std::map<SceneNode*, MovementAnimation*> mMovementAnimations;
+    Real mDuration;
 };
 
 class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
@@ -590,8 +604,8 @@ protected:
 
                         SceneNode *targetPiece = findPieceAbove(targetNode);
 
-                        mAnimationManager->addAnimation(pieceNode,
-                            MovementAnimationFactory::createAnimation(
+                        mAnimationManager->addAnimation(
+                            AnimationFactory::createMovementAnimation(
                             *pieceNode->getName().begin(), targetNode->getPosition(),
                             pieceNode, targetPiece, mSceneMgr, mAnimationManager));
                     }
@@ -1059,14 +1073,5 @@ protected:
             CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
         debug->subscribeEvent(CEGUI::PushButton::EventClicked,
             CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
-
-        // Create a rainstorm
-        /*ParticleSystem* pSys4 = mSceneMgr->createParticleSystem("rain",
-            "Examples/JetEngine1");
-        SceneNode* rNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-        rNode->translate(0,1000,0);
-        rNode->attachObject(pSys4);*/
-        // Fast-forward the rain so it looks more natural
-        //pSys4->fastForward(5);
     }
 };
