@@ -142,71 +142,72 @@ public:
                 break;
             case 3:
                 {
-                    if (mAttackCount <= 0)
+                    if (mAttackCooldown <= 0 && mAttackCount > 0)
                     {
-                        mPhase = 4;
+                        SceneNode* animNode = mMovingNode->createChildSceneNode();
+
+                        Animation* anim = mSceneMgr->createAnimation(nextName(), ATTACK_ANIMATION_LENGTH);
+                        anim->setInterpolationMode(Animation::IM_SPLINE);
+                        //mAnimations.push_back(anim);
+
+                        NodeAnimationTrack* track = anim->createNodeTrack(1, animNode);
+                        TransformKeyFrame* kf = track->createNodeKeyFrame(0);
+
+                        //int waypoint = mAttackCount % 2 == 0 ? 100 : -100;
+                        //int waypoint2 = mAttackCount % 4 <= 1 ? 100 : -100;
+                        Real waypoint = 300 * sin(double(mAttackCount));
+                        Real waypoint2 = 300 * cos(double(mAttackCount));
+                        kf = track->createNodeKeyFrame(1.5);
+                        kf->setTranslate(Vector3(waypoint, 500, waypoint2));
+                        kf = track->createNodeKeyFrame(2);
+                        kf->setTranslate(Vector3(waypoint, 200, waypoint2));
+                        kf = track->createNodeKeyFrame(2.5);
+                        kf->setTranslate(Vector3(0, -200, 0));
+                        kf = track->createNodeKeyFrame(3);
+                        kf->setTranslate(Vector3(0, -600, 0));
+
+                        AnimationState* animState = mSceneMgr->createAnimationState(anim->getName());
+                        animState->setEnabled(true);
+                        animState->setLoop(false);
+                        mAnimStateList.push_back(animState);
+
+                        int nAttack = ATTACK_COUNT - mAttackCount;
+                        mTrail->setInitialColour(nAttack, 0.3, 0.5, 1.0);
+                        mTrail->setColourChange(nAttack, 0.5, 0.5, 0.5, 0.5);
+                        mTrail->setInitialWidth(nAttack, 10);
+                        mTrail->addNode(animNode);
+
+                        // Add light
+                        Light* l2 = mSceneMgr->createLight(nextName());
+                        l2->setDiffuseColour(mTrail->getInitialColour(0));
+                        animNode->attachObject(l2);
+                        mLights.push_back(l2);
+
+                        // Add billboard
+                        BillboardSet* bbs = mSceneMgr->createBillboardSet(nextName(), 1);
+                        bbs->createBillboard(Vector3::ZERO, mTrail->getInitialColour(0));
+                        bbs->setMaterialName("Examples/Flare");
+                        bbs->setQueryFlags(0);
+                        animNode->attachObject(bbs);
+
+                        mAttackCooldown = ATTACK_COOLDOWN;
+                        mAttackCount--;
                     }
-                    else
+                    
+                    // Advance the animations.
+                    std::vector<AnimationState*>::iterator animi;
+                    for (animi = mAnimStateList.begin(); animi != mAnimStateList.end(); ++animi)
                     {
-                        if (mAttackCooldown <= 0)
-                        {
-                            SceneNode* animNode = mMovingNode->createChildSceneNode();
-
-                            Animation* anim = mSceneMgr->createAnimation(nextName(), 10);
-                            anim->setInterpolationMode(Animation::IM_SPLINE);
-                            //mAnimations.push_back(anim);
-
-                            NodeAnimationTrack* track = anim->createNodeTrack(1, animNode);
-                            TransformKeyFrame* kf = track->createNodeKeyFrame(0);
-                            
-                            int waypoint = mAttackCount % 2 == 0 ? 100 : -100;
-                            int waypoint2 = mAttackCount % 4 <= 1 ? 100 : -100;
-                            kf = track->createNodeKeyFrame(0.5);
-                            kf->setTranslate(Vector3(waypoint, 0, waypoint2));
-                            kf = track->createNodeKeyFrame(1);
-                            kf->setTranslate(Vector3(0, -200, 0));
-                            kf = track->createNodeKeyFrame(1.5);
-                            kf->setTranslate(Vector3(0, -600, 0));
-
-                            AnimationState* animState = mSceneMgr->createAnimationState(anim->getName());
-                            animState->setEnabled(true);
-                            animState->setLoop(false);
-                            mAnimStateList.push_back(animState);
-
-                            int nAttack = ATTACK_COUNT - mAttackCount;
-                            mTrail->setInitialColour(nAttack, 0.3, 0.5, 1.0);
-                            mTrail->setColourChange(nAttack, 0.5, 0.5, 0.5, 0.5);
-                            mTrail->setInitialWidth(nAttack, 10);
-                            mTrail->addNode(animNode);
-
-                            // Add light
-                            Light* l2 = mSceneMgr->createLight(nextName());
-                            l2->setDiffuseColour(mTrail->getInitialColour(0));
-                            animNode->attachObject(l2);
-                            mLights.push_back(l2);
-
-                            // Add billboard
-                            BillboardSet* bbs = mSceneMgr->createBillboardSet(nextName(), 20);
-                            bbs->createBillboard(Vector3::ZERO, mTrail->getInitialColour(0));
-                            bbs->setMaterialName("Examples/Flare");
-                            bbs->setQueryFlags(0);
-                            animNode->attachObject(bbs);
-
-                            mAttackCooldown = ATTACK_COOLDOWN;
-                            mAttackCount--;
-                        }
-                        std::vector<AnimationState*>::iterator animi;
-                        for (animi = mAnimStateList.begin(); animi != mAnimStateList.end(); ++animi)
-                        {
-                            (*animi)->addTime(timeSinceLastFrame);
-                        }
+                        (*animi)->addTime(timeSinceLastFrame);
+                    }
+                    // Stay floating until animations have ended.
+                    if (mAttackCooldown > -ATTACK_ANIMATION_LENGTH)
+                    {
                         path += Vector3(0, FLYING_ALTITUDE, 0);
-                        mAttackCooldown -= timeSinceLastFrame;
                     }
-                    break;
+
+                    mAttackCooldown -= timeSinceLastFrame;
                 }
-            case 4:
-                break;
             }
 
             // Normalising the vector so the speed remains constant.
@@ -268,7 +269,8 @@ public:
 protected:
     static const int MOVEMENT_SPEED = 500;
     static const int FLYING_ALTITUDE = 500;
-    static const int ATTACK_COUNT = 300;
+    static const int ATTACK_COUNT = 30;
+    static const int ATTACK_ANIMATION_LENGTH = 3;
     static const Real ATTACK_COOLDOWN;
     static int id;
 
@@ -282,7 +284,7 @@ protected:
 };
 
 int QueenMovementAnimation::id = 1;
-const Real QueenMovementAnimation::ATTACK_COOLDOWN = 0.001;
+const Real QueenMovementAnimation::ATTACK_COOLDOWN = 0.1;
 
 class MovementAnimationFactory
 {
@@ -1013,5 +1015,14 @@ protected:
             CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
         debug->subscribeEvent(CEGUI::PushButton::EventClicked,
             CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
+
+        // Create a rainstorm
+        /*ParticleSystem* pSys4 = mSceneMgr->createParticleSystem("rain",
+            "Examples/JetEngine1");
+        SceneNode* rNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+        rNode->translate(0,1000,0);
+        rNode->attachObject(pSys4);*/
+        // Fast-forward the rain so it looks more natural
+        //pSys4->fastForward(5);
     }
 };
