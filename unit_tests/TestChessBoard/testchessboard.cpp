@@ -192,8 +192,6 @@ void TestChessBoard::getCoordinates_data()
 
     QTest::newRow("with position index 64, coordinates should be (0, 0)")
         << std::size_t(64) << std::size_t(-1) << std::size_t(-1) << false;
-
-
 }
 
 void TestChessBoard::getCoordinates()
@@ -243,7 +241,6 @@ void TestChessBoard::getPosition_data()
 
     QTest::newRow("coordinates (8, 8) should be same as -1 index")
         << std::size_t(8) << std::size_t(8) << std::size_t(-1);
-
 }
 
 void TestChessBoard::getPosition()

@@ -13,10 +13,12 @@ std::vector<std::size_t> Bishop::getValidMoves(std::size_t location, const std::
 {
     std::vector<std::size_t> validMoves;
 
-    std::size_t diagUpR = location;
-    std::size_t diagUpL = location;
-    std::size_t diagDownR = location;
-    std::size_t diagDownL = location;
+    std::size_t x = 0, y = 0;
+    ChessBoard::getCoordinates(location, x, y);
+    std::size_t diagUpR = ChessBoard::getPosition(x + 1, y - 1);
+    std::size_t diagUpL = ChessBoard::getPosition(x - 1, y - 1);
+    std::size_t diagDownR = ChessBoard::getPosition(x + 1, y + 1);
+    std::size_t diagDownL = ChessBoard::getPosition(x - 1, y + 1);
     
     if (diagUpR < squares.size() && !squares.at(diagUpR).hasPiece())
     {
