@@ -12,14 +12,15 @@ namespace ViewConstants
     static const ColourValue BLUE_COLOUR(ColourValue(0.4, 0.4, 1.0));
 };
 
+class AnimationManager;
 class MovementAnimation
 {
 public:
     MovementAnimation(const Vector3& destination, SceneNode *movingNode,
-        SceneNode *targetPiece, SceneManager *sceneMgr)
+        SceneNode *targetPiece, SceneManager *sceneMgr, AnimationManager *animationManager)
         : mDestination(destination), mMovingNode(movingNode),
         mTargetPiece(targetPiece), mTargetPieceName(targetPiece ? targetPiece->getName() : ""),
-        mSceneMgr(sceneMgr)
+        mSceneMgr(sceneMgr), mAnimationManager(animationManager)
     {
     }
 
@@ -42,14 +43,15 @@ protected:
     SceneNode *mTargetPiece;
     const std::string mTargetPieceName;
     SceneManager *mSceneMgr;
+    AnimationManager *mAnimationManager;
 };
 
 class BishopMovementAnimation : public MovementAnimation
 {
 public:
     BishopMovementAnimation(const Vector3& destination, SceneNode *movingNode,
-        SceneNode *targetPiece, SceneManager *sceneMgr)
-        : MovementAnimation(destination, movingNode, targetPiece, sceneMgr)
+        SceneNode *targetPiece, SceneManager *sceneMgr, AnimationManager *animationManager)
+        : MovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager)
     {
     }
 
@@ -82,8 +84,8 @@ class QueenMovementAnimation : public MovementAnimation
 {
 public:
     QueenMovementAnimation(const Vector3& destination, SceneNode *movingNode,
-        SceneNode *targetPiece, SceneManager *sceneMgr)
-        : MovementAnimation(destination, movingNode, targetPiece, sceneMgr),
+        SceneNode *targetPiece, SceneManager *sceneMgr, AnimationManager *animationManager)
+        : MovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager),
         mAttackCount(targetPiece ? ATTACK_COUNT : 0), mPhase(1), mTrail(0),
         mAttackCooldown(targetPiece ? 0 : -ATTACK_ANIMATION_LENGTH)
     {
@@ -296,28 +298,61 @@ class MovementAnimationFactory
 public:
     static MovementAnimation* createAnimation(const char type,
         const Vector3& destination, SceneNode *movingNode,
-        SceneNode *targetPiece, SceneManager *sceneMgr)
+        SceneNode *targetPiece, SceneManager *sceneMgr,
+        AnimationManager *animationManager)
     {
         switch (type)
         {
         case 'B':
-            return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr);
+            return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
         case 'Q':
-            return new QueenMovementAnimation(destination, movingNode, targetPiece, sceneMgr);
+            return new QueenMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
         default:
             // TODO: change this to return 0 for testing when everything should be done.
-            return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr);
+            return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
         }
     }
+};
+
+class AnimationManager
+{
+public:
+    virtual void addAnimation(SceneNode *pieceNode, MovementAnimation *animation)
+    {
+        mMovementAnimations[pieceNode] = animation;
+    }
+
+    virtual void executeAnimations(const Real& timeSinceLastFrame)
+    {
+        std::vector<SceneNode*> removed;
+
+        for (std::map<SceneNode*, MovementAnimation*>::iterator it =
+            mMovementAnimations.begin(); it != mMovementAnimations.end(); it++)
+        {
+            if (!it->second->animate(timeSinceLastFrame))
+            {
+                removed.push_back(it->first);
+                delete it->second;
+            }
+        }
+
+        for (std::size_t i = 0; i < removed.size(); i++)
+        {
+            mMovementAnimations.erase(removed.at(i));
+        }
+    }
+protected:
+    std::map<SceneNode*, MovementAnimation*> mMovementAnimations;
 };
 
 class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-    BufferedInputHandler(RenderWindow *window, Camera *camera, SceneManager *sceneMgr)
+    BufferedInputHandler(RenderWindow *window, Camera *camera, SceneManager *sceneMgr,
+        AnimationManager *animationManager)
         : mLMouseDown(false), mRMouseDown(false), mWindow(window), mCamera(camera),
         mSceneMgr(sceneMgr), mRaySceneQuery(sceneMgr->createRayQuery(Ray())),
-        mSelectedObject(0), mDirection(Vector3::ZERO)
+        mSelectedObject(0), mDirection(Vector3::ZERO), mAnimationManager(animationManager)
     {
     }
 
@@ -488,12 +523,10 @@ public:
         return true;
     }
 
-    virtual void executeActions(const Real& timeSinceLastFrame)
+    virtual void moveCamera(const Real& timeSinceLastFrame)
     {
         mCamera->setPosition(mCamera->getPosition() + 
             mCamera->getOrientation() * mDirection * timeSinceLastFrame);
-
-        executeAnimations(timeSinceLastFrame);
     }
 
 protected:
@@ -504,30 +537,9 @@ protected:
     RaySceneQuery *mRaySceneQuery;     // The ray scene query pointer
     SceneNode *mSelectedObject;         // The selected object
     Vector3 mDirection;     // Value to move in the correct direction
+    AnimationManager *mAnimationManager;
     static const int CAMERA_MOVEMENT_SPEED = 500;
-    std::map<SceneNode*, MovementAnimation*> mMovementAnimations;
-    //CEGUI::Renderer *mGUIRenderer;     // CEGUI renderer
-    //bool mRobotMode;                   // The current state
 
-    virtual void executeAnimations(const Real& timeSinceLastFrame)
-    {
-        std::vector<SceneNode*> removed;
-
-        for (std::map<SceneNode*, MovementAnimation*>::iterator it =
-            mMovementAnimations.begin(); it != mMovementAnimations.end(); it++)
-        {
-            if (!it->second->animate(timeSinceLastFrame))
-            {
-                removed.push_back(it->first);
-                delete it->second;
-            }
-        }
-
-        for (std::size_t i = 0; i < removed.size(); i++)
-        {
-            mMovementAnimations.erase(removed.at(i));
-        }
-    }
 
     virtual void onLeftPressed(const OIS::MouseEvent &arg)
     {
@@ -556,10 +568,10 @@ protected:
 
                         SceneNode *targetPiece = findPieceAbove(targetNode);
 
-                        mMovementAnimations[pieceNode] = 
+                        mAnimationManager->addAnimation(pieceNode,
                             MovementAnimationFactory::createAnimation(
                             *pieceNode->getName().begin(), targetNode->getPosition(),
-                            pieceNode, targetPiece, mSceneMgr);
+                            pieceNode, targetPiece, mSceneMgr, mAnimationManager));
                     }
                     mSelectedObject->showBoundingBox(false);
                     pieceNode->showBoundingBox(false);
@@ -614,7 +626,8 @@ class ViewFrameListener : public FrameListener
 public:
     ViewFrameListener(OIS::Keyboard *keyboard, OIS::Mouse *mouse,
         RenderWindow *window, Camera *camera, SceneManager *sceneManager)
-        : mKeyboard(keyboard), mMouse(mouse), mHandler(window, camera, sceneManager),
+        : mKeyboard(keyboard), mMouse(mouse), mAnimationManager(),
+        mHandler(window, camera, sceneManager, &mAnimationManager),
         mContinue(true), mWindow(window)
     {
         mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
@@ -626,7 +639,8 @@ public:
     {
         mKeyboard->capture();
         mMouse->capture();
-        mHandler.executeActions(evt.timeSinceLastFrame);
+        mHandler.moveCamera(evt.timeSinceLastFrame);
+        mAnimationManager.executeAnimations(evt.timeSinceLastFrame);
         return mContinue && !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
     }
 
@@ -658,6 +672,7 @@ public:
 protected:
     OIS::Keyboard *mKeyboard;
     OIS::Mouse *mMouse;
+    AnimationManager mAnimationManager;
     BufferedInputHandler mHandler;
     bool mContinue;
     Overlay* mDebugOverlay;
