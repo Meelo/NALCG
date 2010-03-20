@@ -81,7 +81,7 @@ void TestBishop::whiteValidMoves_data()
     std::size_t case08[] = { 8, 14, 17, 21, 26, 28, 42, 44 };
     std::size_t case09[] = { 8, 14, 17, 21, 26, 28, 42, 44, 53 };
 
-    QTest::newRow("starting positions, a2") << std::size_t(58) 
+    QTest::newRow("starting positions, c1") << std::size_t(58) 
         << std::vector<PieceHolder>
             (createUnitsAt01, createUnitsAt01 + sizeof(createUnitsAt01) / sizeph)
         << std::vector<std::size_t>(case01, case01 + sizeof(case01) / sizet);
