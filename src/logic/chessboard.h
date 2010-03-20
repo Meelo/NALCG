@@ -43,6 +43,8 @@ public:
     static std::vector<Square> createBoard();
 
     // Getters
+    static bool getCoordinates(std::size_t index, std::size_t& column, std::size_t& row);
+    static std::size_t getPosition(std::size_t column, std::size_t row);
     
     // Setters
 

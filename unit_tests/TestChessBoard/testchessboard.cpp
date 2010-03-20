@@ -21,6 +21,10 @@ private slots:
     void createBoard();
     void checkUnits_data();
     void checkUnits();
+    void getPosition_data();
+    void getPosition();
+    void getCoordinates_data();
+    void getCoordinates();
 };
 
 // Use Q_DECLARE_METATYPE in order to use 'custom' types in _data() functions.
@@ -144,6 +148,113 @@ void TestChessBoard::checkUnits()
 
     QCOMPARE(shouldHaveUnit.getNameOfPiece(), unit);
     QCOMPARE(shouldHaveUnit.getColourOfPiece(), colour);
+}
+
+void TestChessBoard::getCoordinates_data()
+{
+    QTest::addColumn<std::size_t>("position");
+    QTest::addColumn<std::size_t>("column");
+    QTest::addColumn<std::size_t>("row");
+    QTest::addColumn<bool>("valid");
+
+    QTest::newRow("with position index 0, coordinates should be (0, 0)")
+        << std::size_t(0) << std::size_t(0) << std::size_t(0) << true;
+
+    QTest::newRow("with position index 7, coordinates should be (7, 0)")
+        << std::size_t(7) << std::size_t(7) << std::size_t(0) << true;
+
+    QTest::newRow("with position index 63, coordinates should be (7, 7)")
+        << std::size_t(63) << std::size_t(7) << std::size_t(7) << true;
+
+    QTest::newRow("with position index 56, coordinates should be (0, 7)")
+        << std::size_t(56) << std::size_t(0) << std::size_t(7) << true;
+
+    QTest::newRow("with position index 49, coordinates should be (1, 6)")
+        << std::size_t(49) << std::size_t(1) << std::size_t(6) << true;
+
+    QTest::newRow("with position index 29, coordinates should be (5, 3)")
+        << std::size_t(29) << std::size_t(5) << std::size_t(3) << true;
+
+    QTest::newRow("with position index 18, coordinates should be (2, 2)")
+        << std::size_t(18) << std::size_t(2) << std::size_t(2) << true;
+
+    QTest::newRow("with position index 52, coordinates should be (4, 6)")
+        << std::size_t(52) << std::size_t(4) << std::size_t(6) << true;
+
+    QTest::newRow("with position index 47, coordinates should be (7, 5)")
+        << std::size_t(47) << std::size_t(7) << std::size_t(5) << true;
+
+    QTest::newRow("with position index 12, coordinates should be (4, 1)")
+        << std::size_t(12) << std::size_t(4) << std::size_t(1) << true;
+
+    QTest::newRow("with position index 57, coordinates should be (1, 7)")
+        << std::size_t(57) << std::size_t(1) << std::size_t(7) << true;
+
+    QTest::newRow("with position index 64, coordinates should be (0, 0)")
+        << std::size_t(64) << std::size_t(-1) << std::size_t(-1) << false;
+
+
+}
+
+void TestChessBoard::getCoordinates()
+{
+    QFETCH(std::size_t, position);
+    QFETCH(std::size_t, column);
+    QFETCH(std::size_t, row);
+    QFETCH(bool, valid);
+
+    std::size_t x = 0, y = 0;
+    bool ret = ChessBoard::getCoordinates(position, x, y);
+
+    QCOMPARE(ret, valid);
+    QCOMPARE(x, column);
+    QCOMPARE(y, row);
+}
+
+void TestChessBoard::getPosition_data()
+{
+    QTest::addColumn<std::size_t>("column");
+    QTest::addColumn<std::size_t>("row");
+    QTest::addColumn<std::size_t>("expected");
+
+    QTest::newRow("coordinates (0, 0) should be same as 0 index")
+        << std::size_t(0) << std::size_t(0) << std::size_t(0);
+
+    QTest::newRow("coordinates (0, 7) should be same as 56 index")
+        << std::size_t(0) << std::size_t(7) << std::size_t(56);
+
+    QTest::newRow("coordinates (7, 0) should be same as 7 index")
+        << std::size_t(7) << std::size_t(0) << std::size_t(7);
+
+    QTest::newRow("coordinates (7, 7) should be same as 63 index")
+        << std::size_t(7) << std::size_t(7) << std::size_t(63);
+
+    QTest::newRow("coordinates (4, 5) should be same as 44 index")
+        << std::size_t(4) << std::size_t(5) << std::size_t(44);
+
+    QTest::newRow("coordinates (1, 4) should be same as 33 index")
+        << std::size_t(1) << std::size_t(4) << std::size_t(33);
+
+    QTest::newRow("coordinates (2, 6) should be same as 50 index")
+        << std::size_t(2) << std::size_t(6) << std::size_t(50);
+
+    QTest::newRow("coordinates (6, 3) should be same as 30 index")
+        << std::size_t(6) << std::size_t(3) << std::size_t(30);
+
+    QTest::newRow("coordinates (8, 8) should be same as -1 index")
+        << std::size_t(8) << std::size_t(8) << std::size_t(-1);
+
+}
+
+void TestChessBoard::getPosition()
+{
+    QFETCH(std::size_t, column);
+    QFETCH(std::size_t, row);
+    QFETCH(std::size_t, expected);
+
+    std::size_t position = ChessBoard::getPosition(column, row);
+
+    QCOMPARE(position, expected);
 }
 
 // End of Tests
