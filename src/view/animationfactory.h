@@ -8,6 +8,7 @@ using namespace Ogre;
 
 class MovementAnimation;
 class AnimationManager;
+class DyingAnimation;
 class AnimationFactory
 {
 public:
@@ -18,4 +19,7 @@ public:
 
     static BleedingAnimation* createBleedingAnimation(SceneNode *pieceNode,
         SceneManager *sceneMgr, const Real& duration);
+
+    static DyingAnimation* createDyingAnimation(SceneNode *pieceNode,
+        SceneManager *sceneMgr, double delay);
 };

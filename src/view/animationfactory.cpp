@@ -1,6 +1,7 @@
 #include "animationfactory.h"
 #include "bishopmovementanimation.h"
 #include "queenmovementanimation.h"
+#include "dyinganimation.h"
 
 MovementAnimation* AnimationFactory::createMovementAnimation(
     const char type, const Vector3& destination, SceneNode *movingNode,
@@ -25,14 +26,20 @@ BleedingAnimation* AnimationFactory::createBleedingAnimation(
     // Create a bloodstorm
     ParticleSystem* pSys = sceneMgr->createParticleSystem(
         GenericAnimation::nextName(), "Effects/Blood");
-    SceneNode* particleNode = sceneMgr->getRootSceneNode()->createChildSceneNode();
-    const Vector3& position = pieceNode->getPosition();
-    particleNode->translate(position.x, 150, position.z);
+    SceneNode* particleNode = pieceNode->createChildSceneNode();
+    //const Vector3& position = pieceNode->getPosition();
+    particleNode->translate(0, 150, 0);
     particleNode->attachObject(pSys);
     ParticleEmitter *emitter = pSys->getEmitter(0);
     emitter->setTimeToLive(duration + 1);
     pSys->setParticleQuota(emitter->getEmissionRate() * duration);
 
-    return new BleedingAnimation(particleNode, sceneMgr, duration + 1);
+    return new BleedingAnimation(pieceNode, sceneMgr, duration + 1, particleNode);
+}
+
+DyingAnimation* AnimationFactory::createDyingAnimation(SceneNode *pieceNode,
+    SceneManager *sceneMgr, double delay)
+{
+    return new DyingAnimation(pieceNode, sceneMgr, delay);
 }
 
