@@ -111,8 +111,6 @@ public:
         Vector3 path = mDestination - mMovingNode->getPosition();
         if (path.length() > distanceMoved)
         {
-
-            bool flyHigher = mMovingNode->getPosition().y < 500;
             switch (mPhase)
             {
             case 1:
@@ -863,6 +861,7 @@ protected:
         //pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
         pl.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
         pl.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
+        pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
         mInputManager = OIS::InputManager::createInputSystem(pl);
 
         try
