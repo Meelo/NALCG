@@ -95,14 +95,6 @@ public:
 
     virtual ~QueenMovementAnimation()
     {
-        // FIXME: this destruction method is too excessive.
-        // Causes the game to crash if this animation ends while others are playing.
-        mSceneMgr->destroyAllAnimations();
-        mSceneMgr->destroyAllAnimationStates();
-        mSceneMgr->destroyAllBillboardChains();
-        mSceneMgr->destroyAllBillboardSets();
-        mSceneMgr->destroyAllRibbonTrails();
-
         mMovingNode->removeAndDestroyAllChildren();
 
         for (std::size_t i = 0; i < mLights.size(); i++)
@@ -144,6 +136,7 @@ public:
                 path += Vector3(0, FLYING_ALTITUDE, 0);
                 break;
             case 3:
+            case 4:
                 {
                     if (mAttackCooldown <= 0 && mAttackCount > 0)
                     {
@@ -158,16 +151,23 @@ public:
 
                         //int waypoint = mAttackCount % 2 == 0 ? 100 : -100;
                         //int waypoint2 = mAttackCount % 4 <= 1 ? 100 : -100;
-                        Real waypoint = 300 * sin(double(mAttackCount));
-                        Real waypoint2 = 300 * cos(double(mAttackCount));
-                        kf = track->createNodeKeyFrame(1.5);
-                        kf->setTranslate(Vector3(waypoint, 500, waypoint2));
-                        kf = track->createNodeKeyFrame(2);
-                        kf->setTranslate(Vector3(waypoint, 200, waypoint2));
+                        Real waypointX = 100 * sin(double(mAttackCount));
+                        Real waypointY = 100 * cos(double(mAttackCount));
+                        Real waypointX2 = waypointX * 4;
+                        Real waypointY2 = waypointY * 4 + FLAT_ATTACKING_DISTANCE;
+                        waypointY += FLAT_ATTACKING_DISTANCE;
+                        kf = track->createNodeKeyFrame(0);
+                        kf->setTranslate(Vector3(0, 150, 0));
+                        //kf = track->createNodeKeyFrame(0.3);
+                        //kf->setTranslate(Vector3(waypointX, waypointY, -100));
+                        kf = track->createNodeKeyFrame(0.7);
+                        kf->setTranslate(Vector3(waypointX, waypointY, -200));
+                        kf = track->createNodeKeyFrame(1.8);
+                        kf->setTranslate(Vector3(waypointX2, waypointY2, -400));
                         kf = track->createNodeKeyFrame(2.5);
-                        kf->setTranslate(Vector3(0, -200, 0));
+                        kf->setTranslate(Vector3(0, FLAT_ATTACKING_DISTANCE, 400));
                         kf = track->createNodeKeyFrame(3);
-                        kf->setTranslate(Vector3(0, -600, 0));
+                        kf->setTranslate(Vector3(0, FLAT_ATTACKING_DISTANCE, 600));
 
                         AnimationState* animState = mSceneMgr->createAnimationState(anim->getName());
                         animState->setEnabled(true);
@@ -207,26 +207,49 @@ public:
                     if (mAttackCooldown > -ATTACK_ANIMATION_LENGTH)
                     {
                         path += Vector3(0, FLYING_ALTITUDE, 0);
-                        if (path.length() < distanceMoved)
+                        if (path.length() - FLAT_ATTACKING_DISTANCE < distanceMoved)
                         {
                             distanceMoved = 0;
-                            mMovingNode->setPosition(mDestination + Vector3(0, FLYING_ALTITUDE, 0));
+                            //mMovingNode->setPosition(mDestination + Vector3(0, FLYING_ALTITUDE, 0));
                         }
+                    }
+                    else if (mPhase == 3)
+                    {
+                        // FIXME: this destruction method is too excessive.
+                        // Causes the game to crash if this animation ends while others are playing.
+                        mSceneMgr->destroyAllAnimations();
+                        mSceneMgr->destroyAllAnimationStates();
+                        mSceneMgr->destroyAllBillboardChains();
+                        mSceneMgr->destroyAllBillboardSets();
+                        mSceneMgr->destroyAllRibbonTrails();
+
+                        mPhase = 4;
                     }
                     mAttackCooldown -= timeSinceLastFrame;
                 }
             }
 
             // Normalising the vector so the speed remains constant.
-            path.normalise();
-            mMovingNode->translate(path * distanceMoved);
 
-            /*if (flyHigher)
+
+            //mMovingNode->setOrientation(mMovingNode->getInitialOrientation());
+            if (distanceMoved > 0)
             {
-            movingNode->setOrientation(movingNode->getInitialOrientation());
-            Vector3 src = movingNode->getOrientation() * Vector3::UNIT_Z;
-            movingNode->rotate(src.getRotationTo(path));
-            }*/
+                path.normalise();
+                mMovingNode->translate(path * distanceMoved);
+
+                mMovingNode->resetOrientation();
+                Vector3 src = mMovingNode->getOrientation() * Vector3::UNIT_Z;
+                Vector3 flatPath = path;
+                flatPath.y = 0;
+                mMovingNode->rotate(src.getRotationTo(flatPath));
+
+                mMovingNode->pitch(Degree(mMovingNode->getPosition().y * 90.0 / FLYING_ALTITUDE));
+            }
+
+            /*Vector3 src = mMovingNode->getOrientation() * Vector3::UNIT_Z;
+            mMovingNode->rotate(src.getRotationTo(path));*/
+
 
             return true; // Animation still running.
         }
@@ -278,6 +301,7 @@ protected:
     static const int FLYING_ALTITUDE = 500;
     static const int ATTACK_COUNT = 30;
     static const int ATTACK_ANIMATION_LENGTH = 3;
+    static const int FLAT_ATTACKING_DISTANCE = 150;
     static const Real ATTACK_COOLDOWN;
     static int id;
 
