@@ -4,8 +4,8 @@
 #include "knight.h"
 #include "chessboard.h"
 
-const int Knight::X_DIRECTIONS[] = { -1, 1, 0 };
-const int Knight::Y_DIRECTIONS[] = { -2, -2, 0 };
+const int Knight::X_DIRECTIONS[] = { -1, 1, -1, 1, 2, 0 };
+const int Knight::Y_DIRECTIONS[] = { -2, -2, 2, 2, 1, 0 };
 
 Knight::Knight(const Piece::Colour& colour) : Piece(colour, "Knight")
 {

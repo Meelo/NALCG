@@ -142,15 +142,30 @@ void TestKnight::blackValidMoves_data()
     // These will be handled as instructions for creating new units
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
+    PieceHolder createUnitsAt02[] = { };
+    PieceHolder createUnitsAt03[] = { PieceHolder(11, 0) };
 
     // These are the expected valid move indices.
-    std::size_t case01[] = { };
+    std::size_t case01[] = { 16, 18};
+    std::size_t case02[] = { 21, 23 };
+    std::size_t case03[] = { 11, 21, 23 };
 
-    // TODO: index is not really -6.
-    QTest::newRow("starting positions, g8") << std::size_t(-6) 
+    QTest::newRow("starting positions, b8") << std::size_t(1) 
         << std::vector<PieceHolder>
             (createUnitsAt01, createUnitsAt01 + sizeof(createUnitsAt01) / sizeph)
         << std::vector<std::size_t>(case01, case01 + sizeof(case01) / sizet);
+
+    QTest::newRow("starting positions, g8") << std::size_t(6) 
+        << std::vector<PieceHolder>
+            (createUnitsAt02, createUnitsAt02 + sizeof(createUnitsAt02) / sizeph)
+        << std::vector<std::size_t>(case02, case02 + sizeof(case02) / sizet);
+    
+    QTest::newRow("starting positions, b8, empty d7") << std::size_t(2) 
+        << std::vector<PieceHolder>
+            (createUnitsAt03, createUnitsAt03 + sizeof(createUnitsAt03) / sizeph)
+        << std::vector<std::size_t>(case03, case03 + sizeof(case03) / sizet);
+
+
 }
 
 void TestKnight::blackValidMoves()
