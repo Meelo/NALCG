@@ -9,10 +9,13 @@
 class Bishop : public Piece
 {
     // Constants
+    static const int X_DIRECTIONS[];
+    static const int Y_DIRECTIONS[];
 
     // Members
 
     // Methods
+    bool isEmptyOrEdible(std::size_t index, const std::vector<Square>& squares) const;
 
 public:
     Bishop(const Piece::Colour& colour);
