@@ -9,6 +9,8 @@
 class Queen : public Piece
 {
     // Constants
+    static const int X_DIRECTIONS[];
+    static const int Y_DIRECTIONS[];
 
     // Members
 
@@ -21,6 +23,7 @@ public:
     // Methods
 
     // Getters
+    std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& squares) const;
     
     // Setters
 };
