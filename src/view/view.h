@@ -18,7 +18,7 @@ public:
     MovementAnimation(const Vector3& destination, SceneNode *movingNode,
         SceneNode *targetPiece, SceneManager *sceneMgr)
         : mDestination(destination), mMovingNode(movingNode),
-        mTargetPiece(targetPiece), mTargetPieceName(targetPiece->getName()),
+        mTargetPiece(targetPiece), mTargetPieceName(targetPiece ? targetPiece->getName() : ""),
         mSceneMgr(sceneMgr)
     {
     }
@@ -84,7 +84,8 @@ public:
     QueenMovementAnimation(const Vector3& destination, SceneNode *movingNode,
         SceneNode *targetPiece, SceneManager *sceneMgr)
         : MovementAnimation(destination, movingNode, targetPiece, sceneMgr),
-        mAttackCount(targetPiece ? ATTACK_COUNT : 0), mPhase(1), mTrail(0), mAttackCooldown(0)
+        mAttackCount(targetPiece ? ATTACK_COUNT : 0), mPhase(1), mTrail(0),
+        mAttackCooldown(targetPiece ? 0 : -ATTACK_ANIMATION_LENGTH)
     {
         assert(sceneMgr != 0);
         createBlasts();
@@ -200,12 +201,16 @@ public:
                     {
                         (*animi)->addTime(timeSinceLastFrame);
                     }
-                    // Stay floating until animations have ended.
+                    // Stay floating until attack animations have ended.
                     if (mAttackCooldown > -ATTACK_ANIMATION_LENGTH)
                     {
                         path += Vector3(0, FLYING_ALTITUDE, 0);
+                        if (path.length() < distanceMoved)
+                        {
+                            distanceMoved = 0;
+                            mMovingNode->setPosition(mDestination + Vector3(0, FLYING_ALTITUDE, 0));
+                        }
                     }
-
                     mAttackCooldown -= timeSinceLastFrame;
                 }
             }
