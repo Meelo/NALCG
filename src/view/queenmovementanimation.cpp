@@ -112,7 +112,7 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
 
                     mAnimationManager->addAnimation(
                         AnimationFactory::createDyingAnimation(
-                        mTargetPiece, mSceneMgr, ATTACK_COOLDOWN * ATTACK_COUNT * 2 / 3));
+                        mTargetPiece, mSceneMgr, ATTACK_COOLDOWN * ATTACK_COUNT * 3 / 4));
 
                     mBloodCountdown = std::numeric_limits<double>::infinity();
                 }
