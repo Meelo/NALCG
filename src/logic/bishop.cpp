@@ -38,8 +38,3 @@ std::vector<std::size_t> Bishop::getValidMoves(std::size_t location, const std::
     
     return validMoves;
 }
-
-bool Bishop::isEmptyOrEdible(std::size_t index, const std::vector<Square>& squares) const
-{
-    return !squares.at(index).hasPiece() || isOppositeColour(squares.at(index).getColourOfPiece());
-}

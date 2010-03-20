@@ -15,14 +15,13 @@ class Bishop : public Piece
     // Members
 
     // Methods
-    bool isEmptyOrEdible(std::size_t index, const std::vector<Square>& squares) const;
 
 public:
     Bishop(const Piece::Colour& colour);
     virtual ~Bishop() { }
 
     // Methods
-    std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& square) const;
+    std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& squares) const;
 
     // Getters
     
