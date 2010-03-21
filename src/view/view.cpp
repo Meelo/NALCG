@@ -4,11 +4,23 @@
 
 View::~View()
 {
+    if( mInputManager )
+    {
+        mInputManager->destroyInputObject( mMouse );
+        mInputManager->destroyInputObject( mKeyboard );
+        OIS::InputManager::destroyInputSystem(mInputManager);
+        mInputManager = 0;
+    }
+
     delete mSystem;
+    mSystem = 0;
     delete mRenderer;
+    mRenderer = 0;
 
     delete mListener;
+    mListener = 0;
     delete mRoot;
+    mRoot = 0;
 }
 
 void View::createRoot()
