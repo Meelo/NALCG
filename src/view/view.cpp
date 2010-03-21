@@ -218,6 +218,14 @@ void View::createPiece(char type, const std::string& modelName,
     {
         node->yaw(Degree(180));
     }
+    /*else if (type == 'K')
+    {
+            // Set idle animation
+        AnimationState *mAnimationState = ent->getAnimationState("testi2");
+        mAnimationState->setLoop(true);
+        mAnimationState->setEnabled(true);
+        mAnimationState->addTime(3);
+    }*/
     node->setInitialState();
 }
 

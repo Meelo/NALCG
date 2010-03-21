@@ -48,5 +48,6 @@ protected:
     virtual void onLeftReleased(const OIS::MouseEvent &arg);
     virtual void onRightPressed(const OIS::MouseEvent &arg);
     virtual void onRightReleased(const OIS::MouseEvent &arg);
+    virtual void showMovementPossibilities();
 };
 

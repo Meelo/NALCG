@@ -223,11 +223,17 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent &arg)
                     ent->setVisible(true);
                     ent->setMaterialName("board/square/cyan");
                     pieceNode->showBoundingBox(true);
+                    showMovementPossibilities();
                 }
             }
             break;
         }
     }
+}
+
+void BufferedInputHandler::showMovementPossibilities()
+{
+
 }
 
 SceneNode* BufferedInputHandler::findPieceAbove(SceneNode* squareNode)
