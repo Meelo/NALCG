@@ -53,12 +53,33 @@ void TestKnight::whiteValidMoves_data()
     PieceHolder createUnitsAt02[] = { };
     PieceHolder createUnitsAt03[] = { PieceHolder(51, 0) };
     PieceHolder createUnitsAt04[] = { PieceHolder(52, 0) };
-
+    PieceHolder createUnitsAt05[] = { PieceHolder(40, new Pawn(Piece::BLACK)) };
+    PieceHolder createUnitsAt06[] = { PieceHolder(51, new Pawn(Piece::BLACK)) };
+    PieceHolder createUnitsAt07[] = { PieceHolder(52, new Pawn(Piece::BLACK)) };
+    PieceHolder createUnitsAt08[] = { PieceHolder(47, new Pawn(Piece::BLACK)) };
+    PieceHolder createUnitsAt09[] = {   PieceHolder(34, new Knight(Piece::WHITE)),
+                                        PieceHolder(49, 0), 
+                                        PieceHolder(51, 0) };
+    PieceHolder createUnitsAt10[] = {   PieceHolder(34, new Knight(Piece::WHITE)),
+                                        PieceHolder(17, new Pawn(Piece::WHITE)),
+                                        PieceHolder(19, new Pawn(Piece::WHITE)),
+                                        PieceHolder(24, new Pawn(Piece::WHITE)),
+                                        PieceHolder(28, new Pawn(Piece::WHITE)),
+                                        PieceHolder(40, new Pawn(Piece::WHITE)),
+                                        PieceHolder(44, new Pawn(Piece::WHITE)) };
+    
     // These are the expected valid move indices.
     std::size_t case01[] = { 40, 42 };
     std::size_t case02[] = { 45, 47 };
     std::size_t case03[] = { 40, 42, 51 };
     std::size_t case04[] = { 45, 47, 52 };
+    std::size_t case05[] = { 40, 42 };
+    std::size_t case06[] = { 40, 42, 51 };
+    std::size_t case07[] = { 45, 47, 52 };
+    std::size_t case08[] = { 45, 47 };
+    std::size_t case09[] = { 17, 19, 24, 28, 40, 44, 49, 51 };
+    std::size_t case10[] = { };
+
 
     QTest::newRow("starting positions, b1") << std::size_t(57)
         << std::vector<PieceHolder>
@@ -79,6 +100,37 @@ void TestKnight::whiteValidMoves_data()
         << std::vector<PieceHolder>
             (createUnitsAt04, createUnitsAt04 + sizeof(createUnitsAt04) / sizeph)
         << std::vector<std::size_t>(case04, case04 + sizeof(case04) / sizet);
+
+    QTest::newRow("starting positions, b1, edible at a3") << std::size_t(57)
+        << std::vector<PieceHolder>
+            (createUnitsAt05, createUnitsAt05 + sizeof(createUnitsAt05) / sizeph)
+        << std::vector<std::size_t>(case05, case05 + sizeof(case05) / sizet);
+    
+    QTest::newRow("starting positions, b1, edible at d2") << std::size_t(57)
+        << std::vector<PieceHolder>
+            (createUnitsAt06, createUnitsAt06 + sizeof(createUnitsAt06) / sizeph)
+        << std::vector<std::size_t>(case06, case06 + sizeof(case06) / sizet);
+    
+    QTest::newRow("starting positions, g1, edible at h3") << std::size_t(62)
+        << std::vector<PieceHolder>
+            (createUnitsAt07, createUnitsAt07 + sizeof(createUnitsAt07) / sizeph)
+        << std::vector<std::size_t>(case07, case07 + sizeof(case07) / sizet);
+    
+    QTest::newRow("starting positions, g1, edible at e2") << std::size_t(62)
+        << std::vector<PieceHolder>
+            (createUnitsAt08, createUnitsAt08 + sizeof(createUnitsAt08) / sizeph)
+        << std::vector<std::size_t>(case08, case08 + sizeof(case08) / sizet);
+    
+    QTest::newRow("middle of the map, all movements possible" ) << std::size_t(34)
+        << std::vector<PieceHolder>
+            (createUnitsAt09, createUnitsAt09 + sizeof(createUnitsAt09) / sizeph)
+        << std::vector<std::size_t>(case09, case09 + sizeof(case09) / sizet);
+    
+    QTest::newRow("middle of the map, all movements blocked" ) << std::size_t(34)
+        << std::vector<PieceHolder>
+            (createUnitsAt10, createUnitsAt10 + sizeof(createUnitsAt10) / sizeph)
+        << std::vector<std::size_t>(case10, case10 + sizeof(case10) / sizet);
+
 }
 
 void TestKnight::whiteValidMoves()
