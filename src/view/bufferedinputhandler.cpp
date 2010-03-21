@@ -206,6 +206,9 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent &arg)
                 }
                 mSelectedObject->showBoundingBox(false);
                 pieceNode->showBoundingBox(false);
+                Entity *ent = mSceneMgr->getEntity(mSelectedObject->getName() + "s");
+                ent->setVisible(false);
+                ent->setMaterialName("board/square/green");
                 mSelectedObject = 0;
             }
             else
@@ -216,6 +219,9 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent &arg)
                 {
                     mSelectedObject = squareNode;
                     mSelectedObject->showBoundingBox(true);
+                    Entity *ent = mSceneMgr->getEntity(mSelectedObject->getName() + "s");
+                    ent->setVisible(true);
+                    ent->setMaterialName("board/square/cyan");
                     pieceNode->showBoundingBox(true);
                 }
             }

@@ -271,9 +271,9 @@ void View::createScene()
             name << "Board" << i << "," << j;
 
             ent = mSceneMgr->createEntity(name.str(), "square");
-            mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(),
-                Vector3(-700 + i * 200, 0, -700 + j * 200)
-                )->attachObject(ent);
+            SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(
+                name.str(), Vector3(-700 + i * 200, 0, -700 + j * 200));
+            node->attachObject(ent);
 
             if ((i + j) % 2 == 0)
             {
@@ -284,9 +284,17 @@ void View::createScene()
                 ent->setMaterialName("board/square/white");
             }
             ent->setQueryFlags(1 << 0);
+
+            // Create transparent squares on top of normal squares.
+            // These squares indicate possible movement locations.
+            name << "s";
+            ent = mSceneMgr->createEntity(name.str(), "square");
+            ent->setMaterialName("board/square/green");
+            ent->setQueryFlags(0);
+            node->attachObject(ent);
+            ent->setVisible(false);
         }
     }
-
     light = mSceneMgr->createLight("Yellow");
     light->setType(Light::LT_POINT);
     light->setPosition(Vector3(150, 250, 150));
