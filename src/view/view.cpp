@@ -150,15 +150,53 @@ void View::createViewports()
 // The function to create our decal projector
 void View::createProjector()
 {
+    // set up the main decal projection frustum
     mDecalFrustum = new Frustum();
     mProjectorNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("DecalProjectorNode");
     mProjectorNode->attachObject(mDecalFrustum);
-    mProjectorNode->setPosition(0,5,0);
+    mProjectorNode->setPosition(0,500,1500);
+    mDecalFrustum->setQueryFlags(0);
+
+    // include these two lines if you don't want perspective projection
+    //mDecalFrustum->setProjectionType(PT_ORTHOGRAPHIC);
+    //mDecalFrustum->setNearClipDistance(25);
+
+    // set up the perpendicular filter texture frustum
+    mFilterFrustum = new Frustum();
+    mFilterFrustum->setProjectionType(PT_ORTHOGRAPHIC);
+    SceneNode *filterNode = mProjectorNode->createChildSceneNode("DecalFilterNode");
+    filterNode->attachObject(mFilterFrustum);
+    filterNode->setOrientation(Quaternion(Degree(90),Vector3::UNIT_Y));
+    mFilterFrustum->setQueryFlags(0);
 }
 
 // A function to take an existing material and make it receive the projected decal
 void View::makeMaterialReceiveDecal(const String &matName)
 {
+    // get the material
+    MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName(matName);
+
+    // create a new pass in the material to render the decal
+    Pass *pass = mat->getTechnique(0)->createPass();
+
+    // set our pass to blend the decal over the model's regular texture
+    pass->setSceneBlending(SBT_TRANSPARENT_ALPHA);
+    pass->setDepthBias(1);
+
+    // set the decal to be self illuminated instead of lit by scene lighting
+    pass->setLightingEnabled(false);
+
+    // set up the decal's texture unit
+    TextureUnitState *texState = pass->createTextureUnitState("decal.png");
+    texState->setProjectiveTexturing(true, mDecalFrustum);
+    texState->setTextureAddressingMode(TextureUnitState::TAM_CLAMP);
+    texState->setTextureFiltering(FO_POINT, FO_LINEAR, FO_NONE);
+
+    // set up the filter texture's texture unit
+    texState = pass->createTextureUnitState("decal_filter.png");
+    texState->setProjectiveTexturing(true, mFilterFrustum);
+    texState->setTextureAddressingMode(TextureUnitState::TAM_CLAMP);
+    texState->setTextureFiltering(TFO_NONE);
 }
 
 void View::createPiece(char type, const std::string& modelName,
@@ -233,9 +271,9 @@ void View::createScene()
             name << "Board" << i << "," << j;
 
             ent = mSceneMgr->createEntity(name.str(), "square");
-            mSceneMgr->getRootSceneNode()->createChildSceneNode(name.str(),
-                Vector3(-700 + i * 200, 0, -700 + j * 200)
-                )->attachObject(ent);
+            SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(
+                name.str(), Vector3(-700 + i * 200, 0, -700 + j * 200));
+            node->attachObject(ent);
 
             if ((i + j) % 2 == 0)
             {
@@ -246,9 +284,17 @@ void View::createScene()
                 ent->setMaterialName("board/square/white");
             }
             ent->setQueryFlags(1 << 0);
+
+            // Create transparent squares on top of normal squares.
+            // These squares indicate possible movement locations.
+            name << "s";
+            ent = mSceneMgr->createEntity(name.str(), "square");
+            ent->setMaterialName("board/square/green");
+            ent->setQueryFlags(0);
+            node->attachObject(ent);
+            ent->setVisible(false);
         }
     }
-
     light = mSceneMgr->createLight("Yellow");
     light->setType(Light::LT_POINT);
     light->setPosition(Vector3(150, 250, 150));
@@ -283,4 +329,17 @@ void View::createScene()
         CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
     debug->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
+
+    /*// Create the decal projector
+    createProjector();
+
+    // Make all of the materials in the head entities receive the decal
+    //for (unsigned int i = 0; i < ent->getNumSubEntities(); i++)
+        //makeMaterialReceiveDecal(ent->getSubEntity(i)->getMaterialName());
+    makeMaterialReceiveDecal("board/square/white");
+    makeMaterialReceiveDecal("board/square/black");
+    makeMaterialReceiveDecal("asdfasf");
+    makeMaterialReceiveDecal("color_247_242_229");
+    makeMaterialReceiveDecal("22-Default");
+    makeMaterialReceiveDecal("18-Default");*/
 }
