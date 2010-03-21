@@ -350,4 +350,10 @@ void View::createScene()
     makeMaterialReceiveDecal("color_247_242_229");
     makeMaterialReceiveDecal("22-Default");
     makeMaterialReceiveDecal("18-Default");*/
+    //mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
+    ent = mSceneMgr->createEntity("ground", "ground.mesh");
+    ent->setQueryFlags(0);
+    mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -1, 0))->attachObject(ent);
+
+    mSceneMgr->setSkyDome(true, "Sky", 10, 4);
 }
