@@ -50,14 +50,37 @@ void TestKing::whiteValidMoves_data()
     // These will be handled as instructions for creating new units
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
+    PieceHolder createUnitsAt02[] = { PieceHolder(61, 0) };
+    PieceHolder createUnitsAt03[] = { PieceHolder(59, 0) };
+    PieceHolder createUnitsAt04[] = { PieceHolder(52, 0) };
 
     // These are the expected valid move indices.
     std::size_t case01[] = { };
+    std::size_t case02[] = { 61 };
+    std::size_t case03[] = { 59 };
+    std::size_t case04[] = { 52 };
 
     QTest::newRow("starting positions, e1") << std::size_t(60)
         << std::vector<PieceHolder>
             (createUnitsAt01, createUnitsAt01 + sizeof(createUnitsAt01) / sizeph)
         << std::vector<std::size_t>(case01, case01 + sizeof(case01) / sizet);
+
+    QTest::newRow("starting positions, e1, empty f1") << std::size_t(60) 
+        << std::vector<PieceHolder>
+            (createUnitsAt02, createUnitsAt02 + sizeof(createUnitsAt02) / sizeph)
+        << std::vector<std::size_t>(case02, case02 + sizeof(case02) / sizet);
+    
+    QTest::newRow("starting positions, e1, empty d1") << std::size_t(60) 
+        << std::vector<PieceHolder>
+            (createUnitsAt03, createUnitsAt03 + sizeof(createUnitsAt03) / sizeph)
+        << std::vector<std::size_t>(case03, case03 + sizeof(case03) / sizet);
+    
+    QTest::newRow("starting positions, e1, empty e2") << std::size_t(60) 
+        << std::vector<PieceHolder>
+            (createUnitsAt04, createUnitsAt04 + sizeof(createUnitsAt04) / sizeph)
+        << std::vector<std::size_t>(case04, case04 + sizeof(case04) / sizet);
+
+
 }
 
 void TestKing::whiteValidMoves()
@@ -73,7 +96,7 @@ void TestKing::whiteValidMoves()
         PieceHolder ph = new_units.at(i);
         std::size_t location = ph.location;
         squares.at(location).addPiece(ph.piece);
-        QVERIFY(squares.at(location).hasPiece());
+        if (ph.piece) QVERIFY(squares.at(location).hasPiece());
     }
 
     Board* board = new ChessBoard(squares);
@@ -114,14 +137,37 @@ void TestKing::blackValidMoves_data()
     // These will be handled as instructions for creating new units
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
+    PieceHolder createUnitsAt02[] = { PieceHolder(5, 0) };
+    PieceHolder createUnitsAt03[] = { PieceHolder(3, 0) };
+    PieceHolder createUnitsAt04[] = { PieceHolder(12, 0) };
 
     // These are the expected valid move indices.
     std::size_t case01[] = { };
+    std::size_t case02[] = { 5 };
+    std::size_t case03[] = { 3 };
+    std::size_t case04[] = { 12 };
 
     QTest::newRow("starting positions, e8") << std::size_t(4) 
         << std::vector<PieceHolder>
             (createUnitsAt01, createUnitsAt01 + sizeof(createUnitsAt01) / sizeph)
         << std::vector<std::size_t>(case01, case01 + sizeof(case01) / sizet);
+
+    QTest::newRow("starting positions, e8, empty f8") << std::size_t(4) 
+        << std::vector<PieceHolder>
+            (createUnitsAt02, createUnitsAt02 + sizeof(createUnitsAt02) / sizeph)
+        << std::vector<std::size_t>(case02, case02 + sizeof(case02) / sizet);
+    
+    QTest::newRow("starting positions, e8, empty d8") << std::size_t(4) 
+        << std::vector<PieceHolder>
+            (createUnitsAt03, createUnitsAt03 + sizeof(createUnitsAt03) / sizeph)
+        << std::vector<std::size_t>(case03, case03 + sizeof(case03) / sizet);
+    
+    QTest::newRow("starting positions, e8, empty e7") << std::size_t(4) 
+        << std::vector<PieceHolder>
+            (createUnitsAt04, createUnitsAt04 + sizeof(createUnitsAt04) / sizeph)
+        << std::vector<std::size_t>(case04, case04 + sizeof(case04) / sizet);
+
+
 }
 
 void TestKing::blackValidMoves()
