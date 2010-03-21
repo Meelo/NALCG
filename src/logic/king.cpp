@@ -4,8 +4,8 @@
 #include "king.h"
 #include "chessboard.h"
 
-const int King::X_DIRECTIONS[] = { 1, -1, 0,  0, 0 };
-const int King::Y_DIRECTIONS[] = { 0,  0, 1, -1, 0 };
+const int King::X_DIRECTIONS[] = { 1, -1, 0,  0, -1, -1, 1,  1, 0 };
+const int King::Y_DIRECTIONS[] = { 0,  0, 1, -1,  1, -1, 1, -1, 0 };
 
 King::King(const Piece::Colour& colour) : Piece(colour, "King")
 {

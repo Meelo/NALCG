@@ -53,12 +53,16 @@ void TestKing::whiteValidMoves_data()
     PieceHolder createUnitsAt02[] = { PieceHolder(61, 0) };
     PieceHolder createUnitsAt03[] = { PieceHolder(59, 0) };
     PieceHolder createUnitsAt04[] = { PieceHolder(52, 0) };
+    PieceHolder createUnitsAt05[] = { PieceHolder(51, 0) };
+    PieceHolder createUnitsAt06[] = { PieceHolder(53, 0) };
 
     // These are the expected valid move indices.
     std::size_t case01[] = { };
     std::size_t case02[] = { 61 };
     std::size_t case03[] = { 59 };
     std::size_t case04[] = { 52 };
+    std::size_t case05[] = { 51 };
+    std::size_t case06[] = { 53 };
 
     QTest::newRow("starting positions, e1") << std::size_t(60)
         << std::vector<PieceHolder>
@@ -79,7 +83,16 @@ void TestKing::whiteValidMoves_data()
         << std::vector<PieceHolder>
             (createUnitsAt04, createUnitsAt04 + sizeof(createUnitsAt04) / sizeph)
         << std::vector<std::size_t>(case04, case04 + sizeof(case04) / sizet);
+    
+    QTest::newRow("starting positions, e1, empty d2") << std::size_t(60) 
+        << std::vector<PieceHolder>
+            (createUnitsAt05, createUnitsAt05 + sizeof(createUnitsAt05) / sizeph)
+        << std::vector<std::size_t>(case05, case05 + sizeof(case05) / sizet);
 
+    QTest::newRow("starting positions, e1, empty f2") << std::size_t(60) 
+        << std::vector<PieceHolder>
+            (createUnitsAt06, createUnitsAt06 + sizeof(createUnitsAt06) / sizeph)
+        << std::vector<std::size_t>(case06, case06 + sizeof(case06) / sizet);
 
 }
 
@@ -140,12 +153,16 @@ void TestKing::blackValidMoves_data()
     PieceHolder createUnitsAt02[] = { PieceHolder(5, 0) };
     PieceHolder createUnitsAt03[] = { PieceHolder(3, 0) };
     PieceHolder createUnitsAt04[] = { PieceHolder(12, 0) };
+    PieceHolder createUnitsAt05[] = { PieceHolder(11, 0) };
+    PieceHolder createUnitsAt06[] = { PieceHolder(13, 0) };
 
     // These are the expected valid move indices.
     std::size_t case01[] = { };
     std::size_t case02[] = { 5 };
     std::size_t case03[] = { 3 };
     std::size_t case04[] = { 12 };
+    std::size_t case05[] = { 11 };
+    std::size_t case06[] = { 13 };
 
     QTest::newRow("starting positions, e8") << std::size_t(4) 
         << std::vector<PieceHolder>
@@ -167,7 +184,15 @@ void TestKing::blackValidMoves_data()
             (createUnitsAt04, createUnitsAt04 + sizeof(createUnitsAt04) / sizeph)
         << std::vector<std::size_t>(case04, case04 + sizeof(case04) / sizet);
 
+    QTest::newRow("starting positions, e8, empty d7") << std::size_t(4) 
+        << std::vector<PieceHolder>
+            (createUnitsAt05, createUnitsAt05 + sizeof(createUnitsAt05) / sizeph)
+        << std::vector<std::size_t>(case05, case05 + sizeof(case05) / sizet);
 
+    QTest::newRow("starting positions, e8, empty f7") << std::size_t(4) 
+        << std::vector<PieceHolder>
+            (createUnitsAt06, createUnitsAt06 + sizeof(createUnitsAt06) / sizeph)
+        << std::vector<std::size_t>(case06, case06 + sizeof(case06) / sizet);
 }
 
 void TestKing::blackValidMoves()
