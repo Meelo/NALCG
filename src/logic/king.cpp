@@ -28,7 +28,6 @@ std::vector<std::size_t> King::getValidMoves(std::size_t location,
         if (location < squares.size() && isEmptyOrEdible(location, squares))
         {
             validMoves.push_back(location);
-            if (isOppositeColour(squares.at(location).getColourOfPiece())) break;
 
             std::size_t x1 = x, y1 = y;
             ChessBoard::getCoordinates(location, x1, y1);
