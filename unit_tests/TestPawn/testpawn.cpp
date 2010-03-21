@@ -65,6 +65,7 @@ void TestPawn::whiteValidMoves_data()
     PieceHolder createUnitsAt11[] = {   PieceHolder(8, new Pawn(Piece::WHITE)),
                                         PieceHolder(1, new Pawn(Piece::WHITE)),
                                         PieceHolder(0, 0)};
+    PieceHolder createUnitsAt12[] = { PieceHolder(15, new Pawn(Piece::WHITE)) };
 
     // These are the expected valid move indices.
     std::size_t case01[] = { 32, 40 };
@@ -78,6 +79,7 @@ void TestPawn::whiteValidMoves_data()
     std::size_t case09[] = { 35 };
     std::size_t case10[] = { 35 };
     std::size_t case11[] = { 0 };
+    std::size_t case12[] = { 6 };
 
     QTest::newRow("starting positions, a2") << std::size_t(48) 
         << std::vector<PieceHolder>
@@ -133,6 +135,11 @@ void TestPawn::whiteValidMoves_data()
         << std::vector<PieceHolder>
             (createUnitsAt11, createUnitsAt11 + sizeof(createUnitsAt11) / sizeph)
         << std::vector<std::size_t>(case11, case11 + sizeof(case11) / sizet);
+
+    QTest::newRow("pawn at h7, edible g6, bug testing") << std::size_t(15)
+        << std::vector<PieceHolder>
+            (createUnitsAt12, createUnitsAt12 + sizeof(createUnitsAt12) / sizeph)
+        << std::vector<std::size_t>(case12, case12 + sizeof(case12) / sizet);
 }
 
 void TestPawn::whiteValidMoves()
