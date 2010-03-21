@@ -4,13 +4,6 @@
 
 View::~View()
 {
-    if (mInputManager)
-    {
-        mInputManager->destroyInputObject(mKeyboard);
-        mInputManager->destroyInputObject(mMouse);
-        OIS::InputManager::destroyInputSystem(mInputManager);
-    }
-
     delete mSystem;
     delete mRenderer;
 
@@ -122,11 +115,31 @@ void View::createFrameListener()
 {
     mListener = new ViewFrameListener(mKeyboard, mMouse, mWindow, mCamera, mSceneMgr);
     mRoot->addFrameListener(mListener);
+
+    
+    WindowEventUtilities::addWindowEventListener(mWindow, this);
 }
 
 void View::startRenderLoop()
 {
     mRoot->startRendering();
+}
+
+//Unattach OIS before window shutdown (very important under Linux)
+void View::windowClosed(RenderWindow* rw)
+{
+    //Only close for window that created OIS (the main window in these demos)
+    if( rw == mWindow )
+    {
+        if( mInputManager )
+        {
+            mInputManager->destroyInputObject( mMouse );
+            mInputManager->destroyInputObject( mKeyboard );
+            OIS::InputManager::destroyInputSystem(mInputManager);
+            mInputManager = 0;
+            mListener->quit(CEGUI::EventArgs());
+        }
+    }
 }
 
 void View::createCamera()

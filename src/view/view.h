@@ -8,7 +8,7 @@
 using namespace Ogre;
 
 class ViewFrameListener;
-class View
+class View : public WindowEventListener
 {
 public:
     View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
@@ -61,6 +61,7 @@ protected:
     void setupCEGUI();
     void createFrameListener();
     void startRenderLoop();
+    virtual void windowClosed(RenderWindow* rw);
     virtual void createCamera();
     virtual void createViewports();
 

@@ -2,11 +2,15 @@
 
 bool ViewFrameListener::frameStarted(const FrameEvent& evt)
 {
+    if (!mContinue)
+    {
+        return false;
+    }
     mKeyboard->capture();
     mMouse->capture();
     mHandler.moveCamera(evt.timeSinceLastFrame);
     mAnimationManager.executeAnimations(evt.timeSinceLastFrame);
-    return mContinue && !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
+    return !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
 }
 
 bool ViewFrameListener::frameEnded(const FrameEvent& evt)
