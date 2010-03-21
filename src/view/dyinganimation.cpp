@@ -1,1 +1,1 @@
-#include "DyingAnimation.h"
+#include "dyinganimation.h"
