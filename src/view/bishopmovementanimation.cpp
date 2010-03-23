@@ -24,7 +24,7 @@ bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
                     AnimationFactory::createBleedingAnimation(
                     mTargetPiece, mSceneMgr, 0.8, 3, "Effects/Smoke"));
             }
-            if (mAttackDuration < 4)
+            if (mAttackDuration < 4 && mSceneMgr->hasSceneNode(mTargetPieceName))
             {
                 mTargetPiece->yaw(Degree(timeSinceLastFrame * 80));
             }

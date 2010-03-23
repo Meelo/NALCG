@@ -26,6 +26,12 @@ void AnimationManager::stopAllAnimationsBelongingTo(SceneNode *targetNode)
         {
             endAnimation(i);
         }
+        
+        // In case ending one animation caused other animations to end.
+        if (i > mGenericAnimations.size())
+        {
+            i = mGenericAnimations.size();
+        }
     }
 }
 
