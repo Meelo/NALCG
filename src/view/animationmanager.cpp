@@ -9,6 +9,12 @@ void AnimationManager::executeAnimations(double timeSinceLastFrame)
         {
             endAnimation(i);
         }
+
+        // In case ending one animation caused other animations to end.
+        if (i > mGenericAnimations.size())
+        {
+            i = mGenericAnimations.size();
+        }
     }
 }
 
@@ -26,6 +32,9 @@ void AnimationManager::stopAllAnimationsBelongingTo(SceneNode *targetNode)
 void AnimationManager::endAnimation(std::size_t index)
 {
     std::swap(mGenericAnimations.at(index), mGenericAnimations.back());
-    delete mGenericAnimations.back();
+    GenericAnimation* animation = mGenericAnimations.back();
     mGenericAnimations.pop_back();
+    // First pop it, then delete it in case the deletion causes another deletion.
+    delete animation;
+
 }
