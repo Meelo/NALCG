@@ -1,4 +1,6 @@
 #include "bishopmovementanimation.h"
+#include "animationfactory.h"
+#include "dyinganimation.h"
 
 bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
 {
@@ -7,12 +9,26 @@ bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
 
     if (path.length() > distanceMoved)
     {
-        if (path.length() < 100 && mAttackDuration > 0)
+        if (path.length() < 280 && mAttackDuration > 0)
         {
             if (!mParticleNode)
             {
                 createBlasts();
+                mAnimationManager->addAnimation(
+                    AnimationFactory::createDyingAnimation(
+                    mTargetPiece, mSceneMgr, 2));
+                mAnimationManager->addAnimation(
+                    AnimationFactory::createBleedingAnimation(
+                    mTargetPiece, mSceneMgr, 0.8, 2.5, "Effects/Burn"));
+                mAnimationManager->addAnimation(
+                    AnimationFactory::createBleedingAnimation(
+                    mTargetPiece, mSceneMgr, 0.8, 3, "Effects/Smoke"));
             }
+            if (mAttackDuration < 4)
+            {
+                mTargetPiece->yaw(Degree(timeSinceLastFrame * 80));
+            }
+
             mAttackDuration -= timeSinceLastFrame;
         }
         else {
@@ -43,9 +59,9 @@ void BishopMovementAnimation::createBlasts()
         nextName(), "Effects/Flame");
     mParticleNode = mAnimatedNode->createChildSceneNode();
     //const Vector3& position = pieceNode->getPosition();
-    mParticleNode->translate(0, 150, 0);
+    mParticleNode->translate(-90, 270, 90);
     mParticleNode->attachObject(pSys);
     ParticleEmitter *emitter = pSys->getEmitter(0);
-    emitter->setTimeToLive(mAttackDuration + 1);
+    //emitter->setTimeToLive(mAttackDuration + 1);
     pSys->setParticleQuota(emitter->getEmissionRate() * mAttackDuration);
 }

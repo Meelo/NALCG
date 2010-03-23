@@ -21,20 +21,23 @@ MovementAnimation* AnimationFactory::createMovementAnimation(
 }
 
 BleedingAnimation* AnimationFactory::createBleedingAnimation(
-    SceneNode *pieceNode, SceneManager *sceneMgr, const Real& duration)
+    SceneNode *pieceNode, SceneManager *sceneMgr, const Real& delay,
+    const Real& duration, const std::string& effectName)
 {
     // Create a bloodstorm
     ParticleSystem* pSys = sceneMgr->createParticleSystem(
-        GenericAnimation::nextName(), "Effects/Blood");
+        GenericAnimation::nextName(), effectName);
     SceneNode* particleNode = pieceNode->createChildSceneNode();
     //const Vector3& position = pieceNode->getPosition();
     particleNode->translate(0, 150, 0);
     particleNode->attachObject(pSys);
     ParticleEmitter *emitter = pSys->getEmitter(0);
-    emitter->setTimeToLive(duration + 1);
+    emitter->setTimeToLive(duration + 3);
+    emitter->setStartTime(delay + 0.01);
     pSys->setParticleQuota(emitter->getEmissionRate() * duration);
 
-    return new BleedingAnimation(pieceNode, sceneMgr, duration + 1, particleNode);
+    return new BleedingAnimation(pieceNode, sceneMgr, duration + 3,
+        particleNode, delay);
 }
 
 DyingAnimation* AnimationFactory::createDyingAnimation(SceneNode *pieceNode,

@@ -18,7 +18,8 @@ public:
         AnimationManager *animationManager);
 
     static BleedingAnimation* createBleedingAnimation(SceneNode *pieceNode,
-        SceneManager *sceneMgr, const Real& duration);
+        SceneManager *sceneMgr, const Real& delay, const Real& duration, 
+        const std::string& effectName = "Effects/Blood");
 
     static DyingAnimation* createDyingAnimation(SceneNode *pieceNode,
         SceneManager *sceneMgr, double delay);

@@ -108,7 +108,7 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
                 {
                     mAnimationManager->addAnimation(
                         AnimationFactory::createBleedingAnimation(
-                        mTargetPiece, mSceneMgr, ATTACK_COOLDOWN * ATTACK_COUNT));
+                        mTargetPiece, mSceneMgr, 0, ATTACK_COOLDOWN * ATTACK_COUNT));
 
                     mAnimationManager->addAnimation(
                         AnimationFactory::createDyingAnimation(
