@@ -1,6 +1,7 @@
 #include "animationfactory.h"
 #include "bishopmovementanimation.h"
 #include "queenmovementanimation.h"
+#include "knightmovementanimation.h"
 #include "dyinganimation.h"
 
 MovementAnimation* AnimationFactory::createMovementAnimation(
@@ -14,6 +15,8 @@ MovementAnimation* AnimationFactory::createMovementAnimation(
         return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
     case 'Q':
         return new QueenMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
+    case 'N':
+        return new KnightMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
     default:
         // TODO: change this to return 0 for testing when everything should be done.
         return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
