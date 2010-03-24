@@ -3,6 +3,7 @@
 #include "queenmovementanimation.h"
 #include "knightmovementanimation.h"
 #include "dyinganimation.h"
+#include "CameraShakeAnimation.h"
 
 MovementAnimation* AnimationFactory::createMovementAnimation(
     const char type, const Vector3& destination, SceneNode *movingNode,
@@ -44,8 +45,12 @@ BleedingAnimation* AnimationFactory::createBleedingAnimation(
 }
 
 DyingAnimation* AnimationFactory::createDyingAnimation(SceneNode *pieceNode,
-    SceneManager *sceneMgr, double delay)
+    SceneManager *sceneMgr, double delay, double dyingSpeedMultiplier)
 {
-    return new DyingAnimation(pieceNode, sceneMgr, delay);
+    return new DyingAnimation(pieceNode, sceneMgr, delay, dyingSpeedMultiplier);
 }
 
+CameraShakeAnimation* AnimationFactory::createCameraShakeAnimation(Camera* camera, SceneManager* sceneMgr)
+{
+    return new CameraShakeAnimation(camera, sceneMgr);
+}

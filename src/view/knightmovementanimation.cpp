@@ -1,4 +1,15 @@
 #include "knightmovementanimation.h"
+#include "animationfactory.h"
+#include "dyinganimation.h"
+#include "camerashakeanimation.h"
+
+KnightMovementAnimation::~KnightMovementAnimation()
+{
+    Camera* camera = mSceneMgr->getCameraIterator().getNext();
+    mAnimationManager->addAnimation(
+        AnimationFactory::createCameraShakeAnimation(
+        camera, mSceneMgr));
+}
 
 bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
 {
@@ -8,6 +19,17 @@ bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
 
     if (path.length() > distanceMoved)
     {
+        if (mTargetPiece && path.length() < 90 && !mCrushedEnemy)
+        {
+            mAnimationManager->addAnimation(
+                AnimationFactory::createDyingAnimation(
+                mTargetPiece, mSceneMgr, 0, 15));
+            mAnimationManager->addAnimation(
+                AnimationFactory::createBleedingAnimation(
+                mTargetPiece, mSceneMgr, 0, 0.5));
+            mCrushedEnemy = true;
+        }
+
         // Initial vertical velocity is half of the length of the total distance
         // Path shortens while knight travels towards its target and has the same
         // effect as gravity would have to the vertical speed.
