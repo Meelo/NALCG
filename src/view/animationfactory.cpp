@@ -3,7 +3,7 @@
 #include "queenmovementanimation.h"
 #include "knightmovementanimation.h"
 #include "dyinganimation.h"
-#include "CameraShakeAnimation.h"
+#include "camerashakeanimation.h"
 
 MovementAnimation* AnimationFactory::createMovementAnimation(
     const char type, const Vector3& destination, SceneNode *movingNode,
