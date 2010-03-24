@@ -33,7 +33,7 @@ void Square::addPiece(Piece* newPiece)
 {
     // TODO: All pieces should be in a container which is emptied in 
     // the end of game. This is because we want to be able to undo all previous
-    // movements, so lets hold on to those pointers.
+    // movements, so let's hold on to those pointers.
     delete piece;
     piece = newPiece; 
 }

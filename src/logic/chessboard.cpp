@@ -94,26 +94,11 @@ std::vector<Square> ChessBoard::createBoard()
 bool ChessBoard::getCoordinates(std::size_t index, std::size_t& column, 
     std::size_t& row)
 {
-    if (index >= BOARD_SIZE)
-    {
-        column = -1;
-        row = -1;
-        return false;
-    }
-
-    column = index % WIDTH;
-    row = index / WIDTH;
-
-    return true;
+    return Board::getCoordinates(index, column, row, WIDTH, HEIGHT);
 }
 
 std::size_t ChessBoard::getPosition(std::size_t column, std::size_t row)
 {
-    if (column >= WIDTH || row >= HEIGHT)
-    {
-        return -1;
-    }
-
-    return (row * WIDTH + column);
+    return Board::getPosition(column, row, WIDTH, HEIGHT);
 }
 
