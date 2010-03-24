@@ -3,13 +3,8 @@
 #include "dyinganimation.h"
 #include "camerashakeanimation.h"
 
-KnightMovementAnimation::~KnightMovementAnimation()
-{
-    Camera* camera = mSceneMgr->getCameraIterator().getNext();
-    mAnimationManager->addAnimation(
-        AnimationFactory::createCameraShakeAnimation(
-        camera, mSceneMgr));
-}
+
+const Real KnightMovementAnimation::END_DELAY = 0.7;
 
 bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
 {
@@ -23,7 +18,7 @@ bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
         {
             mAnimationManager->addAnimation(
                 AnimationFactory::createDyingAnimation(
-                mTargetPiece, mSceneMgr, 0, 15));
+                mTargetPiece, mSceneMgr, 0, 10));
             mAnimationManager->addAnimation(
                 AnimationFactory::createBleedingAnimation(
                 mTargetPiece, mSceneMgr, 0, 0.5));
@@ -43,6 +38,26 @@ bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
         Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
         mAnimatedNode->rotate(src.getRotationTo(path));
         return true; // Animation still running.
+    }
+    else if (mEndDelay >= 0)
+    {
+        if (!mCameraShaken)
+        {
+            Camera* camera = mSceneMgr->getCameraIterator().getNext();
+            mAnimationManager->addAnimation(
+                AnimationFactory::createCameraShakeAnimation(
+                camera, mSceneMgr));
+            mCameraShaken = true;
+        }
+
+        mEndDelay -= timeSinceLastFrame;
+
+        if (!mTargetPiece)
+        {
+            mEndDelay -= END_DELAY;
+        }
+
+        return true;
     }
 
     mAnimatedNode->setPosition(mDestination);
