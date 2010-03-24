@@ -18,8 +18,8 @@ bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
         path.normalise();
         mAnimatedNode->translate(path * distanceMoved);
 
-        //Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
-        //mAnimatedNode->rotate(src.getRotationTo(path));
+        Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
+        mAnimatedNode->rotate(src.getRotationTo(path));
         return true; // Animation still running.
     }
 
