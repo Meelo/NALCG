@@ -13,7 +13,8 @@ public:
         SceneNode *targetPiece, SceneManager *sceneMgr, AnimationManager *animationManager)
         : MovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager),
         mAttackCount(targetPiece ? ATTACK_COUNT : 0), mPhase(1), mTrail(0),
-        mAttackCooldown(targetPiece ? 0 : -ATTACK_ANIMATION_LENGTH), mBloodCountdown(0)
+        mAttackCooldown(targetPiece ? 0 : -ATTACK_ANIMATION_LENGTH), mBloodCountdown(0),
+        mFlyingAltitude(targetPiece ? ATTACK_ALTITUDE : MOVE_ALTITUDE)
     {
         createBlasts();
     }
@@ -36,8 +37,9 @@ public:
     virtual void restoreLights();
 
 protected:
-    static const int MOVEMENT_SPEED = 500;
-    static const int FLYING_ALTITUDE = 500;
+    static const int MOVEMENT_SPEED = 600;
+    static const int ATTACK_ALTITUDE = 500;
+    static const int MOVE_ALTITUDE = 400;
     static const int ATTACK_COUNT = 30;
     static const int ATTACK_ANIMATION_LENGTH = 3;
     static const int FLAT_ATTACKING_DISTANCE = 150;
@@ -50,6 +52,7 @@ protected:
     Real mAttackCooldown;
     std::vector<Light*> mLights;
     Real mBloodCountdown;
+    const int mFlyingAltitude;
 };
 
 
