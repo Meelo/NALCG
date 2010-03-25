@@ -202,5 +202,15 @@ void QueenMovementAnimation::restoreLights()
     mSceneMgr->getLight("Blue")->setDiffuseColour(ViewConstants::BLUE_COLOUR);
 }
 
+
+// These are here, because ternary syntax won't work in constructor for some
+// weird reason. Probably a bug with GCC-4.3.x. Keep these here unless
+// the bug is no longer an issue.
+const int QueenMovementAnimation::MOVEMENT_SPEED;
+const int QueenMovementAnimation::ATTACK_ALTITUDE;
+const int QueenMovementAnimation::MOVE_ALTITUDE;
+const int QueenMovementAnimation::ATTACK_COUNT;
+const int QueenMovementAnimation::ATTACK_ANIMATION_LENGTH;
+const int QueenMovementAnimation::FLAT_ATTACKING_DISTANCE;
 const Real QueenMovementAnimation::ATTACK_COOLDOWN = 0.075;
 
