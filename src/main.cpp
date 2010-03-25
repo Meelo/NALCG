@@ -1,3 +1,4 @@
+#include "enduser.h"
 #include "view/view.h"
 
 int main(int argc, char **argv)
