@@ -16,17 +16,17 @@ bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
                 createBlasts();
                 mAnimationManager->addAnimation(
                     AnimationFactory::createDyingAnimation(
-                    mTargetPiece, mSceneMgr, 2));
+                    mTargetPiece, mSceneMgr, 0.5, 2));
                 mAnimationManager->addAnimation(
                     AnimationFactory::createBleedingAnimation(
-                    mTargetPiece, mSceneMgr, 0.8, 2.5, "Effects/Burn"));
+                    mTargetPiece, mSceneMgr, 0.3, 2, "Effects/Burn"));
                 mAnimationManager->addAnimation(
                     AnimationFactory::createBleedingAnimation(
-                    mTargetPiece, mSceneMgr, 0.8, 3, "Effects/Smoke"));
+                    mTargetPiece, mSceneMgr, 0.3, 2.5, "Effects/Smoke"));
             }
-            if (mAttackDuration < 4 && mSceneMgr->hasSceneNode(mTargetPieceName))
+            if (mAttackDuration < 2.5 && mSceneMgr->hasSceneNode(mTargetPieceName))
             {
-                mTargetPiece->yaw(Degree(timeSinceLastFrame * 80));
+                mTargetPiece->yaw(Degree(timeSinceLastFrame * 140));
             }
 
             mAttackDuration -= timeSinceLastFrame;

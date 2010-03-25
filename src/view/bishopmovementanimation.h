@@ -8,7 +8,7 @@ public:
     BishopMovementAnimation(const Vector3& destination, SceneNode *movingNode,
         SceneNode *targetPiece, SceneManager *sceneMgr, AnimationManager *animationManager)
         : MovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager),
-        mAttackDuration(targetPiece ? 5.0 : -1), mParticleNode(0)
+        mAttackDuration(targetPiece ? 3.0 : -1), mParticleNode(0)
     {
     }
 
