@@ -308,7 +308,7 @@ void View::createScene()
                 name.str(), Vector3(-700 + i * 200, 0, -700 + j * 200));
             node->attachObject(ent);
 
-            if ((i + j) % 2 == 0)
+            if ((i + j) % 2 == 1)
             {
                 ent->setMaterialName("board/square/black");
             }
@@ -352,8 +352,13 @@ void View::createScene()
     debug->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.05, 0)));
     debug->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
 
+    CEGUI::Window *animationSpeedSlider = win->createWindow("TaharezLook/HorizontalScrollbar", "View/AnimationSpeedSlider");
+    animationSpeedSlider->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.10, 0)));
+    animationSpeedSlider->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.02, 0)));
+
     sheet->addChildWindow(quit);
     sheet->addChildWindow(debug);
+    //sheet->addChildWindow(animationSpeedSlider);
     mSystem->setGUISheet(sheet);
 
     //CEGUI::WindowManager *wmgr = CEGUI::WindowManager::getSingletonPtr();
