@@ -1,5 +1,5 @@
-#ifndef _NALCG_ENGINE_H_
-#define _NALCG_ENGINE_H_
+#ifndef _NALCG_MIDDLE_MAN_H_
+#define _NALCG_MIDDLE_MAN_H_
 
 // system includes
 
@@ -7,7 +7,7 @@
 #include "logic/board.h"
 #include "logic/chesspieces-meta.h"
 
-class Engine
+class MiddleMan
 {
     // Constants
 
@@ -20,8 +20,8 @@ class Engine
     void update();
 
 public:
-    Engine();
-    virtual ~Engine() { }
+    MiddleMan();
+    virtual ~MiddleMan() { }
 
     // Methods
     void startGame();
@@ -36,4 +36,4 @@ public:
     // Setters
 };
 
-#endif // _NALCG_ENGINE_H_
+#endif // _NALCG_MIDDLE_MAN_H_
