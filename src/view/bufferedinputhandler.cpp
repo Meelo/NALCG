@@ -205,7 +205,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent &arg)
                         pieceNode, targetPiece, mSceneMgr, mAnimationManager));
                 }
                 mSelectedObject->showBoundingBox(false);
-                pieceNode->showBoundingBox(false);
+                pieceNode->showBoundingBox(false); // FIXME: moving a dead unit causes the game to crash.
                 Entity *ent = mSceneMgr->getEntity(mSelectedObject->getName() + "s");
                 ent->setVisible(false);
                 ent->setMaterialName("board/square/green");

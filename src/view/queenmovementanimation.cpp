@@ -4,6 +4,14 @@
 #include "animationfactory.h"
 #include "dyinganimation.h"
 
+const int QueenMovementAnimation::MOVEMENT_SPEED = 600;
+const int QueenMovementAnimation::ATTACK_ALTITUDE = 500;
+const int QueenMovementAnimation::MOVE_ALTITUDE = 400;
+const int QueenMovementAnimation::ATTACK_COUNT = 30;
+const int QueenMovementAnimation::ATTACK_ANIMATION_LENGTH = 3;
+const int QueenMovementAnimation::FLAT_ATTACKING_DISTANCE = 150;
+const Real QueenMovementAnimation::ATTACK_COOLDOWN = 0.075;
+
 bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
 {
     Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
@@ -14,15 +22,15 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
         {
         case 1:
             // Fly higher in steep angle until flying altitude is reached.
-            if (mAnimatedNode->getPosition().y > FLYING_ALTITUDE)
+            if (mAnimatedNode->getPosition().y > mFlyingAltitude)
             {
                 mPhase = 2;
             }
-            path += Vector3(0, FLYING_ALTITUDE * 4, 0);
+            path += Vector3(0, mFlyingAltitude * 4, 0);
             break;
         case 2:
             // Continue flying on the same altitude until almost above target.
-            if (path.length() < distanceMoved + FLYING_ALTITUDE * 1.1)
+            if (path.length() < distanceMoved + mFlyingAltitude * 1.1)
             {
                 mPhase = 3;
                 if (mAttackCount > 0)
@@ -31,7 +39,7 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
                     mBloodCountdown = ATTACK_ANIMATION_LENGTH - 0.6;
                 }
             }
-            path += Vector3(0, FLYING_ALTITUDE, 0);
+            path += Vector3(0, mFlyingAltitude, 0);
             break;
         case 3:
         case 4:
@@ -108,7 +116,7 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
                 {
                     mAnimationManager->addAnimation(
                         AnimationFactory::createBleedingAnimation(
-                        mTargetPiece, mSceneMgr, ATTACK_COOLDOWN * ATTACK_COUNT));
+                        mTargetPiece, mSceneMgr, 0, ATTACK_COOLDOWN * ATTACK_COUNT));
 
                     mAnimationManager->addAnimation(
                         AnimationFactory::createDyingAnimation(
@@ -120,11 +128,11 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
                 // Stay floating until attack animations have ended.
                 if (mAttackCooldown > -ATTACK_ANIMATION_LENGTH)
                 {
-                    path += Vector3(0, FLYING_ALTITUDE, 0);
+                    path += Vector3(0, mFlyingAltitude, 0);
                     if (path.length() - FLAT_ATTACKING_DISTANCE < distanceMoved)
                     {
                         distanceMoved = 0;
-                        //mAnimatedNode->setPosition(mDestination + Vector3(0, FLYING_ALTITUDE, 0));
+                        //mAnimatedNode->setPosition(mDestination + Vector3(0, mFlyingAltitude, 0));
                     }
                 }
                 else if (mPhase == 3)
@@ -158,7 +166,7 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
             flatPath.y = 0;
             mAnimatedNode->rotate(src.getRotationTo(flatPath));
 
-            mAnimatedNode->pitch(Degree(mAnimatedNode->getPosition().y * 90.0 / FLYING_ALTITUDE));
+            mAnimatedNode->pitch(Degree(mAnimatedNode->getPosition().y * 90.0 / mFlyingAltitude));
         }
 
         /*Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
@@ -202,5 +210,4 @@ void QueenMovementAnimation::restoreLights()
     mSceneMgr->getLight("Blue")->setDiffuseColour(ViewConstants::BLUE_COLOUR);
 }
 
-const Real QueenMovementAnimation::ATTACK_COOLDOWN = 0.1;
 

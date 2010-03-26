@@ -4,11 +4,12 @@
 #include <CEGUI/CEGUI.h>
 #include <OIS/OIS.h>
 #include <OgreCEGUIRenderer.h>
+#include "../enduser.h"
 
 using namespace Ogre;
 
 class ViewFrameListener;
-class View : public WindowEventListener
+class View : public WindowEventListener, public EndUser
 {
 public:
     View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
@@ -32,6 +33,9 @@ public:
         startRenderLoop();
     }
 
+    // TODO: implement
+    virtual void move(int fromX, int fromY, int toX, int toY) { }
+    virtual void setBoard(const Board& board, unsigned int round) { }
     virtual ~View();
 
 protected:

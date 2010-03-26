@@ -19,13 +19,13 @@ bool ViewFrameListener::frameEnded(const FrameEvent& evt)
     return true;
 }
 
-bool ViewFrameListener::quit(const CEGUI::EventArgs &e)
+bool ViewFrameListener::quit(const CEGUI::EventArgs& e)
 {
     mContinue = false;
     return true;
 }
 
-bool ViewFrameListener::toggleDebugInfo(const CEGUI::EventArgs &e)
+bool ViewFrameListener::toggleDebugInfo(const CEGUI::EventArgs& e)
 {
     if (mDebugOverlay->isVisible())
     {
@@ -35,6 +35,16 @@ bool ViewFrameListener::toggleDebugInfo(const CEGUI::EventArgs &e)
     {
         mDebugOverlay->show();
     }
+    return true;
+}
+
+bool ViewFrameListener::handleAnimationSpeedChanged(const CEGUI::EventArgs& e)
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* window = wmgr.getWindow("View/AnimationSpeedSlider");
+    CEGUI::Scrollbar* scrollbar = static_cast<CEGUI::Scrollbar*>(window);
+    float position = scrollbar->getScrollPosition();
+    mAnimationManager.setAnimationSpeedMultiplier(position * position);
     return true;
 }
 

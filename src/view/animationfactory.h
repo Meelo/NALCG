@@ -9,6 +9,7 @@ using namespace Ogre;
 class MovementAnimation;
 class AnimationManager;
 class DyingAnimation;
+class CameraShakeAnimation;
 class AnimationFactory
 {
 public:
@@ -18,8 +19,12 @@ public:
         AnimationManager *animationManager);
 
     static BleedingAnimation* createBleedingAnimation(SceneNode *pieceNode,
-        SceneManager *sceneMgr, const Real& duration);
+        SceneManager *sceneMgr, const Real& delay, const Real& duration, 
+        const std::string& effectName = "Effects/Blood");
 
     static DyingAnimation* createDyingAnimation(SceneNode *pieceNode,
-        SceneManager *sceneMgr, double delay);
+        SceneManager *sceneMgr, double delay, double dyingSpeedMultiplier = 1.0);
+
+    static CameraShakeAnimation* createCameraShakeAnimation(Camera* camera, SceneManager* sceneMgr);
+
 };
