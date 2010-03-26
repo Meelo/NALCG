@@ -37,12 +37,12 @@ public:
     virtual void restoreLights();
 
 protected:
-    static const int MOVEMENT_SPEED = 600;
-    static const int ATTACK_ALTITUDE = 500;
-    static const int MOVE_ALTITUDE = 400;
-    static const int ATTACK_COUNT = 30;
-    static const int ATTACK_ANIMATION_LENGTH = 3;
-    static const int FLAT_ATTACKING_DISTANCE = 150;
+    static const int MOVEMENT_SPEED;
+    static const int ATTACK_ALTITUDE;
+    static const int MOVE_ALTITUDE;
+    static const int ATTACK_COUNT;
+    static const int ATTACK_ANIMATION_LENGTH;
+    static const int FLAT_ATTACKING_DISTANCE;
     static const Real ATTACK_COOLDOWN;
 
     int mAttackCount;
