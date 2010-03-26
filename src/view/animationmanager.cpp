@@ -5,7 +5,7 @@ void AnimationManager::executeAnimations(double timeSinceLastFrame)
 {
     for (std::size_t i = mGenericAnimations.size() - 1; i != -1; i--)
     {
-        if (!mGenericAnimations.at(i)->animate(timeSinceLastFrame))
+        if (!mGenericAnimations.at(i)->animate(timeSinceLastFrame * mAnimationSpeedMultiplier))
         {
             endAnimation(i);
         }

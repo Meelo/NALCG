@@ -340,25 +340,28 @@ void View::createScene()
     light->setDiffuseColour(ViewConstants::BLUE_COLOUR);
     light->setSpecularColour(1.0, 1.0, 1.0);
 
-    CEGUI::WindowManager *win = CEGUI::WindowManager::getSingletonPtr();
-    CEGUI::Window *sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
+    CEGUI::WindowManager* win = CEGUI::WindowManager::getSingletonPtr();
+    CEGUI::Window* sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
 
-    CEGUI::Window *quit = win->createWindow("TaharezLook/Button", "View/QuitButton");
+    CEGUI::Window* quit = win->createWindow("TaharezLook/Button", "View/QuitButton");
     quit->setText("Quit");
     quit->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
 
-    CEGUI::Window *debug = win->createWindow("TaharezLook/Button", "View/DebugButton");
+    CEGUI::Window* debug = win->createWindow("TaharezLook/Button", "View/DebugButton");
     debug->setText("Debug");
     debug->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.05, 0)));
     debug->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
 
-    CEGUI::Window *animationSpeedSlider = win->createWindow("TaharezLook/HorizontalScrollbar", "View/AnimationSpeedSlider");
+    CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(win->
+        createWindow("TaharezLook/HorizontalScrollbar", "View/AnimationSpeedSlider"));
     animationSpeedSlider->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.10, 0)));
     animationSpeedSlider->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.02, 0)));
+    animationSpeedSlider->setDocumentSize(5);
+    animationSpeedSlider->setScrollPosition(1);
 
     sheet->addChildWindow(quit);
     sheet->addChildWindow(debug);
-    //sheet->addChildWindow(animationSpeedSlider);
+    sheet->addChildWindow(animationSpeedSlider);
     mSystem->setGUISheet(sheet);
 
     //CEGUI::WindowManager *wmgr = CEGUI::WindowManager::getSingletonPtr();
@@ -367,7 +370,9 @@ void View::createScene()
         CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
     debug->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
-
+    animationSpeedSlider->subscribeEvent(
+        CEGUI::Scrollbar::EventScrollPositionChanged, 
+        CEGUI::Event::Subscriber(&ViewFrameListener::handleAnimationSpeedChanged, mListener));
     /*// Create the decal projector
     createProjector();
 

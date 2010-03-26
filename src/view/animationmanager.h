@@ -10,9 +10,18 @@ class GenericAnimation;
 class AnimationManager
 {
 public:
+    AnimationManager() : mAnimationSpeedMultiplier(1.0)
+    {
+    }
+
     virtual void addAnimation(GenericAnimation *animation)
     {
         mGenericAnimations.push_back(animation);
+    }
+
+    virtual void setAnimationSpeedMultiplier(float animationSpeedMultiplier)
+    {
+        mAnimationSpeedMultiplier = animationSpeedMultiplier;
     }
 
     virtual void executeAnimations(double timeSinceLastFrame);
@@ -20,7 +29,7 @@ public:
 
 protected:
     std::vector<GenericAnimation*> mGenericAnimations;
-
+    float mAnimationSpeedMultiplier;
     virtual void endAnimation(std::size_t index);
 };
 
