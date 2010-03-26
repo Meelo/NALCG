@@ -5,7 +5,7 @@
 #include <errno.h>
 #include <fcntl.h>
 
-using mNamespace std;
+using namespace std;
 
 Socket::Socket() : mSock ( -1 )
 {

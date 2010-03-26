@@ -10,7 +10,7 @@
 #include <arpa/inet.h>
 
 
-const int MAXHOSTmName = 200;
+const int MAXHOSTNAME = 200;
 const int MAXCONNECTIONS = 30;
 const int MAXRECV = 500;
 
