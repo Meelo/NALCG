@@ -205,7 +205,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
         {
             while (mSafeMode && mAnimationManager->animationsRunning())
             {
-                mAnimationManager->executeAnimations(std::numeric_limits<float>::max());
+                mAnimationManager->finishAnimations();
             }
 
             if (mSelectedObject)

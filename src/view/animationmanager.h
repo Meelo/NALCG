@@ -25,7 +25,8 @@ public:
         mAnimationSpeedMultiplier = animationSpeedMultiplier;
     }
 
-    virtual void executeAnimations(double timeSinceLastFrame);
+    virtual void executeAnimations(double timeSinceLastFrame, bool instant = false);
+    virtual void finishAnimations();
     virtual void stopAllAnimationsBelongingTo(SceneNode *targetNode);
     virtual bool animationsRunning() const
     {

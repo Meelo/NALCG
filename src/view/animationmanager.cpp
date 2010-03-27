@@ -1,12 +1,17 @@
 #include "animationmanager.h"
 #include "genericanimation.h"
 
-void AnimationManager::executeAnimations(double timeSinceLastFrame)
+void AnimationManager::executeAnimations(double timeSinceLastFrame, bool instant)
 {
+    double timeAdvancement = timeSinceLastFrame * mAnimationSpeedMultiplier;
+    if (instant)
+    {
+        timeAdvancement = std::numeric_limits<float>::max();
+    }
     std::size_t max = std::numeric_limits<std::size_t>::max();
     for (std::size_t i = mGenericAnimations.size() - 1; i != max; i--)
     {
-        if (!mGenericAnimations.at(i)->animate(timeSinceLastFrame * mAnimationSpeedMultiplier))
+        if (!mGenericAnimations.at(i)->animate(timeAdvancement))
         {
             endAnimation(i);
         }
@@ -17,6 +22,11 @@ void AnimationManager::executeAnimations(double timeSinceLastFrame)
             i = mGenericAnimations.size();
         }
     }
+}
+
+void AnimationManager::finishAnimations()
+{
+    executeAnimations(0, true);
 }
 
 void AnimationManager::stopAllAnimationsBelongingTo(SceneNode *targetNode)
