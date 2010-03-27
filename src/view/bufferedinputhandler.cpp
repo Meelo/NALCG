@@ -214,8 +214,9 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                 mSelectedObject->showBoundingBox(false);
                 pieceNode->showBoundingBox(false); // FIXME: moving a dead unit causes the game to crash.
                 Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + "s");
-                ent->setVisible(false);
                 ent->setMaterialName("board/square/green");
+                ent->setVisible(false);
+                toggleMovementPossibilities();
                 mSelectedObject = 0;
             }
             else
@@ -230,7 +231,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                     ent->setVisible(true);
                     ent->setMaterialName("board/square/cyan");
                     pieceNode->showBoundingBox(true);
-                    showMovementPossibilities();
+                    toggleMovementPossibilities();
                 }
             }
             break;
@@ -238,7 +239,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
     }
 }
 
-bool BufferedInputHandler::showMovementPossibilities()
+bool BufferedInputHandler::toggleMovementPossibilities()
 {
     Middleman* middleman = mView->getMiddleman();
     if (!middleman)
@@ -251,15 +252,29 @@ bool BufferedInputHandler::showMovementPossibilities()
     convertPosition(mSelectedObject->getPosition(), &x, &y);
 
     std::vector<std::size_t> validMoves = middleman->getValidMovesAt(x, y);
+    for (std::size_t i = 0; i < validMoves.size(); i++)
+    {
+        std::size_t column = 0;
+        std::size_t row = 0;
+        Board::getCoordinates(validMoves.at(i), column, row,
+            mView->getBoardWidth(), mView->getBoardHeight());
+
+        std::ostringstream name;
+        name << "Board" << column << "," << row << "s";
+        Entity* ent = mSceneMgr->getEntity(name.str());
+        ent->setVisible(!ent->isVisible());
+    }
     return true;
 }
 
 void BufferedInputHandler::convertPosition(const Vector3& position, int* x, int* y)
 {
     int sideLength = ViewConstants::SQUARE_SIDE_LENGTH;
-    // TODO: unmagicalize these:
-    *x = (position.x + 700 + 0.5) / sideLength;
-    *y = (position.y + 700 + 0.5) / sideLength;
+    int offsetX = (mView->getBoardWidth() - 1) * sideLength / 2;
+    int offsetY = (mView->getBoardHeight() - 1) * sideLength / 2;
+    // +0.5 for rounding.
+    *x = (position.x + offsetX + 0.5) / sideLength;
+    *y = (position.z + offsetY + 0.5) / sideLength;
 }
 
 

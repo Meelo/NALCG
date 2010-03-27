@@ -3,7 +3,6 @@
 
 int main(int argc, char **argv)
 {
-    // Create application object
     View view;
     std::vector<AI*> aiList;
     std::vector<AIInfo> aiInfos;

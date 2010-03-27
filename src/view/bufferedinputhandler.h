@@ -52,7 +52,7 @@ protected:
     virtual void onLeftReleased(const OIS::MouseEvent& arg);
     virtual void onRightPressed(const OIS::MouseEvent& arg);
     virtual void onRightReleased(const OIS::MouseEvent& arg);
-    virtual bool showMovementPossibilities();
+    virtual bool toggleMovementPossibilities();
     virtual void convertPosition(const Vector3& position, int* x, int* y);
 };
 
