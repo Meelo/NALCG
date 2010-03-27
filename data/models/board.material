@@ -42,7 +42,7 @@ material board/square/attack
 		pass
 		{
 			ambient 0.0 0.0 0.0 1
-			diffuse 0.0 1.0 0.0 0.75
+			diffuse 1.0 1.0 0.0 0.6
 			specular 0 0 0 10 0
 			scene_blend alpha_blend
 		}
@@ -57,7 +57,7 @@ material board/square/move
 		pass
 		{
 			ambient 0.0 0.0 0.0 1
-			diffuse 1.0 1.0 0.0 0.75
+			diffuse 0.0 1.0 0.0 0.4
 			specular 0 0 0 10 0
 			scene_blend alpha_blend
 		}
@@ -73,7 +73,7 @@ material board/square/selected
 		pass
 		{
 			ambient 0.0 0.0 0.0 1
-			diffuse 1.0 0.0 0.0 0.75
+			diffuse 0.0 1.0 1.0 0.9
 			specular 0 0 0 10 0
 			scene_blend alpha_blend
 		}
