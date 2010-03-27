@@ -10,10 +10,13 @@ public:
     EndUser() : mMiddleman(0) { };
     virtual ~EndUser() { }
 
-    virtual void move(int fromX, int fromY, int toX, int toY) = 0;
+    // Note: Do not use board as a member variable as it can change and be deleted.
+    // It's not safe to use it after these function calls have returned.
+    virtual void init(const Board* board, Middleman* middleman) { mMiddleman = middleman; }
     virtual void setBoard(const Board* const board, unsigned int round) = 0;
+    
+    virtual void move(int fromX, int fromY, int toX, int toY) = 0;
     virtual void setControl(bool white, bool black) = 0;
-    virtual void setMiddleman(Middleman* middleman) { mMiddleman = middleman; }
     virtual Middleman* getMiddleman() const { return mMiddleman; }
 protected:
     Middleman* mMiddleman;

@@ -228,8 +228,7 @@ void View::createPiece(char type, const std::string& modelName,
                        const Vector3& location)
 {
     std::ostringstream entityName;
-    entityName << type << modelName << mEntityCount;
-    mEntityCount++;
+    entityName << type << modelName << location.x << location.y << location.z;
 
     Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName);
     //ent->setCastShadows(true);
@@ -262,72 +261,6 @@ void View::createScene()
     mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
     //mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
 
-    for (int i = 0; i < 8; i++)
-    {
-        createPiece('P', "black_pawn.mesh", Vector3(-700 + i*200, 0, -500));
-    }
-    createPiece('R', "black_rook.mesh", Vector3(-700, 0, -700));
-    createPiece('N', "black_knight.mesh", Vector3(-500, 0, -700));
-    createPiece('B', "black_bishop.mesh", Vector3(-300, 0, -700));
-    createPiece('Q', "black_queen.mesh", Vector3(-100, 0, -700));
-    createPiece('K', "black_king.mesh", Vector3(100, 0, -700));
-    createPiece('B', "black_bishop.mesh", Vector3(300, 0, -700));
-    createPiece('N', "black_knight.mesh", Vector3(500, 0, -700));
-    createPiece('R', "black_rook.mesh", Vector3(700, 0, -700));
-
-    for (int i = 0; i < 8; i++)
-    {
-        createPiece('P', "white_pawn.mesh", Vector3(-700 + i*200, 0, 500));
-    }
-    createPiece('R', "white_rook.mesh", Vector3(-700, 0, 700));
-    createPiece('N', "white_knight.mesh", Vector3(-500, 0, 700));
-    createPiece('B', "white_bishop.mesh", Vector3(-300, 0, 700));
-    createPiece('Q', "white_queen.mesh", Vector3(-100, 0, 700));
-    createPiece('K', "white_king.mesh", Vector3(100, 0, 700));
-    createPiece('B', "white_bishop.mesh", Vector3(300, 0, 700));
-    createPiece('N', "white_knight.mesh", Vector3(500, 0, 700));
-    createPiece('R', "white_rook.mesh", Vector3(700, 0, 700));
-
-    //ent = mSceneMgr->createEntity("BoardEntity", "board.mesh");
-    //mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(ent);
-    //ent->setCastShadows(false);
-    Plane plane(Vector3::UNIT_Y, 0);
-
-    MeshManager::getSingleton().createPlane("square",
-        ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
-        200, 200, 1, 1, true, 1, 1, 1, Vector3::UNIT_Z);
-    for (int j = 0; j < 8; j++)
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            std::ostringstream name;
-            name << "Board" << i << "," << j;
-
-            ent = mSceneMgr->createEntity(name.str(), "square");
-            SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(
-                name.str(), Vector3(-700 + i * 200, 0, -700 + j * 200));
-            node->attachObject(ent);
-
-            if ((i + j) % 2 == 1)
-            {
-                ent->setMaterialName("board/square/black");
-            }
-            else
-            {
-                ent->setMaterialName("board/square/white");
-            }
-            ent->setQueryFlags(1 << 0);
-
-            // Create transparent squares on top of normal squares.
-            // These squares indicate possible movement locations.
-            name << "s";
-            ent = mSceneMgr->createEntity(name.str(), "square");
-            ent->setMaterialName("board/square/green");
-            ent->setQueryFlags(0);
-            node->attachObject(ent);
-            ent->setVisible(false);
-        }
-    }
     light = mSceneMgr->createLight("Yellow");
     light->setType(Light::LT_POINT);
     light->setPosition(Vector3(150, 250, 150));
@@ -391,4 +324,74 @@ void View::createScene()
     mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -1, 0))->attachObject(ent);
 
     mSceneMgr->setSkyDome(true, "Sky", 10, 4);
+}
+
+void View::createBoard(const Board* board)
+{
+    mBoardWidth = board->getWidth();
+    mBoardHeight = board->getHeight();
+
+    for (int i = 0; i < 8; i++)
+    {
+        createPiece('P', "black_pawn.mesh", Vector3(-700 + i*200, 0, -500));
+    }
+    createPiece('R', "black_rook.mesh", Vector3(-700, 0, -700));
+    createPiece('N', "black_knight.mesh", Vector3(-500, 0, -700));
+    createPiece('B', "black_bishop.mesh", Vector3(-300, 0, -700));
+    createPiece('Q', "black_queen.mesh", Vector3(-100, 0, -700));
+    createPiece('K', "black_king.mesh", Vector3(100, 0, -700));
+    createPiece('B', "black_bishop.mesh", Vector3(300, 0, -700));
+    createPiece('N', "black_knight.mesh", Vector3(500, 0, -700));
+    createPiece('R', "black_rook.mesh", Vector3(700, 0, -700));
+
+    for (int i = 0; i < 8; i++)
+    {
+        createPiece('P', "white_pawn.mesh", Vector3(-700 + i*200, 0, 500));
+    }
+    createPiece('R', "white_rook.mesh", Vector3(-700, 0, 700));
+    createPiece('N', "white_knight.mesh", Vector3(-500, 0, 700));
+    createPiece('B', "white_bishop.mesh", Vector3(-300, 0, 700));
+    createPiece('Q', "white_queen.mesh", Vector3(-100, 0, 700));
+    createPiece('K', "white_king.mesh", Vector3(100, 0, 700));
+    createPiece('B', "white_bishop.mesh", Vector3(300, 0, 700));
+    createPiece('N', "white_knight.mesh", Vector3(500, 0, 700));
+    createPiece('R', "white_rook.mesh", Vector3(700, 0, 700));
+
+    Plane plane(Vector3::UNIT_Y, 0);
+
+    MeshManager::getSingleton().createPlane("square",
+        ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
+        200, 200, 1, 1, true, 1, 1, 1, Vector3::UNIT_Z);
+    for (int j = 0; j < 8; j++)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            std::ostringstream name;
+            name << "Board" << i << "," << j;
+
+            Entity* ent = mSceneMgr->createEntity(name.str(), "square");
+            SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode(
+                name.str(), Vector3(-700 + i * 200, 0, -700 + j * 200));
+            node->attachObject(ent);
+
+            if ((i + j) % 2 == 1)
+            {
+                ent->setMaterialName("board/square/black");
+            }
+            else
+            {
+                ent->setMaterialName("board/square/white");
+            }
+            ent->setQueryFlags(1 << 0);
+
+            // Create transparent squares on top of normal squares.
+            // These squares indicate possible movement locations.
+            name << "s";
+            ent = mSceneMgr->createEntity(name.str(), "square");
+            ent->setMaterialName("board/square/green");
+            ent->setQueryFlags(0);
+            node->attachObject(ent);
+            ent->setVisible(false);
+        }
+    }
 }
