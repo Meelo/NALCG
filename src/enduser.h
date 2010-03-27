@@ -12,6 +12,7 @@ public:
     
     virtual void move(int fromX, int fromY, int toX, int toY) = 0;
     virtual void setBoard(const Board& board, unsigned int round) = 0;
+    virtual void setControl(bool white, bool black) = 0;
     virtual void setMiddleman(Middleman* middleman)
     {
         mMiddleman = middleman;
