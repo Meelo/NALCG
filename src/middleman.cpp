@@ -19,10 +19,15 @@ void Middleman::startGame()
     board = new ChessBoard(ChessBoard::createBoard());
     rounds = 0;
 
-    // add players
-
     // white starts
     currentTurn = Piece::WHITE;
+
+    // add players
+    for (std::size_t i = 0; i < views.size(); i++)
+    {
+        views.at(i)->init(board, this);
+    }
+
 }
 
 Piece::Colour Middleman::endGame()
