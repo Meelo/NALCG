@@ -30,6 +30,10 @@ public:
     bool quit(const CEGUI::EventArgs& e);
     bool toggleDebugInfo(const CEGUI::EventArgs& e);
     bool handleAnimationSpeedChanged(const CEGUI::EventArgs& e);
+    void move(int fromX, int fromY, int toX, int toY)
+    {
+        mHandler.move(fromX, fromY, toX, toY);
+    }
 
 protected:
     OIS::Keyboard* mKeyboard;

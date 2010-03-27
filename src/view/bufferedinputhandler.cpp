@@ -177,6 +177,7 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
 {
     mCamera->setPosition(mCamera->getPosition() + 
         mCamera->getOrientation() * mDirection * timeSinceLastFrame);
+
     if (mCamera->getPosition().y < 10)
     {
         Vector3 newPosition = mCamera->getPosition();
@@ -209,24 +210,24 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                 SceneNode* pieceNode = findPieceAbove(mSelectedObject);
                 if (mSelectedObject != targetNode)
                 {
+                    std::stringstream name;
+                    name << mSelectedObject->getName() << " " << targetNode->getName();
+                    std::size_t fromX, fromY, toX, toY;
+                    name >> fromX;
+                    name >> fromY;
+                    name >> toX;
+                    name >> toY;
+
                     Middleman* middleman = mView->getMiddleman();
                     if (middleman)
                     {
-                        std::stringstream name;
-                        name << mSelectedObject->getName() << " " << targetNode->getName();
-                        std::size_t fromX, fromY, toX, toY;
-                        name >> fromX;
-                        name >> fromY;
-                        name >> toX;
-                        name >> toY;
+
                         mView->getMiddleman()->move(fromX, fromY, toX, toY);
                     }
-                    SceneNode* targetPiece = findPieceAbove(targetNode);
-
-                    mAnimationManager->addAnimation(
-                        AnimationFactory::createMovementAnimation(
-                        *pieceNode->getName().begin(), targetNode->getPosition(),
-                        pieceNode, targetPiece, mSceneMgr, mAnimationManager));
+                    else
+                    {
+                        move(fromX, fromY, toX, toY);
+                    }
                 }
                 mSelectedObject->showBoundingBox(false);
                 pieceNode->showBoundingBox(false); // FIXME: moving a dead unit causes the game to crash.
@@ -253,6 +254,21 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
             break;
         }
     }
+}
+
+void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY)
+{
+    std::ostringstream targetName;
+    targetName << toX << " " << toY;
+    SceneNode* targetNode = mSceneMgr->getSceneNode(targetName.str());
+    SceneNode* pieceNode = findPieceAbove(mSelectedObject);
+
+    SceneNode* targetPiece = findPieceAbove(targetNode);
+
+    mAnimationManager->addAnimation(
+        AnimationFactory::createMovementAnimation(
+        *pieceNode->getName().begin(), targetNode->getPosition(),
+        pieceNode, targetPiece, mSceneMgr, mAnimationManager));
 }
 
 bool BufferedInputHandler::toggleMovementPossibilities()
