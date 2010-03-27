@@ -16,7 +16,7 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
 {
     Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
     Vector3 path = mDestination - mAnimatedNode->getPosition();
-    if (path.length() > distanceMoved)
+    if (path.length() > distanceMoved || mPhase < 4)
     {
         switch (mPhase)
         {
@@ -171,7 +171,6 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
 
         /*Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
         mAnimatedNode->rotate(src.getRotationTo(path));*/
-
 
         return true; // Animation still running.
     }
