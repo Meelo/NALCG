@@ -177,6 +177,12 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
 {
     mCamera->setPosition(mCamera->getPosition() + 
         mCamera->getOrientation() * mDirection * timeSinceLastFrame);
+    if (mCamera->getPosition().y < 10)
+    {
+        Vector3 newPosition = mCamera->getPosition();
+        newPosition.y = 10;
+        mCamera->setPosition(newPosition);
+    }
 }
 
 void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
