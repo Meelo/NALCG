@@ -48,7 +48,7 @@ protected:
 
 
     virtual void onLeftPressed(const OIS::MouseEvent& arg);
-    virtual SceneNode* findPieceAbove(SceneNode* squareNode) const;
+    virtual SceneNode* findPieceAbove(Node* squareNode) const;
     virtual void onLeftReleased(const OIS::MouseEvent& arg);
     virtual void onRightPressed(const OIS::MouseEvent& arg);
     virtual void onRightReleased(const OIS::MouseEvent& arg);

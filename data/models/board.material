@@ -35,40 +35,47 @@ material board/square/white
 
 }
 
-material board/square/green
+material board/square/attack
 {
 	technique
 	{
 		pass
 		{
-			ambient 0.588235 0.588235 0.588235 1
-			diffuse 0.588 0.588 0.588 1
+			ambient 0.0 0.0 0.0 1
+			diffuse 0.0 1.0 0.0 0.75
 			specular 0 0 0 10 0
 			scene_blend alpha_blend
-			texture_unit
-			{
-				texture board_square_green.png
-			}
+		}
+
+	}
+
+}
+material board/square/move
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0 0.0 0.0 1
+			diffuse 1.0 1.0 0.0 0.75
+			specular 0 0 0 10 0
+			scene_blend alpha_blend
 		}
 
 	}
 
 }
 
-material board/square/cyan
+material board/square/selected
 {
 	technique
 	{
 		pass
 		{
-			ambient 0.588235 0.588235 0.588235 1
-			diffuse 0.588 0.588 0.588 1
+			ambient 0.0 0.0 0.0 1
+			diffuse 1.0 0.0 0.0 0.75
 			specular 0 0 0 10 0
 			scene_blend alpha_blend
-			texture_unit
-			{
-				texture board_square_cyan.png
-			}
 		}
 
 	}

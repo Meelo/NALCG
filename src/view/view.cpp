@@ -388,7 +388,7 @@ void View::createBoard(const Board* board)
             // These squares indicate possible movement locations.
             name << " s";
             ent = mSceneMgr->createEntity(name.str(), "square");
-            ent->setMaterialName("board/square/green");
+            ent->setMaterialName("board/square/move");
             ent->setQueryFlags(0);
             node->attachObject(ent);
             ent->setVisible(false);

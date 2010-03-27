@@ -225,7 +225,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                 mSelectedObject->showBoundingBox(false);
                 pieceNode->showBoundingBox(false); // FIXME: moving a dead unit causes the game to crash.
                 Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + " s");
-                ent->setMaterialName("board/square/green");
+                ent->setMaterialName("board/square/move");
                 ent->setVisible(false);
                 mSelectedObject = 0;
             }
@@ -239,7 +239,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                     mSelectedObject->showBoundingBox(true);
                     Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + " s");
                     ent->setVisible(true);
-                    ent->setMaterialName("board/square/cyan");
+                    ent->setMaterialName("board/square/selected");
                     pieceNode->showBoundingBox(true);
                     toggleMovementPossibilities();
                 }
@@ -273,6 +273,14 @@ bool BufferedInputHandler::toggleMovementPossibilities()
         name << column << " " << row << " s";
         Entity* ent = mSceneMgr->getEntity(name.str());
         ent->setVisible(!ent->isVisible());
+        if (ent->isVisible())
+        {
+            if (findPieceAbove(ent->getParentNode()))
+            {
+                ent->setMaterialName("board/square/attack");
+            }
+        }
+
     }
     return true;
 }
@@ -288,7 +296,7 @@ void BufferedInputHandler::convertPosition(const Vector3& position, int* x, int*
 }
 
 
-SceneNode* BufferedInputHandler::findPieceAbove(SceneNode* squareNode) const
+SceneNode* BufferedInputHandler::findPieceAbove(Node* squareNode) const
 {
     const Vector3& squarePosition = squareNode->getPosition();
     Node::ChildNodeIterator it = mSceneMgr->getRootSceneNode()->getChildIterator();
