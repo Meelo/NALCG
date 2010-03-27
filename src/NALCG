@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [[ ! -f ../bin/NALCG ]]; then
+    echo "NALCG binary not found, running make..."
+    make -sj5
+    if [[ $? != 0 ]]; then
+        echo "make failed, NALCG can't be launched"
+        echo "cleaning..."
+        make clean
+        echo "exiting..."
+        exit
+    fi
+fi
+
+cd ../bin
+if [[ "$1" == "--debug" ]]; then
+    gdb ./NALCG -ex run
+elif [[ "$1" == "--gdb" ]]; then
+    gdb ./NALCG
+elif [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    echo -e "This is a launcher script for NALCG.\nLaunching can include compiling and debugging."
+    echo "Usage:"
+    echo -e "    ./NALCG [options]\n\n"
+    echo "Options:"
+    echo "  --debug                  Launch NALCG in gdb and autorun it."
+    echo "  --gdb                    Launch NALCG in gdb without autorun."
+    echo "  --help -h                Show this help and exit."
+    echo -e "\n\nWithout options NALCG will be executed normally"
+else
+    ./NALCG
+fi
