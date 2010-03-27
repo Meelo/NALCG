@@ -42,6 +42,8 @@ bool BufferedInputHandler::keyPressed(const OIS::KeyEvent &arg)
     case OIS::KC_R:
         mDirection.y += CAMERA_MOVEMENT_SPEED;
         break;
+    default:
+        ; // No handling
     }
     return true;
 }
@@ -81,6 +83,8 @@ bool BufferedInputHandler::keyReleased(const OIS::KeyEvent &arg)
     case OIS::KC_R:
         mDirection.y -= CAMERA_MOVEMENT_SPEED;
         break;
+    default:
+        ; // No handling
     }
     return true;
 }

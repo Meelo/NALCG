@@ -32,9 +32,9 @@ public:
     }
 
 protected:
-    double mDelay;
     Real mDuration;
     SceneNode *mParticleNode;
     std::string mAnimatedNodeName;
+    double mDelay;
 };
 

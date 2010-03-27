@@ -42,8 +42,8 @@ protected:
     static const int CLOCKWISE = -1;
     static const int COUNTER_CLOCKWISE = 1;
     static const int SHAKE_FREQUENCY = 10;
-    double mShakeDuration;
     Camera* mCamera;
+    double mShakeDuration;
     Quaternion mInitialOrientation;
 
 };
