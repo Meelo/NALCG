@@ -12,7 +12,7 @@
 #include "logic/board.h"
 #include "logic/chesspieces-meta.h"
 
-class MiddleMan
+class Middleman
 {
     // Constants
 
@@ -31,8 +31,8 @@ class MiddleMan
     void boardUpdate();
 
 public:
-    MiddleMan(const std::vector<AI*>& aiList, const std::vector<AIInfo>& aiInfos);
-    virtual ~MiddleMan() { }
+    Middleman(const std::vector<AI*>& aiList, const std::vector<AIInfo>& aiInfos);
+    virtual ~Middleman() { }
 
     // Methods
     void startGame();

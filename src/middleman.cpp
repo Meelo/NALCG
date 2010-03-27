@@ -4,7 +4,7 @@
 #include "middleman.h"
 #include "logic/chessboard.h"
 
-MiddleMan::MiddleMan(const std::vector<AI*>& aiList,
+Middleman::Middleman(const std::vector<AI*>& aiList,
     const std::vector<AIInfo>& aiInfos) :
     board(0), currentTurn(Piece::WHITE), rounds(0), aiList(aiList),
     aiInfos(aiInfos)
@@ -13,7 +13,7 @@ MiddleMan::MiddleMan(const std::vector<AI*>& aiList,
 }
 
 // public methods
-void MiddleMan::startGame()
+void Middleman::startGame()
 {
     // TODO: read board type from config file or something
     board = new ChessBoard(ChessBoard::createBoard());
@@ -25,7 +25,7 @@ void MiddleMan::startGame()
     currentTurn = Piece::WHITE;
 }
 
-Piece::Colour MiddleMan::endGame()
+Piece::Colour Middleman::endGame()
 {
     // TODO: Cleaning up the mess
     delete board;
@@ -35,12 +35,12 @@ Piece::Colour MiddleMan::endGame()
     return Piece::WHITE;
 }
 
-std::vector<std::size_t>  MiddleMan::getValidMovesAt(std::size_t x, std::size_t y) const
+std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t y) const
 {
     return board->getValidMoves(x, y);
 }
 
-void MiddleMan::move(   std::size_t fromX, std::size_t fromY,
+void Middleman::move(   std::size_t fromX, std::size_t fromY,
                         std::size_t toX,   std::size_t toY)
 {
     if (board->move(fromX, fromY, toX, toY))
@@ -49,19 +49,19 @@ void MiddleMan::move(   std::size_t fromX, std::size_t fromY,
     }
 }
 
-void  MiddleMan::undo()
+void  Middleman::undo()
 {
 
 }
 
 // private methods
-void MiddleMan::playRound()
+void Middleman::playRound()
 {
 
 }
 
 // private methods
-void MiddleMan::moveUpdate( std::size_t fromX, std::size_t fromY,
+void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
                             std::size_t toX,   std::size_t toY)
 {
     for (std::size_t i = 0; i < views.size(); ++i)
@@ -70,7 +70,7 @@ void MiddleMan::moveUpdate( std::size_t fromX, std::size_t fromY,
     }
 }
 
-void MiddleMan::boardUpdate()
+void Middleman::boardUpdate()
 {
     for (std::size_t i = 0; i < views.size(); ++i)
     {

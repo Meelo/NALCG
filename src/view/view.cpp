@@ -125,7 +125,7 @@ void View::setupCEGUI()
 
 void View::createFrameListener()
 {
-    mListener = new ViewFrameListener(mKeyboard, mMouse, mWindow, mCamera, mSceneMgr);
+    mListener = new ViewFrameListener(mKeyboard, mMouse, mWindow, mCamera, mSceneMgr, this);
     mRoot->addFrameListener(mListener);
 
     
