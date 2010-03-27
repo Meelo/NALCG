@@ -33,6 +33,7 @@ public:
     virtual bool mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id);
     virtual bool mouseReleased(const OIS::MouseEvent& arg, OIS::MouseButtonID id);
     virtual void moveCamera(const Real& timeSinceLastFrame);
+    virtual void move(int fromX, int fromY, int toX, int toY);
 
 protected:
     bool mLMouseDown, mRMouseDown;     // True if the mouse buttons are down

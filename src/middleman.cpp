@@ -48,7 +48,6 @@ std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t 
 void Middleman::move(   std::size_t fromX, std::size_t fromY,
                         std::size_t toX,   std::size_t toY)
 {
-    std::cout << currentTurn << std::endl;
     if (board->move(fromX, fromY, toX, toY, currentTurn))
     {
         moveUpdate(fromX, fromY, toX, toY);

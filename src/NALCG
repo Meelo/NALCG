@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [[ "$1" == "--clean" || "$1" == "-c" ]]; then
+    make clean
+fi
+
 if [[ ! -f ../bin/NALCG || "$1" == "--update" || "$1" == "-u" ]]; then
     echo "NALCG binary not found or out of date, running make..."
     make -sj5
@@ -22,10 +26,11 @@ elif [[ "$1" == "--help" || "$1" == "-h" ]]; then
     echo "Usage:"
     echo -e "    ./NALCG [options]\n\n"
     echo "Options:"
-    echo "  --update -u              Run make before launching even if binary exists."
-    echo "  --debug                  Launch NALCG in gdb and autorun it."
-    echo "  --gdb                    Launch NALCG in gdb without autorun."
-    echo "  --help -h                Show this help and exit."
+    echo "  --update -u         Run make before launching even if binary exists."
+    echo "  --clean -c          Run make clean first"
+    echo "  --debug             Launch NALCG in gdb and autorun it."
+    echo "  --gdb               Launch NALCG in gdb without autorun."
+    echo "  --help -h           Show this help and exit."
     echo -e "\n\nWithout options NALCG will be executed normally"
 else
     ./NALCG

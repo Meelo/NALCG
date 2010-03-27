@@ -6,10 +6,10 @@
 #include <OIS/OIS.h>
 #include <OgreCEGUIRenderer.h>
 #include "../enduser.h"
+#include "viewframelistener.h"
 
 using namespace Ogre;
 
-class ViewFrameListener;
 class View : public WindowEventListener, public EndUser
 {
 public:
@@ -42,7 +42,10 @@ public:
         }
     }
     virtual void setBoard(const Board* const board, unsigned int round) { }
-    virtual void move(int fromX, int fromY, int toX, int toY) { }
+    virtual void move(int fromX, int fromY, int toX, int toY)
+    {
+        mListener->move(fromX, fromY, toX, toY);
+    }
     virtual void setControl(bool white, bool black) { }
 
     virtual int getBoardWidth() const { return mBoardWidth; }
