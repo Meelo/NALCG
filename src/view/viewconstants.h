@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_VIEW_CONSTANTS_H_
+#define _NALCG_VIEW_CONSTANTS_H_
 
 #include <Ogre.h>
 
@@ -10,3 +11,5 @@ namespace ViewConstants
     static const ColourValue YELLOW_COLOUR(ColourValue(1.0, 1.0, 0.4));
     static const ColourValue BLUE_COLOUR(ColourValue(0.4, 0.4, 1.0));
 };
+
+#endif // _NALCG_VIEW_CONSTANTS_H_

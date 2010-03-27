@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_KNIGHT_MOVEMENT_ANIMATION_H_
+#define _NALCG_KNIGHT_MOVEMENT_ANIMATION_H_
 
 #include "movementanimation.h"
 
@@ -24,3 +25,4 @@ protected:
     bool mCameraShaken;
 };
 
+#endif // _NALCG_KNIGHT_MOVEMENT_ANIMATION_H_

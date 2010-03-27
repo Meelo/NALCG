@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_MOVEMENT_ANIMATION_H_
+#define _NALCG_MOVEMENT_ANIMATION_H_
 
 #include "genericanimation.h"
 #include "animationmanager.h"
@@ -33,3 +34,4 @@ protected:
     AnimationManager *mAnimationManager;
 };
 
+#endif // _NALCG_MOVEMENT_ANIMATION_H_

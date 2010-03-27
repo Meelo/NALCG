@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_BLEEDING_ANIMATION_H_
+#define _NALCG_BLEEDING_ANIMATION_H_
 
 #include "genericanimation.h"
 
@@ -38,3 +39,4 @@ protected:
     double mDelay;
 };
 
+#endif // _NALCG_BLEEDING_ANIMATION_H_

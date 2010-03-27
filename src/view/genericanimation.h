@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_GENERIC_ANIMATION_H_
+#define _NALCG_GENERIC_ANIMATION_H_
 
 #include <Ogre.h>
 
@@ -27,3 +28,5 @@ protected:
     SceneManager *mSceneMgr;
     static int id;
 };
+
+#endif // _NALCG_GENERIC_ANIMATION_H_

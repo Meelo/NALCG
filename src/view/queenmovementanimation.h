@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_QUEEN_MOVEMENT_ANIMATION_H_
+#define _NALCG_QUEEN_MOVEMENT_ANIMATION_H_
 
 #include <Ogre.h>
 
@@ -61,4 +62,4 @@ protected:
     const int mFlyingAltitude;
 };
 
-
+#endif // _NALCG_QUEEN_MOVEMENT_ANIMATION_H_

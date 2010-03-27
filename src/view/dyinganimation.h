@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_DYING_ANIMATION_H_
+#define _NALCG_DYING_ANIMATION_H_
 
 #include "genericanimation.h"
 
@@ -34,3 +35,5 @@ protected:
     double mDyingSpeedMultiplier;
 
 };
+
+#endif // _NALCG_DYING_ANIMATION_H_

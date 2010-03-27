@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_CAMERA_SHAKE_ANIMATION_H_
+#define _NALCG_CAMERA_SHAKE_ANIMATION_H_
 
 #include "genericanimation.h"
 
@@ -47,3 +48,5 @@ protected:
     Quaternion mInitialOrientation;
 
 };
+
+#endif // _NALCG_CAMERA_SHAKE_ANIMATION_H_

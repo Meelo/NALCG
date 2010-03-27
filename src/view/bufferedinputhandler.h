@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_BUFFERED_INPUT_HANDLER_H_
+#define _NALCG_BUFFERED_INPUT_HANDLER_H_
 
 #include <Ogre.h>
 #include <CEGUI/CEGUI.h>
@@ -51,3 +52,4 @@ protected:
     virtual void showMovementPossibilities();
 };
 
+#endif // _NALCG_BUFFERED_INPUT_HANDLER_H_
