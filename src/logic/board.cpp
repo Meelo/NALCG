@@ -76,12 +76,12 @@ std::size_t Board::getPosition(std::size_t column, std::size_t row,
 }
 
 bool Board::move(std::size_t fromX, std::size_t fromY,
-    std::size_t toX, std::size_t toY)
+    std::size_t toX, std::size_t toY, Piece::Colour player)
 {
     // first merge two dimensions into one.
     std::size_t moveFrom = getPosition(fromX, fromY);
     std::size_t moveTo = getPosition(toX, toY);
-    if (isMoveValid(moveFrom, moveTo))
+    if (isMoveValid(moveFrom, moveTo, player))
     {
         // Validation passed, movement shall be done.
 
@@ -97,13 +97,14 @@ bool Board::move(std::size_t fromX, std::size_t fromY,
 // private
 
 
-bool Board::isMoveValid(std::size_t moveFrom, std::size_t moveTo) const
+bool Board::isMoveValid(std::size_t moveFrom, std::size_t moveTo,
+    Piece::Colour player) const
 {
     // TODO do the actual validation
     // Validation should be about going through current states (is checked?),
     // going through selected unit's valid moves, etc.
 
-    return moveFrom != moveTo;
+    return squares.at(moveFrom).getColourOfPiece() == player && moveFrom != moveTo;
 }
 
 // just forward this to the static version of this method.

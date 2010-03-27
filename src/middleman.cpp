@@ -48,13 +48,15 @@ std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t 
 void Middleman::move(   std::size_t fromX, std::size_t fromY,
                         std::size_t toX,   std::size_t toY)
 {
-    if (board->move(fromX, fromY, toX, toY))
+    std::cout << currentTurn << std::endl;
+    if (board->move(fromX, fromY, toX, toY, currentTurn))
     {
         moveUpdate(fromX, fromY, toX, toY);
+        playRound();
     }
 }
 
-void  Middleman::undo()
+void Middleman::undo()
 {
 
 }
@@ -62,7 +64,7 @@ void  Middleman::undo()
 // private methods
 void Middleman::playRound()
 {
-
+    currentTurn = currentTurn == Piece::WHITE ? Piece::BLACK : Piece::WHITE;
 }
 
 // private methods

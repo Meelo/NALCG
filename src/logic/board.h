@@ -19,7 +19,8 @@ class Board
     std::size_t height;
 
     // Methods
-    bool isMoveValid(std::size_t moveFrom, std::size_t moveTo) const;
+    bool isMoveValid(std::size_t moveFrom, std::size_t moveTo,
+        Piece::Colour player) const;
     bool getCoordinates(std::size_t index, std::size_t& column,
         std::size_t& row) const;
     std::size_t getPosition(std::size_t column, std::size_t row) const;
@@ -37,7 +38,7 @@ public:
     static std::size_t getPosition(std::size_t column, std::size_t row,
         std::size_t boardWidth, std::size_t boardHeight);
     bool move(  std::size_t fromX,  std::size_t fromY,
-                std::size_t toX,    std::size_t toY);
+                std::size_t toX,    std::size_t toY, Piece::Colour player);
 
     // Getters
     std::size_t getWidth() const { return width; }
