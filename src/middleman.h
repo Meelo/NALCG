@@ -38,7 +38,7 @@ public:
     void startGame();
     Piece::Colour endGame();
     std::vector<std::size_t> getValidMovesAt(std::size_t x, std::size_t y) const;
-    bool move(  std::size_t fromX, std::size_t fromY,
+    void move(  std::size_t fromX, std::size_t fromY,
                 std::size_t toX,   std::size_t toY);
     void undo();
 

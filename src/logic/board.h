@@ -20,10 +20,10 @@ class Board
 
     // Methods
     bool isMoveValid(std::size_t moveFrom, std::size_t moveTo) const;
-    bool getCoordinates(std::size_t index, std::size_t& column, 
+    bool getCoordinates(std::size_t index, std::size_t& column,
         std::size_t& row) const;
     std::size_t getPosition(std::size_t column, std::size_t row) const;
-   
+
 public:
     Board(const std::vector<Square>& squares, std::size_t width = 8, std::size_t height = 8);
     virtual ~Board();
@@ -31,12 +31,13 @@ public:
     // Methods
     static std::vector<Square> createBoard(std::size_t width = 8, std::size_t height = 8);
     std::vector<std::size_t> getValidMoves(std::size_t location);
-    static bool getCoordinates(std::size_t index, std::size_t& column, 
+    std::vector<std::size_t> getValidMoves(std::size_t x, std::size_t y);
+    static bool getCoordinates(std::size_t index, std::size_t& column,
         std::size_t& row, std::size_t boardWidth, std::size_t boardHeight);
-    static std::size_t getPosition(std::size_t column, std::size_t row, 
+    static std::size_t getPosition(std::size_t column, std::size_t row,
         std::size_t boardWidth, std::size_t boardHeight);
-    bool move(std::size_t fromX, std::size_t fromY, 
-        std::size_t toX, std::size_t toY);
+    bool move(  std::size_t fromX,  std::size_t fromY,
+                std::size_t toX,    std::size_t toY);
 
     // Getters
     std::size_t getWidth() const { return width; }
