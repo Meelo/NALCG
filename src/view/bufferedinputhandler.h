@@ -16,7 +16,7 @@ public:
         : mLMouseDown(false), mRMouseDown(false), mWindow(window), mCamera(camera),
         mSceneMgr(sceneMgr), mRaySceneQuery(sceneMgr->createRayQuery(Ray())),
         mSelectedObject(0), mDirection(Vector3::ZERO), mAnimationManager(animationManager),
-        mView(view)
+        mView(view), mSafeMode(true)
     {
     }
 
@@ -45,6 +45,7 @@ protected:
     Vector3 mDirection;     // Value to move in the correct direction
     AnimationManager* mAnimationManager;
     View* mView;
+    bool mSafeMode;
     static const int CAMERA_MOVEMENT_SPEED = 500;
 
 

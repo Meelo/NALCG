@@ -188,11 +188,6 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
 
 void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 {
-    if (mAnimationManager->animationsRunning())
-    {
-        return;
-    }
-
     CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
 
     Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/arg.state.width, mousePos.d_y/arg.state.height);
@@ -208,6 +203,11 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
     {
         if (itr->movable)
         {
+            while (mSafeMode && mAnimationManager->animationsRunning())
+            {
+                mAnimationManager->executeAnimations(std::numeric_limits<float>::max());
+            }
+
             if (mSelectedObject)
             {
                 toggleMovementPossibilities();
@@ -235,7 +235,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                     }
                 }
                 mSelectedObject->showBoundingBox(false);
-                pieceNode->showBoundingBox(false); // FIXME: moving a dead unit causes the game to crash.
+                pieceNode->showBoundingBox(false);
                 Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + " s");
                 ent->setMaterialName("board/square/move");
                 ent->setVisible(false);
