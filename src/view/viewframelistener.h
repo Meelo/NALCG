@@ -14,9 +14,10 @@ class ViewFrameListener : public FrameListener
 {
 public:
     ViewFrameListener(OIS::Keyboard* keyboard, OIS::Mouse* mouse,
-        RenderWindow* window, Camera* camera, SceneManager* sceneManager)
+        RenderWindow* window, Camera* camera, SceneManager* sceneManager,
+        View* view)
         : mKeyboard(keyboard), mMouse(mouse), mAnimationManager(),
-        mHandler(window, camera, sceneManager, &mAnimationManager),
+        mHandler(window, camera, sceneManager, &mAnimationManager, view),
         mContinue(true), mWindow(window)
     {
         mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");

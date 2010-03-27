@@ -4,10 +4,13 @@
 #include "animationmanager.h"
 #include "animationfactory.h"
 #include "movementanimation.h"
+#include "../middleman.h"
+#include "view.h"
+#include "viewconstants.h"
 
-bool BufferedInputHandler::keyPressed(const OIS::KeyEvent &arg)
+bool BufferedInputHandler::keyPressed(const OIS::KeyEvent& arg)
 {
-    CEGUI::System *sys = CEGUI::System::getSingletonPtr();
+    CEGUI::System* sys = CEGUI::System::getSingletonPtr();
     sys->injectKeyDown(arg.key);
     sys->injectChar(arg.text);
 
@@ -48,7 +51,7 @@ bool BufferedInputHandler::keyPressed(const OIS::KeyEvent &arg)
     return true;
 }
 
-bool BufferedInputHandler::keyReleased(const OIS::KeyEvent &arg)
+bool BufferedInputHandler::keyReleased(const OIS::KeyEvent& arg)
 {
     CEGUI::System::getSingleton().injectKeyUp(arg.key);
 
@@ -91,7 +94,7 @@ bool BufferedInputHandler::keyReleased(const OIS::KeyEvent &arg)
 
 // MouseListener
 
-CEGUI::MouseButton BufferedInputHandler::convertButton(OIS::MouseButtonID buttonID)
+CEGUI::MouseButton BufferedInputHandler::convertButton(OIS::MouseButtonID buttonID) const
 {
     switch (buttonID)
     {
@@ -108,7 +111,7 @@ CEGUI::MouseButton BufferedInputHandler::convertButton(OIS::MouseButtonID button
         return CEGUI::LeftButton;
     }
 }
-bool BufferedInputHandler::mouseMoved(const OIS::MouseEvent &arg)
+bool BufferedInputHandler::mouseMoved(const OIS::MouseEvent& arg)
 {
     if (!mRMouseDown) {
         CEGUI::System::getSingleton().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
@@ -131,7 +134,7 @@ bool BufferedInputHandler::mouseMoved(const OIS::MouseEvent &arg)
 
     return true;
 }
-bool BufferedInputHandler::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+bool BufferedInputHandler::mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id)
 {
     CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
 
@@ -150,7 +153,7 @@ bool BufferedInputHandler::mousePressed(const OIS::MouseEvent &arg, OIS::MouseBu
     }
     return true;
 }
-bool BufferedInputHandler::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
+bool BufferedInputHandler::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseButtonID id)
 {
     CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
 
@@ -176,7 +179,7 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
         mCamera->getOrientation() * mDirection * timeSinceLastFrame);
 }
 
-void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent &arg)
+void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 {
     CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
 
@@ -186,7 +189,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent &arg)
     mRaySceneQuery->setSortByDistance(true);
     mRaySceneQuery->setQueryMask(1 << 0);
 
-    RaySceneQueryResult &result = mRaySceneQuery->execute();
+    RaySceneQueryResult& result = mRaySceneQuery->execute();
     RaySceneQueryResult::iterator itr;
 
     for (itr = result.begin(); itr != result.end(); itr++)
@@ -195,13 +198,13 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent &arg)
         {
             if (mSelectedObject)
             {
-                SceneNode *targetNode = itr->movable->getParentSceneNode();
-                SceneNode *pieceNode = findPieceAbove(mSelectedObject);
+                SceneNode* targetNode = itr->movable->getParentSceneNode();
+                SceneNode* pieceNode = findPieceAbove(mSelectedObject);
                 if (mSelectedObject != targetNode)
                 {
                     std::cout << mSelectedObject->getName() << " -> " << targetNode->getName() << std::endl;
 
-                    SceneNode *targetPiece = findPieceAbove(targetNode);
+                    SceneNode* targetPiece = findPieceAbove(targetNode);
 
                     mAnimationManager->addAnimation(
                         AnimationFactory::createMovementAnimation(
@@ -210,20 +213,20 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent &arg)
                 }
                 mSelectedObject->showBoundingBox(false);
                 pieceNode->showBoundingBox(false); // FIXME: moving a dead unit causes the game to crash.
-                Entity *ent = mSceneMgr->getEntity(mSelectedObject->getName() + "s");
+                Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + "s");
                 ent->setVisible(false);
                 ent->setMaterialName("board/square/green");
                 mSelectedObject = 0;
             }
             else
             {
-                SceneNode *squareNode = itr->movable->getParentSceneNode();
-                SceneNode *pieceNode = findPieceAbove(squareNode);
+                SceneNode* squareNode = itr->movable->getParentSceneNode();
+                SceneNode* pieceNode = findPieceAbove(squareNode);
                 if (pieceNode)
                 {
                     mSelectedObject = squareNode;
                     mSelectedObject->showBoundingBox(true);
-                    Entity *ent = mSceneMgr->getEntity(mSelectedObject->getName() + "s");
+                    Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + "s");
                     ent->setVisible(true);
                     ent->setMaterialName("board/square/cyan");
                     pieceNode->showBoundingBox(true);
@@ -235,12 +238,32 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent &arg)
     }
 }
 
-void BufferedInputHandler::showMovementPossibilities()
+bool BufferedInputHandler::showMovementPossibilities()
 {
+    Middleman* middleman = mView->getMiddleman();
+    if (!middleman)
+    {
+        return false;
+    }
 
+    int x = -1;
+    int y = -1;
+    convertPosition(mSelectedObject->getPosition(), &x, &y);
+
+    std::vector<std::size_t> validMoves = middleman->getValidMovesAt(x, y);
+    return true;
 }
 
-SceneNode* BufferedInputHandler::findPieceAbove(SceneNode* squareNode)
+void BufferedInputHandler::convertPosition(const Vector3& position, int* x, int* y)
+{
+    int sideLength = ViewConstants::SQUARE_SIDE_LENGTH;
+    // TODO: unmagicalize these:
+    *x = (position.x + 700 + 0.5) / sideLength;
+    *y = (position.y + 700 + 0.5) / sideLength;
+}
+
+
+SceneNode* BufferedInputHandler::findPieceAbove(SceneNode* squareNode) const
 {
     const Vector3& squarePosition = squareNode->getPosition();
     Node::ChildNodeIterator it = mSceneMgr->getRootSceneNode()->getChildIterator();
@@ -255,15 +278,15 @@ SceneNode* BufferedInputHandler::findPieceAbove(SceneNode* squareNode)
     return 0;
 }
 
-void BufferedInputHandler::onLeftReleased(const OIS::MouseEvent &arg)
+void BufferedInputHandler::onLeftReleased(const OIS::MouseEvent& arg)
 {
 }
 
-void BufferedInputHandler::onRightPressed(const OIS::MouseEvent &arg)
+void BufferedInputHandler::onRightPressed(const OIS::MouseEvent& arg)
 {
 }
 
-void BufferedInputHandler::onRightReleased(const OIS::MouseEvent &arg)
+void BufferedInputHandler::onRightReleased(const OIS::MouseEvent& arg)
 {
 }
 
