@@ -43,8 +43,11 @@ public:
     void undo();
 
     // Getters
+    std::size_t getAICount() const { return aiList.size(); }
+    const AIInfo& getAIInfoAt(std::size_t index) const { return aiInfos.at(index); }
 
     // Setters
+    void addView(EndUser* view) { views.push_back(view); }
 };
 
 #endif // _NALCG_MIDDLE_MAN_H_
