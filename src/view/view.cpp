@@ -367,7 +367,7 @@ void View::createBoard(const Board* board)
         for (int i = 0; i < 8; i++)
         {
             std::ostringstream name;
-            name << "Board" << i << "," << j;
+            name << i << " " << j;
 
             Entity* ent = mSceneMgr->createEntity(name.str(), "square");
             SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode(
@@ -386,7 +386,7 @@ void View::createBoard(const Board* board)
 
             // Create transparent squares on top of normal squares.
             // These squares indicate possible movement locations.
-            name << "s";
+            name << " s";
             ent = mSceneMgr->createEntity(name.str(), "square");
             ent->setMaterialName("board/square/green");
             ent->setQueryFlags(0);

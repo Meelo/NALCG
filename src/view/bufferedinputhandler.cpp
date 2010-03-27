@@ -198,12 +198,23 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
         {
             if (mSelectedObject)
             {
+                toggleMovementPossibilities();
                 SceneNode* targetNode = itr->movable->getParentSceneNode();
                 SceneNode* pieceNode = findPieceAbove(mSelectedObject);
                 if (mSelectedObject != targetNode)
                 {
-                    std::cout << mSelectedObject->getName() << " -> " << targetNode->getName() << std::endl;
-
+                    Middleman* middleman = mView->getMiddleman();
+                    if (middleman)
+                    {
+                        std::stringstream name;
+                        name << mSelectedObject->getName() << " " << targetNode->getName();
+                        std::size_t fromX, fromY, toX, toY;
+                        name >> fromX;
+                        name >> fromY;
+                        name >> toX;
+                        name >> toY;
+                        mView->getMiddleman()->move(fromX, fromY, toX, toY);
+                    }
                     SceneNode* targetPiece = findPieceAbove(targetNode);
 
                     mAnimationManager->addAnimation(
@@ -213,10 +224,9 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                 }
                 mSelectedObject->showBoundingBox(false);
                 pieceNode->showBoundingBox(false); // FIXME: moving a dead unit causes the game to crash.
-                Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + "s");
+                Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + " s");
                 ent->setMaterialName("board/square/green");
                 ent->setVisible(false);
-                toggleMovementPossibilities();
                 mSelectedObject = 0;
             }
             else
@@ -227,7 +237,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                 {
                     mSelectedObject = squareNode;
                     mSelectedObject->showBoundingBox(true);
-                    Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + "s");
+                    Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + " s");
                     ent->setVisible(true);
                     ent->setMaterialName("board/square/cyan");
                     pieceNode->showBoundingBox(true);
@@ -260,7 +270,7 @@ bool BufferedInputHandler::toggleMovementPossibilities()
             mView->getBoardWidth(), mView->getBoardHeight());
 
         std::ostringstream name;
-        name << "Board" << column << "," << row << "s";
+        name << column << " " << row << " s";
         Entity* ent = mSceneMgr->getEntity(name.str());
         ent->setVisible(!ent->isVisible());
     }
