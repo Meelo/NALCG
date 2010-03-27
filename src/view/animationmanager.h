@@ -27,6 +27,10 @@ public:
 
     virtual void executeAnimations(double timeSinceLastFrame);
     virtual void stopAllAnimationsBelongingTo(SceneNode *targetNode);
+    virtual bool animationsRunning() const
+    {
+        return !mGenericAnimations.empty();
+    }
 
 protected:
     std::vector<GenericAnimation*> mGenericAnimations;

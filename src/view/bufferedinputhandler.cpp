@@ -188,6 +188,11 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
 
 void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 {
+    if (mAnimationManager->animationsRunning())
+    {
+        return;
+    }
+
     CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
 
     Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/arg.state.width, mousePos.d_y/arg.state.height);
