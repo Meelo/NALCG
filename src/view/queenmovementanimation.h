@@ -21,6 +21,11 @@ public:
 
     virtual ~QueenMovementAnimation()
     {
+        if (mPhase < 4)
+        {
+            destroyAnimationsBillboardsAndTrails();
+            mPhase = 4;
+        }
         mAnimatedNode->removeAndDestroyAllChildren();
 
         for (std::size_t i = 0; i < mLights.size(); i++)
@@ -33,6 +38,7 @@ public:
 
     virtual bool animate(const Real& timeSinceLastFrame);
     virtual void createBlasts();
+    virtual void destroyAnimationsBillboardsAndTrails();
     virtual void dimLights();
     virtual void restoreLights();
 

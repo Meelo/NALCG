@@ -356,7 +356,7 @@ void View::createScene()
         createWindow("TaharezLook/HorizontalScrollbar", "View/AnimationSpeedSlider"));
     animationSpeedSlider->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.10, 0)));
     animationSpeedSlider->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.02, 0)));
-    animationSpeedSlider->setDocumentSize(5);
+    animationSpeedSlider->setDocumentSize(4);
     animationSpeedSlider->setScrollPosition(1);
 
     sheet->addChildWindow(quit);

@@ -44,7 +44,16 @@ bool ViewFrameListener::handleAnimationSpeedChanged(const CEGUI::EventArgs& e)
     CEGUI::Window* window = wmgr.getWindow("View/AnimationSpeedSlider");
     CEGUI::Scrollbar* scrollbar = static_cast<CEGUI::Scrollbar*>(window);
     float position = scrollbar->getScrollPosition();
-    mAnimationManager.setAnimationSpeedMultiplier(position * position);
+    float multiplier = position;
+    if (position >= scrollbar->getDocumentSize())
+    {
+        multiplier = std::numeric_limits<float>::max();
+    }
+    else if (position > 1)
+    {
+        multiplier = Math::Pow(position, 4) * 0.08 + 0.92;
+    }
+    mAnimationManager.setAnimationSpeedMultiplier(multiplier);
     return true;
 }
 
