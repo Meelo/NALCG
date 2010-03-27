@@ -1,5 +1,5 @@
-#ifndef _NALCG_MIDDLE_MAN_H_
-#define _NALCG_MIDDLE_MAN_H_
+#ifndef _NALCG_MIDDLEMAN_H_
+#define _NALCG_MIDDLEMAN_H_
 
 // system includes
 #include <cassert>
@@ -50,4 +50,4 @@ public:
     void addView(EndUser* view) { views.push_back(view); }
 };
 
-#endif // _NALCG_MIDDLE_MAN_H_
+#endif // _NALCG_MIDDLEMAN_H_

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_ANIMATION_FACTORY_H_
+#define _NALCG_ANIMATION_FACTORY_H_
 
 #include <Ogre.h>
 
@@ -19,7 +20,7 @@ public:
         AnimationManager *animationManager);
 
     static BleedingAnimation* createBleedingAnimation(SceneNode *pieceNode,
-        SceneManager *sceneMgr, const Real& delay, const Real& duration, 
+        SceneManager *sceneMgr, const Real& delay, const Real& duration,
         const std::string& effectName = "Effects/Blood");
 
     static DyingAnimation* createDyingAnimation(SceneNode *pieceNode,
@@ -28,3 +29,5 @@ public:
     static CameraShakeAnimation* createCameraShakeAnimation(Camera* camera, SceneManager* sceneMgr);
 
 };
+
+#endif // _NALCG_ANIMATION_FACTORY_H_

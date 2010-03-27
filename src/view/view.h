@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_VIEW_H_
+#define _NALCG_VIEW_H_
 
 #include <Ogre.h>
 #include <CEGUI/CEGUI.h>
@@ -90,3 +91,5 @@ protected:
     void createScene();
     void createBoard(const Board* board);
 };
+
+#endif // _NALCG_VIEW_H_

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_ANIMATION_MANAGER_H_
+#define _NALCG_ANIMATION_MANAGER_H_
 
 #include <vector>
 
@@ -33,3 +34,4 @@ protected:
     virtual void endAnimation(std::size_t index);
 };
 
+#endif // _NALCG_ANIMATION_MANAGER_H_

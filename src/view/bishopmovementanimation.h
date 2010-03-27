@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_BISHOP_MOVEMENT_ANIMATION_H_
+#define _NALCG_BISHOP_MOVEMENT_ANIMATION_H_
 
 #include "movementanimation.h"
 
@@ -20,3 +21,4 @@ protected:
     SceneNode *mParticleNode;
 };
 
+#endif // _NALCG_BISHOP_MOVEMENT_ANIMATION_H_

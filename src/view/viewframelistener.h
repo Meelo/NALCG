@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_VIEW_FRAME_LISTENER_H_
+#define _NALCG_VIEW_FRAME_LISTENER_H_
 
 #include <Ogre.h>
 #include <CEGUI/CEGUI.h>
@@ -42,3 +43,4 @@ protected:
     virtual void updateStats();
 };
 
+#endif // _NALCG_VIEW_FRAME_LISTENER_H_
