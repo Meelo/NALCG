@@ -3,7 +3,8 @@
 
 void AnimationManager::executeAnimations(double timeSinceLastFrame)
 {
-    for (std::size_t i = mGenericAnimations.size() - 1; i != -1; i--)
+    std::size_t max = std::numeric_limits<std::size_t>::max();
+    for (std::size_t i = mGenericAnimations.size() - 1; i != max; i--)
     {
         if (!mGenericAnimations.at(i)->animate(timeSinceLastFrame * mAnimationSpeedMultiplier))
         {
@@ -20,7 +21,8 @@ void AnimationManager::executeAnimations(double timeSinceLastFrame)
 
 void AnimationManager::stopAllAnimationsBelongingTo(SceneNode *targetNode)
 {
-    for (std::size_t i = mGenericAnimations.size() - 1; i != -1; i--)
+    std::size_t max = std::numeric_limits<std::size_t>::max();
+    for (std::size_t i = mGenericAnimations.size() - 1; i != max; i--)
     {
         if (mGenericAnimations.at(i)->getAnimatedNode() == targetNode)
         {
