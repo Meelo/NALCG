@@ -86,6 +86,7 @@ bool Board::move(std::size_t fromX, std::size_t fromY,
         // Validation passed, movement shall be done.
 
         squares.at(moveTo).addPiece(squares.at(moveFrom).getPiece());
+        squares.at(moveFrom).removePiece();
 
         return true;
     }
