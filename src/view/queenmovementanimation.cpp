@@ -16,7 +16,7 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
 {
     Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
     Vector3 path = mDestination - mAnimatedNode->getPosition();
-    if (path.length() > distanceMoved || mPhase < 4)
+    if (path.length() > distanceMoved)
     {
         switch (mPhase)
         {
@@ -137,14 +137,7 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
                 }
                 else if (mPhase == 3)
                 {
-                    // FIXME: this destruction method is too excessive.
-                    // Causes the game to crash if this animation ends while others are playing.
-                    mSceneMgr->destroyAllAnimations();
-                    mSceneMgr->destroyAllAnimationStates();
-                    mSceneMgr->destroyAllBillboardChains();
-                    mSceneMgr->destroyAllBillboardSets();
-                    mSceneMgr->destroyAllRibbonTrails();
-
+                    destroyAnimationsBillboardsAndTrails();
                     mPhase = 4;
                 }
                 mAttackCooldown -= timeSinceLastFrame;
@@ -193,6 +186,17 @@ void QueenMovementAnimation::createBlasts()
     mTrail->setQueryFlags(0);
 
     mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(mTrail);
+}
+
+void QueenMovementAnimation::destroyAnimationsBillboardsAndTrails()
+{
+    // FIXME: this destruction method is too excessive.
+    // Causes the game to crash if this animation ends while others are playing.
+    mSceneMgr->destroyAllAnimations();
+    mSceneMgr->destroyAllAnimationStates();
+    mSceneMgr->destroyAllBillboardChains();
+    mSceneMgr->destroyAllBillboardSets();
+    mSceneMgr->destroyAllRibbonTrails();
 }
 
 void QueenMovementAnimation::dimLights()

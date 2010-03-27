@@ -7,7 +7,7 @@ bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
     Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
     Vector3 path = mDestination - mAnimatedNode->getPosition();
 
-    if (path.length() > distanceMoved)
+    if (path.length() > distanceMoved || mParticleNode)
     {
         if (path.length() < 280 && mAttackDuration > 0)
         {

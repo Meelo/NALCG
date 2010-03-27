@@ -49,9 +49,9 @@ protected:
     SceneManager *mSceneMgr;
     Camera *mCamera;
     RenderWindow *mWindow;
-    SceneNode *mProjectorNode;
     Frustum *mDecalFrustum;
     Frustum *mFilterFrustum;
+    SceneNode *mProjectorNode;
 
     int mEntityCount;
 
