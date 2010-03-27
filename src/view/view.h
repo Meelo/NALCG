@@ -35,7 +35,7 @@ public:
 
     // TODO: implement
     virtual void move(int fromX, int fromY, int toX, int toY) { }
-    virtual void setBoard(const Board& board, unsigned int round) { }
+    virtual void setBoard(const Board* const board, unsigned int round) { }
     virtual void setControl(bool white, bool black) { }
     virtual ~View();
 

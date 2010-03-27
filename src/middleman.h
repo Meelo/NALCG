@@ -2,8 +2,13 @@
 #define _NALCG_MIDDLE_MAN_H_
 
 // system includes
+#include <cassert>
+#include <vector>
 
 // class includes
+#include "ai.h"
+#include "aiinfo.h"
+#include "enduser.h"
 #include "logic/board.h"
 #include "logic/chesspieces-meta.h"
 
@@ -14,25 +19,31 @@ class MiddleMan
     // Members
     Board* board;
     Piece::Colour currentTurn;
-    
+    unsigned int rounds;
+    std::vector<EndUser*> views;
+    std::vector<AI*> aiList;
+    std::vector<AIInfo> aiInfos;
+
     // Methods
     void playRound();
-    void update();
+    void moveUpdate(std::size_t fromX, std::size_t fromY,
+                    std::size_t toX,   std::size_t toY);
+    void boardUpdate();
 
 public:
-    MiddleMan();
+    MiddleMan(const std::vector<AI*>& aiList, const std::vector<AIInfo>& aiInfos);
     virtual ~MiddleMan() { }
 
     // Methods
     void startGame();
     Piece::Colour endGame();
     std::vector<std::size_t> getValidMovesAt(std::size_t x, std::size_t y) const;
-    bool move(  std::size_t fromX, std::size_t fromY, 
+    bool move(  std::size_t fromX, std::size_t fromY,
                 std::size_t toX,   std::size_t toY);
     void undo();
 
     // Getters
-    
+
     // Setters
 };
 
