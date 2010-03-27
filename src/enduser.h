@@ -3,14 +3,22 @@
 
 #include "logic/board.h"
 
+class Middleman;
 class EndUser
 {
 public:
-    EndUser() { };
+    EndUser() : mMiddleman(0) { };
     virtual ~EndUser() { }
     
     virtual void move(int fromX, int fromY, int toX, int toY) = 0;
     virtual void setBoard(const Board& board, unsigned int round) = 0;
+    virtual void setMiddleman(Middleman* middleman)
+    {
+        mMiddleman = middleman;
+    }
+
+protected:
+    Middleman* mMiddleman;
 };
 
 #endif // _NALCG_ENDUSER_H_
