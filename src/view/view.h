@@ -93,6 +93,8 @@ protected:
     virtual void createPiece(char type, const std::string& modelName, const Vector3& location);
     void createScene();
     void createBoard(const Board* board);
+    bool dev(const CEGUI::EventArgs& e);
+
 };
 
 #endif // _NALCG_VIEW_H_

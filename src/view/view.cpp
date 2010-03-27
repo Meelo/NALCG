@@ -1,6 +1,7 @@
 #include "view.h"
 #include "viewframelistener.h"
 #include "viewconstants.h"
+#include "../middleman.h"
 
 View::~View()
 {
@@ -285,6 +286,11 @@ void View::createScene()
     debug->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.05, 0)));
     debug->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
 
+    CEGUI::Window* dev = win->createWindow("TaharezLook/Button", "View/DevButton");
+    dev->setText("Milo's Dev button");
+    dev->setPosition(CEGUI::UVector2(CEGUI::UDim(0.85, 0), CEGUI::UDim(0.0, 0)));
+    dev->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+
     CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(win->
         createWindow("TaharezLook/HorizontalScrollbar", "View/AnimationSpeedSlider"));
     animationSpeedSlider->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.10, 0)));
@@ -294,6 +300,7 @@ void View::createScene()
 
     sheet->addChildWindow(quit);
     sheet->addChildWindow(debug);
+    sheet->addChildWindow(dev);
     sheet->addChildWindow(animationSpeedSlider);
     mSystem->setGUISheet(sheet);
 
@@ -303,6 +310,8 @@ void View::createScene()
         CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
     debug->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
+    dev->subscribeEvent(CEGUI::PushButton::EventClicked,
+        CEGUI::Event::Subscriber(&View::dev, this));
     animationSpeedSlider->subscribeEvent(
         CEGUI::Scrollbar::EventScrollPositionChanged, 
         CEGUI::Event::Subscriber(&ViewFrameListener::handleAnimationSpeedChanged, mListener));
@@ -394,4 +403,11 @@ void View::createBoard(const Board* board)
             ent->setVisible(false);
         }
     }
+}
+
+
+bool View::dev(const CEGUI::EventArgs& e)
+{
+    mMiddleman->undo();
+    return true;
 }
