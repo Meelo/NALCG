@@ -3,8 +3,6 @@
 // class dependencies
 #include "square.h"
 
-const std::string empty = "";
-
 Square::Square(Piece* piece) : piece(piece)
 {
 
