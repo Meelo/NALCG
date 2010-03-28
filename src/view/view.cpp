@@ -120,7 +120,7 @@ void View::setupCEGUI()
     mSystem->setDefaultFont("BlueHighway-12");
 
     CEGUI::MouseCursor::getSingleton().setImage(CEGUI::System::getSingleton().getDefaultMouseCursor());
-
+    mSystem->setMultiClickTimeout(std::numeric_limits<double>::min());
     //CEGUI::MouseCursor::getSingleton().setVisible(false);
 }
 
@@ -254,26 +254,9 @@ void View::createPiece(char type, const std::string& modelName,
     node->setInitialState();
 }
 
-void View::createScene()
+
+void View::createGUI()
 {
-    Entity *ent;
-    Light *light;
-
-    mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
-    //mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
-
-    light = mSceneMgr->createLight("Yellow");
-    light->setType(Light::LT_POINT);
-    light->setPosition(Vector3(150, 250, 150));
-    light->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
-    light->setSpecularColour(1.0, 1.0, 1.0);
-
-    light = mSceneMgr->createLight("Blue");
-    light->setType(Light::LT_POINT);
-    light->setPosition(Vector3(-150, 250, -150));
-    light->setDiffuseColour(ViewConstants::BLUE_COLOUR);
-    light->setSpecularColour(1.0, 1.0, 1.0);
-
     CEGUI::WindowManager* win = CEGUI::WindowManager::getSingletonPtr();
     CEGUI::Window* sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
 
@@ -315,6 +298,28 @@ void View::createScene()
     animationSpeedSlider->subscribeEvent(
         CEGUI::Scrollbar::EventScrollPositionChanged, 
         CEGUI::Event::Subscriber(&ViewFrameListener::handleAnimationSpeedChanged, mListener));
+}
+
+void View::createScene()
+{
+    Light *light;
+
+    mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
+    //mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
+
+    light = mSceneMgr->createLight("Yellow");
+    light->setType(Light::LT_POINT);
+    light->setPosition(Vector3(150, 250, 150));
+    light->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
+    light->setSpecularColour(1.0, 1.0, 1.0);
+
+    light = mSceneMgr->createLight("Blue");
+    light->setType(Light::LT_POINT);
+    light->setPosition(Vector3(-150, 250, -150));
+    light->setDiffuseColour(ViewConstants::BLUE_COLOUR);
+    light->setSpecularColour(1.0, 1.0, 1.0);
+
+
     /*// Create the decal projector
     createProjector();
 
@@ -328,17 +333,21 @@ void View::createScene()
     makeMaterialReceiveDecal("22-Default");
     makeMaterialReceiveDecal("18-Default");*/
     //mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
-    ent = mSceneMgr->createEntity("ground", "ground.mesh");
+    mSceneMgr->setSkyDome(true, "Sky", 10, 4);
+}
+void View::createGround()
+{
+    Entity *ent = mSceneMgr->createEntity("ground", "ground.mesh");
     ent->setQueryFlags(0);
     mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -1, 0))->attachObject(ent);
-
-    mSceneMgr->setSkyDome(true, "Sky", 10, 4);
 }
 
 void View::createBoard(const Board* board)
 {
     mBoardWidth = board->getWidth();
     mBoardHeight = board->getHeight();
+    
+    using ViewConstants::SQUARE_SIDE_LENGTH;
 
     for (int i = 0; i < 8; i++)
     {
@@ -366,21 +375,23 @@ void View::createBoard(const Board* board)
     createPiece('N', "white_knight.mesh", Vector3(500, 0, 700));
     createPiece('R', "white_rook.mesh", Vector3(700, 0, 700));
 
+
     Plane plane(Vector3::UNIT_Y, 0);
 
     MeshManager::getSingleton().createPlane("square",
         ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
-        200, 200, 1, 1, true, 1, 1, 1, Vector3::UNIT_Z);
-    for (int j = 0; j < 8; j++)
+        SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH, 1, 1, true, 1, 1, 1, Vector3::UNIT_Z);
+    for (int j = 0; j < int(mBoardHeight); j++)
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < int(mBoardWidth); i++)
         {
             std::ostringstream name;
             name << i << " " << j;
-
             Entity* ent = mSceneMgr->createEntity(name.str(), "square");
+
+            Vector3 position = convertPosition(i, j);
             SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode(
-                name.str(), Vector3(-700 + i * 200, 0, -700 + j * 200));
+                name.str(), position);
             node->attachObject(ent);
 
             if ((i + j) % 2 == 1)
@@ -405,6 +416,24 @@ void View::createBoard(const Board* board)
     }
 }
 
+void View::convertPosition(const Vector3& position, int* x, int* y) const
+{
+    int sideLength = ViewConstants::SQUARE_SIDE_LENGTH;
+    int offsetX = (getBoardWidth() - 1) * sideLength / 2;
+    int offsetY = (getBoardHeight() - 1) * sideLength / 2;
+    // +0.5 for rounding.
+    *x = (position.x + offsetX + 0.5) / sideLength;
+    *y = (position.z + offsetY + 0.5) / sideLength;
+}
+
+Vector3 View::convertPosition(int x, int y) const
+{
+    int sideLength = ViewConstants::SQUARE_SIDE_LENGTH;
+    int offsetX = (getBoardWidth() - 1) * sideLength / 2;
+    int offsetY = (getBoardHeight() - 1) * sideLength / 2;
+    
+    return Vector3(x * sideLength - offsetX, 0, y * sideLength - offsetY);
+}
 
 bool View::dev(const CEGUI::EventArgs& e)
 {

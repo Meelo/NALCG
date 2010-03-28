@@ -55,7 +55,6 @@ protected:
     virtual void onRightPressed(const OIS::MouseEvent& arg);
     virtual void onRightReleased(const OIS::MouseEvent& arg);
     virtual bool toggleMovementPossibilities();
-    virtual void convertPosition(const Vector3& position, int* x, int* y);
 };
 
 #endif // _NALCG_BUFFERED_INPUT_HANDLER_H_

@@ -34,14 +34,22 @@ public:
             setupInputSystem();
             setupCEGUI();
             createFrameListener();
+            createGUI();
             createScene();
+            createGround();
             createBoard(board);
             startRenderLoop();
         } catch( Exception& e ) {
             fprintf(stderr, "An exception has occurred: %s\n", e.what());
         }
     }
-    virtual void setBoard(const Board* const board, unsigned int round) { }
+    virtual void setBoard(const Board* const board, unsigned int round)
+    {
+        mSceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
+        mSceneMgr->destroyAllEntities();
+        createGround();
+        createBoard(board);
+    }
     virtual void move(int fromX, int fromY, int toX, int toY)
     {
         mListener->move(fromX, fromY, toX, toY);
@@ -51,6 +59,8 @@ public:
     virtual int getBoardWidth() const { return mBoardWidth; }
     virtual int getBoardHeight() const { return mBoardHeight; }
 
+    virtual void convertPosition(const Vector3& position, int* x, int* y) const;
+    virtual Vector3 convertPosition(int x, int y) const;
     virtual ~View();
 
 protected:
@@ -92,6 +102,8 @@ protected:
 
     virtual void createPiece(char type, const std::string& modelName, const Vector3& location);
     void createScene();
+    void createGround();
+    void createGUI();
     void createBoard(const Board* board);
     bool dev(const CEGUI::EventArgs& e);
 

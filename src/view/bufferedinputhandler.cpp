@@ -286,7 +286,7 @@ bool BufferedInputHandler::toggleMovementPossibilities()
 
     int x = -1;
     int y = -1;
-    convertPosition(mSelectedObject->getPosition(), &x, &y);
+    mView->convertPosition(mSelectedObject->getPosition(), &x, &y);
 
     std::vector<std::size_t> validMoves = middleman->getValidMovesAt(x, y);
     for (std::size_t i = 0; i < validMoves.size(); i++)
@@ -310,16 +310,6 @@ bool BufferedInputHandler::toggleMovementPossibilities()
 
     }
     return true;
-}
-
-void BufferedInputHandler::convertPosition(const Vector3& position, int* x, int* y)
-{
-    int sideLength = ViewConstants::SQUARE_SIDE_LENGTH;
-    int offsetX = (mView->getBoardWidth() - 1) * sideLength / 2;
-    int offsetY = (mView->getBoardHeight() - 1) * sideLength / 2;
-    // +0.5 for rounding.
-    *x = (position.x + offsetX + 0.5) / sideLength;
-    *y = (position.z + offsetY + 0.5) / sideLength;
 }
 
 
