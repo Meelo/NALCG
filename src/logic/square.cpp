@@ -38,7 +38,7 @@ char Square::getSymbolOfPiece() const
         return piece->getSymbol();
     }
 
-    return ' ';
+    return 0;
 }
 
 void Square::addPiece(Piece* newPiece)
