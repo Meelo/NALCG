@@ -111,6 +111,8 @@ protected:
     std::string getMeshName(char symbol) const;
     CEGUI::Window* createGUIComponent(const std::string& text, double x, double y,
         double sizeX, double sizeY, const std::string& type = "Button");
+    bool undo(const CEGUI::EventArgs& e);
+    bool restart(const CEGUI::EventArgs& e);
     bool dev(const CEGUI::EventArgs& e);
 
 };

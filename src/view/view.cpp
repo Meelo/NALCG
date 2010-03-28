@@ -289,13 +289,19 @@ void View::createGUI()
         CEGUI::Scrollbar::EventScrollPositionChanged, 
         CEGUI::Event::Subscriber(&ViewFrameListener::handleAnimationSpeedChanged, mListener));
 
-    createGUIComponent("Quit", 0, 0.20, 0.1, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Undo", 0, 0.10, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+        CEGUI::Event::Subscriber(&View::undo, this));
+
+    createGUIComponent("Restart", 0, 0.17, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+        CEGUI::Event::Subscriber(&View::restart, this));
+
+    createGUIComponent("Quit", 0, 0.22, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
 
-    createGUIComponent("FPS info", 0, 0.30, 0.1, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("FPS info", 0, 0.29, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
 
-    createGUIComponent("Dev", 0, 0.40, 0.1, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Dev", 0, 0.34, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::dev, this));
 }
 
@@ -443,6 +449,18 @@ Vector3 View::convertPosition(int x, int y) const
     int offsetY = (getBoardHeight() - 1) * sideLength / 2;
     
     return Vector3(x * sideLength - offsetX, 0, y * sideLength - offsetY);
+}
+
+bool View::undo(const CEGUI::EventArgs& e)
+{
+    mMiddleman->undo();
+    return true;
+}
+
+bool View::restart(const CEGUI::EventArgs& e)
+{
+    //mMiddleman->restart();
+    return true;
 }
 
 bool View::dev(const CEGUI::EventArgs& e)
