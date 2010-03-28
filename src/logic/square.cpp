@@ -3,13 +3,15 @@
 // class dependencies
 #include "square.h"
 
-const std::string empty = "";
-
 Square::Square(Piece* piece) : piece(piece)
 {
 
 }
 
+Square::Square(const Square& orig)
+{
+    piece = orig.piece ? orig.piece->clone() : 0;
+}
 
 const std::string Square::getNameOfPiece() const
 {

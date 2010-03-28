@@ -19,12 +19,13 @@ class Bishop : public Piece
 public:
     Bishop(const Piece::Colour& colour);
     virtual ~Bishop() { }
+    Bishop* clone() const { return new Bishop(*this); }
 
     // Methods
     std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& squares) const;
 
     // Getters
-    
+
     // Setters
 };
 

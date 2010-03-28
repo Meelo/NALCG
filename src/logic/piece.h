@@ -34,6 +34,7 @@ protected:
 public:
     Piece(const Colour& colour, const std::string& name, const char symbol = 0);
     virtual ~Piece() { }
+    virtual Piece* clone() const = 0;
 
     // Methods
     virtual std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& square) const;

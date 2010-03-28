@@ -18,6 +18,7 @@ class Square
 
 public:
     Square(Piece* piece = 0);
+    Square(const Square& orig);
     virtual ~Square() { }
 
     // Methods
