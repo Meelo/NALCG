@@ -14,26 +14,11 @@
 
 class Middleman
 {
+public:
     // Constants
     static const unsigned int HALF_TURN = 1;
     static const unsigned int FULL_TURN = 2;
 
-    // Members
-    Board* board;
-    Piece::Colour currentTurn;
-    unsigned int rounds;
-    std::vector<EndUser*> views;
-    std::vector<AI*> aiList;
-    std::vector<AIInfo> aiInfos;
-    std::vector<Board*> gameStates;
-
-    // Methods
-    void playRound();
-    void moveUpdate(std::size_t fromX, std::size_t fromY,
-                    std::size_t toX,   std::size_t toY);
-    void boardUpdate();
-
-public:
     Middleman(const std::vector<AI*>& aiList, const std::vector<AIInfo>& aiInfos);
     virtual ~Middleman() { }
 
@@ -51,6 +36,22 @@ public:
 
     // Setters
     void addView(EndUser* view) { views.push_back(view); }
+
+private:
+    // Members
+    Board* board;
+    Piece::Colour currentTurn;
+    unsigned int rounds;
+    std::vector<EndUser*> views;
+    std::vector<AI*> aiList;
+    std::vector<AIInfo> aiInfos;
+    std::vector<Board*> gameStates;
+
+    // Methods
+    void playRound();
+    void moveUpdate(std::size_t fromX, std::size_t fromY,
+                    std::size_t toX,   std::size_t toY);
+    void boardUpdate();
 };
 
 #endif // _NALCG_MIDDLEMAN_H_

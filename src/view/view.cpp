@@ -129,7 +129,7 @@ void View::createFrameListener()
     mListener = new ViewFrameListener(mKeyboard, mMouse, mWindow, mCamera, mSceneMgr, this);
     mRoot->addFrameListener(mListener);
 
-    
+
     WindowEventUtilities::addWindowEventListener(mWindow, this);
 }
 
@@ -264,7 +264,7 @@ CEGUI::Window* View::createGUIComponent(const std::string& text, double x, doubl
     button->setText(text);
     button->setPosition(CEGUI::UVector2(CEGUI::UDim(x, 0), CEGUI::UDim(y, 0)));
     button->setSize(CEGUI::UVector2(CEGUI::UDim(sizeX, 0), CEGUI::UDim(sizeY, 0)));
-    
+
     sheet->addChildWindow(button);
     return button;
 }
@@ -286,7 +286,7 @@ void View::createGUI()
 
     sheet->addChildWindow(animationSpeedSlider);
     animationSpeedSlider->subscribeEvent(
-        CEGUI::Scrollbar::EventScrollPositionChanged, 
+        CEGUI::Scrollbar::EventScrollPositionChanged,
         CEGUI::Event::Subscriber(&ViewFrameListener::handleAnimationSpeedChanged, mListener));
 
     createGUIComponent("Undo", 0, 0.10, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
@@ -351,7 +351,7 @@ void View::createBoard(const Board* board)
 {
     mBoardWidth = board->getWidth();
     mBoardHeight = board->getHeight();
-    
+
     using ViewConstants::SQUARE_SIDE_LENGTH;
 
     for (int i = 0; i < 8; i++)
@@ -447,7 +447,7 @@ Vector3 View::convertPosition(int x, int y) const
     int sideLength = ViewConstants::SQUARE_SIDE_LENGTH;
     int offsetX = (getBoardWidth() - 1) * sideLength / 2;
     int offsetY = (getBoardHeight() - 1) * sideLength / 2;
-    
+
     return Vector3(x * sideLength - offsetX, 0, y * sideLength - offsetY);
 }
 
@@ -465,6 +465,6 @@ bool View::restart(const CEGUI::EventArgs& e)
 
 bool View::dev(const CEGUI::EventArgs& e)
 {
-    mMiddleman->undo();
+    mMiddleman->undo(Middleman::HALF_TURN);
     return true;
 }
