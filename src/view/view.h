@@ -48,6 +48,7 @@ public:
 
     virtual void setBoard(const Board* const board, unsigned int round)
     {
+        mListener->getAnimationManager().finishAnimations();
         mSceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
         mSceneMgr->destroyAllEntities();
         createGround();

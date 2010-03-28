@@ -26,7 +26,10 @@ void AnimationManager::executeAnimations(double timeSinceLastFrame, bool instant
 
 void AnimationManager::finishAnimations()
 {
-    executeAnimations(0, true);
+    while (animationsRunning())
+    {
+        executeAnimations(0, true);
+    }
 }
 
 void AnimationManager::stopAllAnimationsBelongingTo(SceneNode *targetNode)

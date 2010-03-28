@@ -203,7 +203,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
     {
         if (itr->movable)
         {
-            while (mSafeMode && mAnimationManager->animationsRunning())
+            if (mSafeMode)
             {
                 mAnimationManager->finishAnimations();
             }

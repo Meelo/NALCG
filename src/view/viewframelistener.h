@@ -34,6 +34,10 @@ public:
     {
         mHandler.move(fromX, fromY, toX, toY);
     }
+    AnimationManager& getAnimationManager()
+    {
+        return mAnimationManager;
+    }
 
 protected:
     OIS::Keyboard* mKeyboard;
