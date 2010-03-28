@@ -51,6 +51,8 @@ public:
     virtual int getBoardWidth() const { return mBoardWidth; }
     virtual int getBoardHeight() const { return mBoardHeight; }
 
+    virtual void convertPosition(const Vector3& position, int* x, int* y) const;
+    virtual Vector3 convertPosition(int x, int y) const;
     virtual ~View();
 
 protected:
