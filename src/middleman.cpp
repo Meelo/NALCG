@@ -53,38 +53,32 @@ void Middleman::move(   std::size_t fromX, std::size_t fromY,
 {
     if (board->move(fromX, fromY, toX, toY, currentTurn))
     {
-        gameStates.push_back(new Board(*board));
         moveUpdate(fromX, fromY, toX, toY);
-        ++rounds;
         playRound();
     }
-    std::cerr << "gamestates.size() " << gameStates.size() << std::endl;
 }
 
-void Middleman::undo()
+void Middleman::undo(unsigned int steps)
 {
-    std::cout  << "-------------" << std::endl;
-    if (gameStates.size() > 2)
+    if (gameStates.size() > steps && steps >= HALF_TURN)
     {
-        //~ delete gameStates.back();
-        gameStates.pop_back();
-        //~ delete gameStates.back();
-        gameStates.pop_back();
-        std::cerr << board << " " << gameStates.back() << std::endl;
-        board = gameStates.back();
-        rounds -= 2;
-        //~ playRound();
+        for (unsigned int i = 0; i < steps; ++i)
+        {
+            delete gameStates.back();
+            gameStates.pop_back();
+        }
+        board = new Board(*gameStates.back());
+        rounds -= steps;
         boardUpdate();
-        board->printBoard();
     }
-    std::cout  << "-------------" << std::endl;
-    std::cerr << "Undo: gamestates.size() " << gameStates.size() << std::endl;
 }
 
 // private methods
 void Middleman::playRound()
 {
+    gameStates.push_back(new Board(*board));
     currentTurn = currentTurn == Piece::WHITE ? Piece::BLACK : Piece::WHITE;
+    ++rounds;
 }
 
 // private methods
