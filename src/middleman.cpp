@@ -57,7 +57,8 @@ void Middleman::move(   std::size_t fromX, std::size_t fromY,
 
 void Middleman::undo()
 {
-
+    board->move(0, 0, 1, 1, currentTurn);
+    boardUpdate();
 }
 
 // private methods

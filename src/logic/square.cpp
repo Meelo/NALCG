@@ -8,6 +8,10 @@ Square::Square(Piece* piece) : piece(piece)
 
 }
 
+Square::Square(const Square& orig)
+{
+    piece = orig.piece ? orig.piece->clone() : 0;
+}
 
 const std::string Square::getNameOfPiece() const
 {

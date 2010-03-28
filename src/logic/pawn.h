@@ -20,12 +20,13 @@ class Pawn : public Piece
 public:
     Pawn(const Piece::Colour& colour);
     virtual ~Pawn() { }
+    Pawn* clone() const { return new Pawn(*this); }
 
     // Methods
     std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& square) const;
 
     // Getters
-    
+
     // Setters
 };
 

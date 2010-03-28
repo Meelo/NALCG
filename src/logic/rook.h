@@ -19,6 +19,7 @@ class Rook : public Piece
 public:
     Rook(const Piece::Colour& colour);
     virtual ~Rook() { }
+    Rook* clone() const { return new Rook(*this); }
 
     // Methods
 

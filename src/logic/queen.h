@@ -19,12 +19,13 @@ class Queen : public Piece
 public:
     Queen(const Piece::Colour& colour);
     virtual ~Queen() { }
+    Queen* clone() const { return new Queen(*this); }
 
     // Methods
 
     // Getters
     std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& squares) const;
-    
+
     // Setters
 };
 
