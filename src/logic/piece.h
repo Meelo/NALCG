@@ -24,6 +24,7 @@ protected:
     // Members
     const Colour colour;
     const std::string name;
+    const char symbol;
 
     // Methods
     Piece::Colour getOppositeColour() const;
@@ -31,7 +32,7 @@ protected:
     bool isEmptyOrEdible(std::size_t index, const std::vector<Square>& squares) const;
 
 public:
-    Piece(const Colour& colour, const std::string& name);
+    Piece(const Colour& colour, const std::string& name, const char symbol = ' ');
     virtual ~Piece() { }
 
     // Methods
@@ -40,7 +41,8 @@ public:
     // Getters
     const Colour& getColour() const { return colour; }
     const std::string& getName() const { return name; };
-    
+    char getSymbol() const { return symbol; }
+
     // Setters
 };
 
