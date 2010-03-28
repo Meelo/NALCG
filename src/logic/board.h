@@ -44,6 +44,8 @@ public:
     std::size_t getWidth() const { return width; }
     std::size_t getHeight() const { return height; }
     std::size_t getTotalSize() const { return squares.size(); }
+    char getSymbolAt(std::size_t column, std::size_t row) const;
+    std::string getNameAt(std::size_t column, std::size_t row) const;
 
     // Setters
 };

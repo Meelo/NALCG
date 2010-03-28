@@ -4,12 +4,13 @@
 #include "pawn.h"
 #include "chessboard.h"
 
-Pawn::Pawn(const Piece::Colour& colour) : Piece(colour, "Pawn")
+Pawn::Pawn(const Piece::Colour& colour) : Piece(colour, "Pawn",
+    colour == Piece::WHITE ? 'p' : 'P')
 {
 
 }
 
-std::vector<std::size_t> Pawn::getValidMoves(std::size_t location, 
+std::vector<std::size_t> Pawn::getValidMoves(std::size_t location,
     const std::vector<Square>& squares) const
 {
     std::vector<std::size_t> validMoves;
@@ -24,13 +25,13 @@ std::vector<std::size_t> Pawn::getValidMoves(std::size_t location,
     std::size_t diagL = ChessBoard::getPosition(x - 1, y + direction);
     std::size_t diagR = ChessBoard::getPosition(x + 1, y + direction);
 
-    if (diagL < squares.size() && 
+    if (diagL < squares.size() &&
         isOppositeColour(squares.at(diagL).getColourOfPiece()))
     {
         validMoves.push_back(diagL);
     }
-    
-    if (diagR < squares.size() && 
+
+    if (diagR < squares.size() &&
         isOppositeColour(squares.at(diagR).getColourOfPiece()))
     {
         validMoves.push_back(diagR);
@@ -40,8 +41,8 @@ std::vector<std::size_t> Pawn::getValidMoves(std::size_t location,
     if (possibility < squares.size() && !squares.at(possibility).hasPiece())
     {
         validMoves.push_back(possibility);
-        
-        if ((colour == Piece::WHITE && y == ChessBoard::WHITE_PAWN_ROW) || 
+
+        if ((colour == Piece::WHITE && y == ChessBoard::WHITE_PAWN_ROW) ||
             (colour == Piece::BLACK && y == ChessBoard::BLACK_PAWN_ROW))
         {
             possibility += (direction * ChessBoard::WIDTH);
@@ -52,6 +53,6 @@ std::vector<std::size_t> Pawn::getValidMoves(std::size_t location,
             }
         }
     }
-    
+
     return validMoves;
 }

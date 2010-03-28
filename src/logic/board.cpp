@@ -94,6 +94,16 @@ bool Board::move(std::size_t fromX, std::size_t fromY,
     return false;
 }
 
+char Board::getSymbolAt(std::size_t column, std::size_t row) const
+{
+    return squares.at(getPosition(column, row)).getSymbolOfPiece();
+}
+
+std::string Board::getNameAt(std::size_t column, std::size_t row) const
+{
+    return squares.at(getPosition(column, row)).getNameOfPiece();
+}
+
 // private
 
 

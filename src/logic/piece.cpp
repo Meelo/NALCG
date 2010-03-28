@@ -5,8 +5,8 @@
 #include "piece.h"
 #include "square.h"
 
-Piece::Piece(const Piece::Colour& colour, const std::string& name) :
-    colour(colour), name(name)
+Piece::Piece(const Piece::Colour& colour, const std::string& name,
+    const char symbol) : colour(colour), name(name), symbol(symbol)
 {
 
 }

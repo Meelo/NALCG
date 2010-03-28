@@ -3,6 +3,8 @@
 // class dependencies
 #include "square.h"
 
+const std::string empty = "";
+
 Square::Square(Piece* piece) : piece(piece)
 {
 
@@ -16,7 +18,7 @@ const std::string Square::getNameOfPiece() const
         return piece->getName();
     }
 
-    return "empty";
+    return "";
 }
 
 Piece::Colour Square::getColourOfPiece() const
@@ -29,13 +31,23 @@ Piece::Colour Square::getColourOfPiece() const
     return Piece::UNDEFINED;
 }
 
+char Square::getSymbolOfPiece() const
+{
+    if (piece)
+    {
+        return piece->getSymbol();
+    }
+
+    return ' ';
+}
+
 void Square::addPiece(Piece* newPiece)
 {
-    // TODO: All pieces should be in a container which is emptied in 
+    // TODO: All pieces should be in a container which is emptied in
     // the end of game. This is because we want to be able to undo all previous
     // movements, so let's hold on to those pointers.
     delete piece;
-    piece = newPiece; 
+    piece = newPiece;
 }
 
 Piece* Square::removePiece()

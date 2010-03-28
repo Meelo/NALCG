@@ -29,7 +29,8 @@ public:
     // Getters
     const std::string getNameOfPiece() const;
     Piece::Colour getColourOfPiece() const;
-    
+    char getSymbolOfPiece() const;
+
     // Setters
 
 };

@@ -125,7 +125,7 @@ void TestSquare::addingPiecesToSquare()
 
 void TestSquare::removingPiecesFromSquare_data()
 {
-    std::string empty = "empty";
+    std::string empty = "";
     std::string pawn = "Pawn";
     std::string king = "King";
     QTest::addColumn<std::size_t>("index");
@@ -160,7 +160,7 @@ void TestSquare::removingPiecesFromSquare()
 
 void TestSquare::getPiece_data()
 {
-    std::string empty = "empty";
+    std::string empty = "";
     std::string pawn = "Pawn";
     std::string king = "King";
     QTest::addColumn<Square>("square");
@@ -175,7 +175,7 @@ void TestSquare::getPiece()
 {
     QFETCH(Square, square);
     QFETCH(std::string, expected);
-    if (expected == "empty")
+    if (expected == "")
     {
         QVERIFY(square.getPiece() == 0);
     }

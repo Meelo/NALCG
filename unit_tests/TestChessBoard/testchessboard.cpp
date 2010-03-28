@@ -79,7 +79,7 @@ void TestChessBoard::checkUnits_data()
     Piece::Colour white = Piece::WHITE;
     Piece::Colour black = Piece::BLACK;
     Piece::Colour undefined = Piece::UNDEFINED;
-    std::string empty("empty");
+    std::string empty("");
     std::string pawn("Pawn");
     std::string rook("Rook");
     std::string knight("Knight");
