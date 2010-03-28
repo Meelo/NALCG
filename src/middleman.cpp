@@ -60,7 +60,11 @@ void Middleman::move(   std::size_t fromX, std::size_t fromY,
 
 void Middleman::undo(unsigned int steps)
 {
-    if (gameStates.size() > steps && steps >= HALF_TURN)
+    if (gameStates.size() <= steps)
+    {
+        steps = gameStates.size() - 1;
+    }
+    if (steps >= HALF_TURN)
     {
         for (unsigned int i = 0; i < steps; ++i)
         {
@@ -68,6 +72,7 @@ void Middleman::undo(unsigned int steps)
             gameStates.pop_back();
         }
         board = new Board(*gameStates.back());
+        currentTurn = gameStates.size() % 2 ? Piece::WHITE : Piece::BLACK;
         rounds -= steps;
         boardUpdate();
     }
@@ -81,7 +86,6 @@ void Middleman::playRound()
     ++rounds;
 }
 
-// private methods
 void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
                             std::size_t toX,   std::size_t toY)
 {
