@@ -12,6 +12,13 @@ Middleman::Middleman(const std::vector<AI*>& aiList,
     assert(aiList.size() == aiInfos.size());
 }
 
+Middleman::~Middleman()
+{
+    deleteAndClear(views);
+    deleteAndClear(aiList);
+    deleteAndClear(gameStates);
+}
+
 // public methods
 void Middleman::startGame()
 {
@@ -19,7 +26,7 @@ void Middleman::startGame()
     board = new ChessBoard(ChessBoard::createBoard());
     rounds = 0;
 
-    gameStates.clear();
+    deleteAndClear(gameStates);
     gameStates.push_back(new Board(*board));
 
     // white starts
@@ -100,5 +107,15 @@ void Middleman::boardUpdate()
     for (std::size_t i = 0; i < views.size(); ++i)
     {
         views.at(i)->setBoard(board, rounds);
+    }
+}
+
+template <typename T>
+void Middleman::deleteAndClear(std::vector<T> vector)
+{
+    while (!vector.empty())
+    {
+        delete vector.back();
+        vector.pop_back();
     }
 }

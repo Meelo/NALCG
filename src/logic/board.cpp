@@ -1,4 +1,5 @@
 // system includes
+#include <iostream>
 
 // class dependencies
 #include "board.h"
@@ -10,11 +11,29 @@ Board::Board(const std::vector<Square>& squares, std::size_t width,
 
 }
 
+Board::Board(const Board& orig)
+{
+    squares = orig.squares;
+    for (std::size_t i = 0; i < orig.deadPieces.size(); ++i)
+    {
+        deadPieces.push_back(orig.deadPieces.at(i)->clone());
+    }
+    width = orig.width;
+    height = orig.height;
+}
+
 Board::~Board()
 {
-    for (std::size_t i = 0; i < squares.size(); ++i)
+    while (!deadPieces.empty())
     {
-        delete squares.at(i).removePiece();
+        delete deadPieces.back();
+        deadPieces.pop_back();
+    }
+
+    while (!squares.empty())
+    {
+        delete squares.back().removePiece();
+        squares.pop_back();
     }
 }
 
@@ -83,10 +102,15 @@ bool Board::move(std::size_t fromX, std::size_t fromY,
     std::size_t moveTo = getPosition(toX, toY);
     if (isMoveValid(moveFrom, moveTo, player))
     {
-        // Validation passed, movement shall be done.
-
-        squares.at(moveTo).addPiece(squares.at(moveFrom).getPiece());
-        squares.at(moveFrom).removePiece();
+        // Validation passed
+        // First kill unit if such exists.
+        if (squares.at(moveTo).hasPiece())
+        {
+            deadPieces.push_back(squares.at(moveTo).removePiece());
+        }
+        // Then movement shall be done.
+        squares.at(moveTo).addPiece(squares.at(moveFrom).removePiece());
+        //~ squares.at(moveFrom).removePiece();
 
         return true;
     }

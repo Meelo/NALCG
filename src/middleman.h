@@ -12,6 +12,7 @@
 #include "logic/board.h"
 #include "logic/chesspieces-meta.h"
 
+
 class Middleman
 {
 public:
@@ -20,7 +21,7 @@ public:
     static const unsigned int FULL_TURN = 2;
 
     Middleman(const std::vector<AI*>& aiList, const std::vector<AIInfo>& aiInfos);
-    virtual ~Middleman() { }
+    virtual ~Middleman();
 
     // Methods
     void startGame();
@@ -52,6 +53,8 @@ private:
     void moveUpdate(std::size_t fromX, std::size_t fromY,
                     std::size_t toX,   std::size_t toY);
     void boardUpdate();
+    template <typename T>
+    void deleteAndClear(std::vector<T> vector);
 };
 
 #endif // _NALCG_MIDDLEMAN_H_

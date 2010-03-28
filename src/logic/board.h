@@ -14,6 +14,7 @@ class Board
 
     // Members
     std::vector<Square> squares;
+    std::vector<Piece*> deadPieces;
 
     std::size_t width;
     std::size_t height;
@@ -27,7 +28,7 @@ class Board
 
 public:
     Board(const std::vector<Square>& squares, std::size_t width = 8, std::size_t height = 8);
-    //~ Board(const Board& board);
+    Board(const Board& orig);
     virtual ~Board();
 
     // Methods
