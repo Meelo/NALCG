@@ -254,50 +254,49 @@ void View::createPiece(char type, const std::string& modelName,
     node->setInitialState();
 }
 
+CEGUI::Window* View::createGUIComponent(const std::string& text, double x, double y,
+                                        double sizeX, double sizeY, const std::string& type)
+{
+    CEGUI::WindowManager* win = CEGUI::WindowManager::getSingletonPtr();
+    CEGUI::Window* sheet = win->getWindow("View/Sheet");
+
+    CEGUI::Window* button = win->createWindow("TaharezLook/" + type, "View/" + text + type);
+    button->setText(text);
+    button->setPosition(CEGUI::UVector2(CEGUI::UDim(x, 0), CEGUI::UDim(y, 0)));
+    button->setSize(CEGUI::UVector2(CEGUI::UDim(sizeX, 0), CEGUI::UDim(sizeY, 0)));
+    
+    sheet->addChildWindow(button);
+    return button;
+}
 
 void View::createGUI()
 {
     CEGUI::WindowManager* win = CEGUI::WindowManager::getSingletonPtr();
     CEGUI::Window* sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
+    mSystem->setGUISheet(sheet);
 
-    CEGUI::Window* quit = win->createWindow("TaharezLook/Button", "View/QuitButton");
-    quit->setText("Quit");
-    quit->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
-
-    CEGUI::Window* debug = win->createWindow("TaharezLook/Button", "View/DebugButton");
-    debug->setText("Debug");
-    debug->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.05, 0)));
-    debug->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
-
-    CEGUI::Window* dev = win->createWindow("TaharezLook/Button", "View/DevButton");
-    dev->setText("Milo's Dev button");
-    dev->setPosition(CEGUI::UVector2(CEGUI::UDim(0.85, 0), CEGUI::UDim(0.0, 0)));
-    dev->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+    createGUIComponent("Animation speed: 1x", 0, 0, 0.19, 0.08, "StaticText");
 
     CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(win->
         createWindow("TaharezLook/HorizontalScrollbar", "View/AnimationSpeedSlider"));
-    animationSpeedSlider->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.10, 0)));
-    animationSpeedSlider->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.02, 0)));
+    animationSpeedSlider->setPosition(CEGUI::UVector2(CEGUI::UDim(0.005, 0), CEGUI::UDim(0.055, 0)));
+    animationSpeedSlider->setSize(CEGUI::UVector2(CEGUI::UDim(0.17, 0), CEGUI::UDim(0.02, 0)));
     animationSpeedSlider->setDocumentSize(4);
     animationSpeedSlider->setScrollPosition(1);
 
-    sheet->addChildWindow(quit);
-    sheet->addChildWindow(debug);
-    sheet->addChildWindow(dev);
     sheet->addChildWindow(animationSpeedSlider);
-    mSystem->setGUISheet(sheet);
-
-    //CEGUI::WindowManager *wmgr = CEGUI::WindowManager::getSingletonPtr();
-    //CEGUI::Window *quit = wmgr->getWindow("View/QuitButton");
-    quit->subscribeEvent(CEGUI::PushButton::EventClicked,
-        CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
-    debug->subscribeEvent(CEGUI::PushButton::EventClicked,
-        CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
-    dev->subscribeEvent(CEGUI::PushButton::EventClicked,
-        CEGUI::Event::Subscriber(&View::dev, this));
     animationSpeedSlider->subscribeEvent(
         CEGUI::Scrollbar::EventScrollPositionChanged, 
         CEGUI::Event::Subscriber(&ViewFrameListener::handleAnimationSpeedChanged, mListener));
+
+    createGUIComponent("Quit", 0, 0.20, 0.1, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
+        CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
+
+    createGUIComponent("FPS info", 0, 0.30, 0.1, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
+        CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
+
+    createGUIComponent("Dev", 0, 0.40, 0.1, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
+        CEGUI::Event::Subscriber(&View::dev, this));
 }
 
 void View::createScene()

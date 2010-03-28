@@ -109,6 +109,8 @@ protected:
     void createGUI();
     void createBoard(const Board* board);
     std::string getMeshName(char symbol) const;
+    CEGUI::Window* createGUIComponent(const std::string& text, double x, double y,
+        double sizeX, double sizeY, const std::string& type = "Button");
     bool dev(const CEGUI::EventArgs& e);
 
 };
