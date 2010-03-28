@@ -10,7 +10,7 @@ public:
     MovementAnimation(const Vector3& destination, SceneNode *movingNode,
         SceneNode *targetPiece, SceneManager *sceneMgr, AnimationManager *animationManager)
         : GenericAnimation(movingNode, sceneMgr), mDestination(destination),
-        mTargetPiece(targetPiece), mTargetPieceName(targetPiece ? targetPiece->getName() : ""),
+        mTargetPiece(targetPiece), mTargetPieceName(targetPiece ? targetPiece->getName() : "NO_TARGET"),
         mAnimationManager(animationManager)
     {
     }

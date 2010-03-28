@@ -154,7 +154,7 @@ bool QueenMovementAnimation::animate(const Real& timeSinceLastFrame)
             mAnimatedNode->translate(path * distanceMoved);
 
             mAnimatedNode->resetOrientation();
-            Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
+            Vector3 src = Vector3::UNIT_Z;
             Vector3 flatPath = path;
             flatPath.y = 0;
             mAnimatedNode->rotate(src.getRotationTo(flatPath));

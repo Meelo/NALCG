@@ -32,7 +32,7 @@ protected:
     bool isEmptyOrEdible(std::size_t index, const std::vector<Square>& squares) const;
 
 public:
-    Piece(const Colour& colour, const std::string& name, const char symbol = ' ');
+    Piece(const Colour& colour, const std::string& name, const char symbol = 0);
     virtual ~Piece() { }
 
     // Methods

@@ -41,8 +41,11 @@ public:
             startRenderLoop();
         } catch( Exception& e ) {
             fprintf(stderr, "An exception has occurred: %s\n", e.what());
+        } catch (std::exception& e) {
+            std::cerr << "An exception has occured: " << e.what() << std::endl;
         }
     }
+
     virtual void setBoard(const Board* const board, unsigned int round)
     {
         mSceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
@@ -105,6 +108,7 @@ protected:
     void createGround();
     void createGUI();
     void createBoard(const Board* board);
+    std::string getMeshName(char symbol) const;
     bool dev(const CEGUI::EventArgs& e);
 
 };

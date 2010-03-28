@@ -351,30 +351,16 @@ void View::createBoard(const Board* board)
 
     for (int i = 0; i < 8; i++)
     {
-        createPiece('P', "black_pawn.mesh", Vector3(-700 + i*200, 0, -500));
+        for (int j = 0; j < 8; j++)
+        {
+            char symbol = board->getSymbolAt(i, j);
+            if (symbol)
+            {
+                char upperCaseSymbol = symbol & (~(1 << 5));
+                createPiece(upperCaseSymbol, getMeshName(symbol), convertPosition(i, j));
+            }
+        }
     }
-    createPiece('R', "black_rook.mesh", Vector3(-700, 0, -700));
-    createPiece('N', "black_knight.mesh", Vector3(-500, 0, -700));
-    createPiece('B', "black_bishop.mesh", Vector3(-300, 0, -700));
-    createPiece('Q', "black_queen.mesh", Vector3(-100, 0, -700));
-    createPiece('K', "black_king.mesh", Vector3(100, 0, -700));
-    createPiece('B', "black_bishop.mesh", Vector3(300, 0, -700));
-    createPiece('N', "black_knight.mesh", Vector3(500, 0, -700));
-    createPiece('R', "black_rook.mesh", Vector3(700, 0, -700));
-
-    for (int i = 0; i < 8; i++)
-    {
-        createPiece('P', "white_pawn.mesh", Vector3(-700 + i*200, 0, 500));
-    }
-    createPiece('R', "white_rook.mesh", Vector3(-700, 0, 700));
-    createPiece('N', "white_knight.mesh", Vector3(-500, 0, 700));
-    createPiece('B', "white_bishop.mesh", Vector3(-300, 0, 700));
-    createPiece('Q', "white_queen.mesh", Vector3(-100, 0, 700));
-    createPiece('K', "white_king.mesh", Vector3(100, 0, 700));
-    createPiece('B', "white_bishop.mesh", Vector3(300, 0, 700));
-    createPiece('N', "white_knight.mesh", Vector3(500, 0, 700));
-    createPiece('R', "white_rook.mesh", Vector3(700, 0, 700));
-
 
     Plane plane(Vector3::UNIT_Y, 0);
 
@@ -413,6 +399,31 @@ void View::createBoard(const Board* board)
             node->attachObject(ent);
             ent->setVisible(false);
         }
+    }
+}
+
+std::string View::getMeshName(char symbol) const
+{
+    switch (symbol)
+    {
+    case 'P': return "black_pawn.mesh";
+    case 'R': return "black_rook.mesh";
+    case 'N': return "black_knight.mesh";
+    case 'B': return "black_bishop.mesh";
+    case 'Q': return "black_queen.mesh";
+    case 'K': return "black_king.mesh";
+
+    case 'p': return "white_pawn.mesh";
+    case 'r': return "white_rook.mesh";
+    case 'n': return "white_knight.mesh";
+    case 'b': return "white_bishop.mesh";
+    case 'q': return "white_queen.mesh";
+    case 'k': return "white_king.mesh";
+    default:
+        std::ostringstream errorMessage;
+        errorMessage << "getMeshName(): Unknown symbol: " << symbol;
+        errorMessage << " (" << int(symbol) << ")";
+        throw std::runtime_error(errorMessage.str());
     }
 }
 
