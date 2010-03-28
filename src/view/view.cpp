@@ -120,7 +120,7 @@ void View::setupCEGUI()
     mSystem->setDefaultFont("BlueHighway-12");
 
     CEGUI::MouseCursor::getSingleton().setImage(CEGUI::System::getSingleton().getDefaultMouseCursor());
-
+    mSystem->setMultiClickTimeout(std::numeric_limits<double>::min());
     //CEGUI::MouseCursor::getSingleton().setVisible(false);
 }
 
