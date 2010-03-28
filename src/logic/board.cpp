@@ -104,6 +104,21 @@ std::string Board::getNameAt(std::size_t column, std::size_t row) const
     return squares.at(getPosition(column, row)).getNameOfPiece();
 }
 
+void Board::printBoard() const
+{
+    for (std::size_t i = 0; i < squares.size(); ++i)
+    {
+        if (i % width == 0)
+        {
+            std::cout << std::endl;
+        }
+        char c = squares.at(i).getSymbolOfPiece();
+        if (!c) c = '-';
+        std::cout << c;
+    }
+    std::cout << std::endl;
+}
+
 // private
 
 

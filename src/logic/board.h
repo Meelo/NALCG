@@ -27,7 +27,7 @@ class Board
 
 public:
     Board(const std::vector<Square>& squares, std::size_t width = 8, std::size_t height = 8);
-    Board(const Board& board);
+    //~ Board(const Board& board);
     virtual ~Board();
 
     // Methods
@@ -40,6 +40,7 @@ public:
         std::size_t boardWidth, std::size_t boardHeight);
     bool move(  std::size_t fromX,  std::size_t fromY,
                 std::size_t toX,    std::size_t toY, Piece::Colour player);
+    void printBoard() const;
 
     // Getters
     std::size_t getWidth() const { return width; }

@@ -19,6 +19,9 @@ void Middleman::startGame()
     board = new ChessBoard(ChessBoard::createBoard());
     rounds = 0;
 
+    gameStates.clear();
+    gameStates.push_back(new Board(*board));
+
     // white starts
     currentTurn = Piece::WHITE;
 
@@ -50,15 +53,32 @@ void Middleman::move(   std::size_t fromX, std::size_t fromY,
 {
     if (board->move(fromX, fromY, toX, toY, currentTurn))
     {
+        gameStates.push_back(new Board(*board));
         moveUpdate(fromX, fromY, toX, toY);
+        ++rounds;
         playRound();
     }
+    std::cerr << "gamestates.size() " << gameStates.size() << std::endl;
 }
 
 void Middleman::undo()
 {
-    board->move(0, 0, 1, 1, currentTurn);
-    boardUpdate();
+    std::cout  << "-------------" << std::endl;
+    if (gameStates.size() > 2)
+    {
+        //~ delete gameStates.back();
+        gameStates.pop_back();
+        //~ delete gameStates.back();
+        gameStates.pop_back();
+        std::cerr << board << " " << gameStates.back() << std::endl;
+        board = gameStates.back();
+        rounds -= 2;
+        //~ playRound();
+        boardUpdate();
+        board->printBoard();
+    }
+    std::cout  << "-------------" << std::endl;
+    std::cerr << "Undo: gamestates.size() " << gameStates.size() << std::endl;
 }
 
 // private methods

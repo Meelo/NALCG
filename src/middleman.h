@@ -23,6 +23,7 @@ class Middleman
     std::vector<EndUser*> views;
     std::vector<AI*> aiList;
     std::vector<AIInfo> aiInfos;
+    std::vector<Board*> gameStates;
 
     // Methods
     void playRound();
