@@ -15,6 +15,8 @@
 class Middleman
 {
     // Constants
+    static const unsigned int HALF_TURN = 1;
+    static const unsigned int FULL_TURN = 2;
 
     // Members
     Board* board;
@@ -41,7 +43,7 @@ public:
     std::vector<std::size_t> getValidMovesAt(std::size_t x, std::size_t y) const;
     void move(  std::size_t fromX, std::size_t fromY,
                 std::size_t toX,   std::size_t toY);
-    void undo();
+    void undo(unsigned int steps = FULL_TURN);
 
     // Getters
     std::size_t getAICount() const { return aiList.size(); }
