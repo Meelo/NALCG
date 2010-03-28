@@ -459,7 +459,7 @@ bool View::undo(const CEGUI::EventArgs& e)
 
 bool View::restart(const CEGUI::EventArgs& e)
 {
-    //mMiddleman->restart();
+    mMiddleman->undo(mRound);
     return true;
 }
 

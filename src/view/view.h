@@ -16,7 +16,7 @@ public:
     View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
         mRenderer(0), mSystem(0), mListener(0), mDecalFrustum(0),
         mFilterFrustum(0), mProjectorNode(0), mBoardWidth(0),
-        mBoardHeight(0)
+        mBoardHeight(0), mRound(0)
     {
     }
 
@@ -48,6 +48,7 @@ public:
 
     virtual void setBoard(const Board* const board, unsigned int round)
     {
+        mRound = round;
         mListener->getAnimationManager().finishAnimations();
         mSceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
         mSceneMgr->destroyAllEntities();
@@ -56,6 +57,7 @@ public:
     }
     virtual void move(int fromX, int fromY, int toX, int toY)
     {
+        mRound++;
         mListener->move(fromX, fromY, toX, toY);
     }
     virtual void setControl(bool white, bool black) { }
@@ -83,6 +85,7 @@ protected:
     SceneNode *mProjectorNode;
     std::size_t mBoardWidth;
     std::size_t mBoardHeight;
+    unsigned int mRound;
 
     void createRoot();
     void defineResources();
