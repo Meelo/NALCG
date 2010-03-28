@@ -254,26 +254,9 @@ void View::createPiece(char type, const std::string& modelName,
     node->setInitialState();
 }
 
-void View::createScene()
+
+void View::createGUI()
 {
-    Entity *ent;
-    Light *light;
-
-    mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
-    //mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
-
-    light = mSceneMgr->createLight("Yellow");
-    light->setType(Light::LT_POINT);
-    light->setPosition(Vector3(150, 250, 150));
-    light->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
-    light->setSpecularColour(1.0, 1.0, 1.0);
-
-    light = mSceneMgr->createLight("Blue");
-    light->setType(Light::LT_POINT);
-    light->setPosition(Vector3(-150, 250, -150));
-    light->setDiffuseColour(ViewConstants::BLUE_COLOUR);
-    light->setSpecularColour(1.0, 1.0, 1.0);
-
     CEGUI::WindowManager* win = CEGUI::WindowManager::getSingletonPtr();
     CEGUI::Window* sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
 
@@ -315,6 +298,28 @@ void View::createScene()
     animationSpeedSlider->subscribeEvent(
         CEGUI::Scrollbar::EventScrollPositionChanged, 
         CEGUI::Event::Subscriber(&ViewFrameListener::handleAnimationSpeedChanged, mListener));
+}
+
+void View::createScene()
+{
+    Light *light;
+
+    mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
+    //mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
+
+    light = mSceneMgr->createLight("Yellow");
+    light->setType(Light::LT_POINT);
+    light->setPosition(Vector3(150, 250, 150));
+    light->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
+    light->setSpecularColour(1.0, 1.0, 1.0);
+
+    light = mSceneMgr->createLight("Blue");
+    light->setType(Light::LT_POINT);
+    light->setPosition(Vector3(-150, 250, -150));
+    light->setDiffuseColour(ViewConstants::BLUE_COLOUR);
+    light->setSpecularColour(1.0, 1.0, 1.0);
+
+
     /*// Create the decal projector
     createProjector();
 
@@ -328,11 +333,13 @@ void View::createScene()
     makeMaterialReceiveDecal("22-Default");
     makeMaterialReceiveDecal("18-Default");*/
     //mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
-    ent = mSceneMgr->createEntity("ground", "ground.mesh");
+    mSceneMgr->setSkyDome(true, "Sky", 10, 4);
+}
+void View::createGround()
+{
+    Entity *ent = mSceneMgr->createEntity("ground", "ground.mesh");
     ent->setQueryFlags(0);
     mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -1, 0))->attachObject(ent);
-
-    mSceneMgr->setSkyDome(true, "Sky", 10, 4);
 }
 
 void View::createBoard(const Board* board)
