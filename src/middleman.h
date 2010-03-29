@@ -12,7 +12,6 @@
 #include "logic/board.h"
 #include "logic/chesspieces-meta.h"
 
-
 class Middleman
 {
 public:
@@ -54,7 +53,7 @@ private:
                     std::size_t toX,   std::size_t toY);
     void boardUpdate();
     template <typename T>
-    void deleteAndClear(std::vector<T> vector);
+    void deleteAndClear(std::vector<T>& vector);
 };
 
 #endif // _NALCG_MIDDLEMAN_H_
