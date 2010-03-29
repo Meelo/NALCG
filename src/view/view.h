@@ -48,17 +48,17 @@ public:
 
     virtual void setBoard(const Board* const board, unsigned int round)
     {
-        mRound = round;
         mListener->getAnimationManager().finishAnimations();
         mSceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
         mSceneMgr->destroyAllEntities();
         createGround();
         createBoard(board);
+        mRound = round;
     }
     virtual void move(int fromX, int fromY, int toX, int toY)
     {
-        mRound++;
         mListener->move(fromX, fromY, toX, toY);
+        mRound++;
     }
     virtual void setControl(bool white, bool black) { }
 

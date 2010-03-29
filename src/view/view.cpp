@@ -245,11 +245,10 @@ void View::createPiece(char type, const std::string& modelName,
     }
     /*else if (type == 'K')
     {
-            // Set idle animation
-        AnimationState *mAnimationState = ent->getAnimationState("testi2");
+        AnimationState *mAnimationState = ent->getAnimationState("wrooktest");
         mAnimationState->setLoop(true);
         mAnimationState->setEnabled(true);
-        mAnimationState->addTime(3);
+        mAnimationState->addTime(2);
     }*/
     node->setInitialState();
 }
