@@ -20,3 +20,47 @@ material 13-Default
 }
 
 
+
+material 11-Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture gold.jpg
+			}
+		}
+
+	}
+
+}
+
+
+
+material outerground
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.128235 0.128235 0.128235 1
+			diffuse 0.128235 0.128235 0.128235 1
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture desert.jpg
+			}
+		}
+
+	}
+
+}
+
+

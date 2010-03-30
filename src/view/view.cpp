@@ -159,7 +159,7 @@ void View::createCamera()
 {
     mCamera = mSceneMgr->createCamera("PlayerCam");
     // set its position, direction
-    mCamera->setPosition(Vector3(0,2000,2000));
+    mCamera->setPosition(Vector3(0,1800,1900));
     mCamera->lookAt(Vector3(0,0,-45.0));
     mCamera->setNearClipDistance(5);
 }
@@ -345,9 +345,9 @@ void View::createGround()
     ent->setQueryFlags(0);
     mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -50, 0))->attachObject(ent);
 
-    ent = mSceneMgr->createEntity("podium", "podium.mesh");
+    /*ent = mSceneMgr->createEntity("podium", "podium.mesh");
     ent->setQueryFlags(0);
-    mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -50, 0))->attachObject(ent);
+    mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -50, 0))->attachObject(ent);*/
 }
 
 void View::createBoard(const Board* board)

@@ -190,8 +190,8 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
     MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/move");
     mat->setDiffuse(0, 1.0, 0, sin(alpha * 3) * 0.25 + 0.5);
 
-    double lightX = sin(alpha / 3.0) * 2000;
-    double lightZ = cos(alpha / 3.0) * 2000;
+    double lightX = sin(alpha / 2.0) * 2200;
+    double lightZ = cos(alpha / 2.0) * 2200;
     Light* light = mSceneMgr->getLight("Blue");
     light->setPosition(-lightX, 1000, -lightZ);
 
