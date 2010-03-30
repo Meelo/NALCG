@@ -309,17 +309,17 @@ void View::createScene()
     Light *light;
 
     mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
-    //mSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
+    //mSceneMgr->setShadowTechnique(SHADOWTYPE_STENCIL_ADDITIVE);
 
     light = mSceneMgr->createLight("Yellow");
     light->setType(Light::LT_POINT);
-    light->setPosition(Vector3(150, 250, 150));
+    light->setPosition(Vector3(1500, -25000, 1500));
     light->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
     light->setSpecularColour(1.0, 1.0, 1.0);
 
     light = mSceneMgr->createLight("Blue");
     light->setType(Light::LT_POINT);
-    light->setPosition(Vector3(-150, 250, -150));
+    light->setPosition(Vector3(-1500, 1500, -1500));
     light->setDiffuseColour(ViewConstants::BLUE_COLOUR);
     light->setSpecularColour(1.0, 1.0, 1.0);
 
@@ -341,9 +341,13 @@ void View::createScene()
 }
 void View::createGround()
 {
-    Entity *ent = mSceneMgr->createEntity("ground", "ground.mesh");
+    Entity* ent = mSceneMgr->createEntity("ground", "ground.mesh");
     ent->setQueryFlags(0);
-    mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -1, 0))->attachObject(ent);
+    mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -50, 0))->attachObject(ent);
+
+    ent = mSceneMgr->createEntity("podium", "podium.mesh");
+    ent->setQueryFlags(0);
+    mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -50, 0))->attachObject(ent);
 }
 
 void View::createBoard(const Board* board)
@@ -368,16 +372,16 @@ void View::createBoard(const Board* board)
 
     Plane plane(Vector3::UNIT_Y, 0);
 
-    MeshManager::getSingleton().createPlane("square",
+    /*MeshManager::getSingleton().createPrefabCube().createPlane("square",
         ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
-        SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH, 1, 1, true, 1, 1, 1, Vector3::UNIT_Z);
+        SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH, 1, 1, true, 1, 1, 1, Vector3::UNIT_Z);*/
     for (int j = 0; j < int(mBoardHeight); j++)
     {
         for (int i = 0; i < int(mBoardWidth); i++)
         {
             std::ostringstream name;
             name << i << " " << j;
-            Entity* ent = mSceneMgr->createEntity(name.str(), "square");
+            Entity* ent = mSceneMgr->createEntity(name.str(), "Prefab_Cube");
 
             Vector3 position = convertPosition(i, j);
             SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode(
@@ -397,11 +401,13 @@ void View::createBoard(const Board* board)
             // Create transparent squares on top of normal squares.
             // These squares indicate possible movement locations.
             name << " s";
-            ent = mSceneMgr->createEntity(name.str(), "square");
+            ent = mSceneMgr->createEntity(name.str(), "Prefab_Cube");
             ent->setMaterialName("board/square/move");
             ent->setQueryFlags(0);
             node->attachObject(ent);
             ent->setVisible(false);
+            node->scale(2, 2, 2);
+            node->translate(0, -200, 0);
         }
     }
 }

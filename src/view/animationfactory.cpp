@@ -29,6 +29,8 @@ BleedingAnimation* AnimationFactory::createBleedingAnimation(
     const Real& duration, const std::string& effectName)
 {
     // Create a bloodstorm
+    // FIXME: make sure the particle system is destroyed, since it's
+    // created to scene manager and might not be destroyed normally.
     ParticleSystem* pSys = sceneMgr->createParticleSystem(
         GenericAnimation::nextName(), effectName);
     SceneNode* particleNode = pieceNode->createChildSceneNode();

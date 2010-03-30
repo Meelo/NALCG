@@ -64,6 +64,7 @@ public:
 
     virtual int getBoardWidth() const { return mBoardWidth; }
     virtual int getBoardHeight() const { return mBoardHeight; }
+    virtual bool isWhiteTurn() const { return mRound % 2 == 0; }
 
     virtual void convertPosition(const Vector3& position, int* x, int* y) const;
     virtual Vector3 convertPosition(int x, int y) const;
