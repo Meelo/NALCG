@@ -123,14 +123,14 @@ particle_system Effects/Explosion
         velocity_min    8000
         velocity_max    15000
         colour_range_start  1 1 0.8
-        colour_range_end    1 0.6 0.1
+        colour_range_end    1 0.7 0.1
 		
 	}
 	affector ColourFader
 	{
-		red -0.8
-		green -0.9
-		blue -0.9
+		red -0.7
+		green -0.8
+		blue -0.8
 	}
 	
 	// Gravity
