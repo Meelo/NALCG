@@ -36,8 +36,8 @@ public:
             createFrameListener();
             createGUI();
             createScene();
-            createGround();
             createBoard(board);
+            createInitialExplosion();
             startRenderLoop();
         } catch( Exception& e ) {
             fprintf(stderr, "An exception has occurred: %s\n", e.what());
@@ -68,6 +68,7 @@ public:
 
     virtual void convertPosition(const Vector3& position, int* x, int* y) const;
     virtual Vector3 convertPosition(int x, int y) const;
+    void createGround();
     virtual ~View();
 
 protected:
@@ -101,6 +102,7 @@ protected:
     virtual void windowClosed(RenderWindow* rw);
     virtual void createCamera();
     virtual void createViewports();
+    virtual void createInitialExplosion();
 
     // The function to create our decal projector
     void createProjector();
@@ -110,7 +112,6 @@ protected:
 
     virtual void createPiece(char type, const std::string& modelName, const Vector3& location);
     void createScene();
-    void createGround();
     void createGUI();
     void createBoard(const Board* board);
     std::string getMeshName(char symbol) const;

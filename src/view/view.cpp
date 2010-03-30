@@ -2,6 +2,7 @@
 #include "viewframelistener.h"
 #include "viewconstants.h"
 #include "../middleman.h"
+#include "animationfactory.h"
 
 View::~View()
 {
@@ -61,7 +62,7 @@ void View::setupRenderSystem()
 
 void View::createRenderWindow()
 {
-    mRoot->initialise(true, "Not Another Lousy Chess Game");
+    mRoot->initialise(true, "NALCG");
 }
 
 void View::initializeResourceGroups()
@@ -159,8 +160,9 @@ void View::createCamera()
 {
     mCamera = mSceneMgr->createCamera("PlayerCam");
     // set its position, direction
-    mCamera->setPosition(Vector3(0,1800,1900));
-    mCamera->lookAt(Vector3(0,0,-45.0));
+    mCamera->setPosition(Vector3(0, 1800, 1900));
+    mCamera->lookAt(Vector3(0, 0, -45.0));
+    mCamera->setPosition(Vector3(0, 18000, 19000));
     mCamera->setNearClipDistance(5);
 }
 
@@ -339,6 +341,18 @@ void View::createScene()
     //mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
     mSceneMgr->setSkyDome(true, "Sky", 10, 4);
 }
+
+
+void View::createInitialExplosion()
+{
+    SceneNode* explosion = mSceneMgr->getRootSceneNode()->createChildSceneNode(
+        "Initial explosion", Vector3(0, 0, 0));
+    BleedingAnimation* anim = AnimationFactory::createBleedingAnimation(
+        explosion, mSceneMgr, 0, 1.8, "Effects/Explosion");
+    mListener->getAnimationManager().addAnimation(anim);
+
+}
+
 void View::createGround()
 {
     Entity* ent = mSceneMgr->createEntity("ground", "ground.mesh");
