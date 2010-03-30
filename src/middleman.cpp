@@ -14,7 +14,7 @@ Middleman::Middleman(const std::vector<AI*>& aiList,
 
 Middleman::~Middleman()
 {
-    deleteAndClear(views);
+    views.clear();
     deleteAndClear(aiList);
     deleteAndClear(gameStates);
 }
@@ -111,7 +111,7 @@ void Middleman::boardUpdate()
 }
 
 template <typename T>
-void Middleman::deleteAndClear(std::vector<T> vector)
+void Middleman::deleteAndClear(std::vector<T>& vector)
 {
     while (!vector.empty())
     {

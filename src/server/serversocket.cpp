@@ -1,5 +1,5 @@
-#include "ServerSocket.h"
-#include "SocketException.h"
+#include "serversocket.h"
+#include "socketexception.h"
 
 ServerSocket::ServerSocket ( int port )
 {

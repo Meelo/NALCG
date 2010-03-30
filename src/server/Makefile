@@ -3,7 +3,7 @@ CFLAGS=-lpthread
 OPTS=-Wall
 CC=g++
 APP=NALCG-server
-OBJS= ServerSocket.o Socket.o User.o ServerMain.o
+OBJS= serversocket.o socket.o user.o servermain.o
 
 all: $(OBJS)
 	$(CC) $(OPTS) $(CFLAGS) $(OBJS) -o $(APP)
