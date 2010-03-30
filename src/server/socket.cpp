@@ -5,8 +5,6 @@
 #include <errno.h>
 #include <fcntl.h>
 
-using namespace std;
-
 Socket::Socket() : mSock ( -1 )
 {
     memset ( &mAddr, 0, sizeof ( mAddr ) );
@@ -91,7 +89,7 @@ bool Socket::accept ( Socket& new_socket ) const
 }
 
 
-bool Socket::send ( const string s ) const
+bool Socket::send ( const std::string s ) const
 {
     int status = ::send ( mSock, s.c_str(), s.size(), MSG_NOSIGNAL );
     if ( status == -1 )
@@ -105,7 +103,7 @@ bool Socket::send ( const string s ) const
 }
 
 
-int Socket::recv ( string& s ) const
+int Socket::recv ( std::string& s ) const
 {
     char buf [ MAXRECV + 1 ];
 
