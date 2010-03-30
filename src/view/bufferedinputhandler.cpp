@@ -198,6 +198,21 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
     light = mSceneMgr->getLight("Yellow");
     light->setPosition(lightX, 1000, lightZ);
 
+    static bool created;
+    if (alpha < 4.5)
+    {
+        Vector3 newPosition = mCamera->getPosition();
+        newPosition.y -= timeSinceLastFrame * 3600;
+        newPosition.z -= timeSinceLastFrame * 3800;
+        mCamera->setPosition(newPosition);
+
+        if (!created && alpha > 2)
+        {
+              mView->createGround();
+              created = true;
+        }
+    }
+
 }
 
 void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
