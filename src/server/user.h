@@ -3,9 +3,9 @@
 
 using namespace std;
 
-#include "User.h"
-#include "ServerSocket.h"
-#include "SocketException.h"
+#include "user.h"
+#include "serversocket.h"
+#include "socketexception.h"
 #include <string>
 
 class User

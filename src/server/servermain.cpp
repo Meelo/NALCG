@@ -1,14 +1,14 @@
-#include "ServerSocket.h"
-#include "SocketException.h"
+#include "serversocket.h"
+#include "socketexception.h"
 #include <string>
 #include <iostream>
 #include <pthread.h>
-#include "User.h"
+#include "user.h"
 #include <list>
 #include <fstream>
 #include <cstdlib>
        
-int MAX = 30;
+unsigned int MAX = 30;
 ServerSocket mServer ( 30000 );
 pthread_rwlock_t mRwlock;
 list<User*> mClients;

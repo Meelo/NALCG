@@ -1,5 +1,5 @@
-#include "User.h"
-#include "ServerSocket.h"
+#include "user.h"
+#include "serversocket.h"
 #include <string>
 
 using namespace std;
