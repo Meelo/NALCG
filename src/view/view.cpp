@@ -159,7 +159,7 @@ void View::createCamera()
 {
     mCamera = mSceneMgr->createCamera("PlayerCam");
     // set its position, direction
-    mCamera->setPosition(Vector3(0,1500,1500));
+    mCamera->setPosition(Vector3(0,2000,2000));
     mCamera->lookAt(Vector3(0,0,-45.0));
     mCamera->setNearClipDistance(5);
 }
@@ -381,7 +381,7 @@ void View::createBoard(const Board* board)
         {
             std::ostringstream name;
             name << i << " " << j;
-            Entity* ent = mSceneMgr->createEntity(name.str(), "Prefab_Cube");
+            Entity* ent = mSceneMgr->createEntity(name.str(), "square.mesh");
 
             Vector3 position = convertPosition(i, j);
             SceneNode* node = mSceneMgr->getRootSceneNode()->createChildSceneNode(
@@ -401,13 +401,11 @@ void View::createBoard(const Board* board)
             // Create transparent squares on top of normal squares.
             // These squares indicate possible movement locations.
             name << " s";
-            ent = mSceneMgr->createEntity(name.str(), "Prefab_Cube");
+            ent = mSceneMgr->createEntity(name.str(), "square.mesh");
             ent->setMaterialName("board/square/move");
             ent->setQueryFlags(0);
             node->attachObject(ent);
             ent->setVisible(false);
-            node->scale(2, 2, 2);
-            node->translate(0, -200, 0);
         }
     }
 }

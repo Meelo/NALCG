@@ -26,6 +26,8 @@ public:
             mSceneMgr->getRootSceneNode()->removeAndDestroyChild(mTargetPieceName);
         }
     }
+    virtual void dimLights();
+    virtual void restoreLights();
 
 protected:
     Vector3 mDestination;

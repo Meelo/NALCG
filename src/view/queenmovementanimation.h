@@ -40,8 +40,6 @@ public:
     virtual bool animate(const Real& timeSinceLastFrame);
     virtual void createBlasts();
     virtual void destroyAnimationsBillboardsAndTrails();
-    virtual void dimLights();
-    virtual void restoreLights();
 
 protected:
     static const int MOVEMENT_SPEED;

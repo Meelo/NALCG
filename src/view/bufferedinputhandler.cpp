@@ -189,6 +189,15 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
     alpha += timeSinceLastFrame;
     MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/move");
     mat->setDiffuse(0, 1.0, 0, sin(alpha * 3) * 0.25 + 0.5);
+
+    double lightX = sin(alpha / 3.0) * 2000;
+    double lightZ = cos(alpha / 3.0) * 2000;
+    Light* light = mSceneMgr->getLight("Blue");
+    light->setPosition(-lightX, 1000, -lightZ);
+
+    light = mSceneMgr->getLight("Yellow");
+    light->setPosition(lightX, 1000, lightZ);
+
 }
 
 void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
