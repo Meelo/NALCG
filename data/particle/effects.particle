@@ -117,6 +117,7 @@ particle_system Effects/Explosion
 	emitter Point
 	{
 		angle 360
+
 		emission_rate 2500
         time_to_live    1
         direction       0.5 -0.3 1

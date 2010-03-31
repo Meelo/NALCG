@@ -62,7 +62,7 @@ void View::setupRenderSystem()
 
 void View::createRenderWindow()
 {
-    mRoot->initialise(true, "Not Another Lousy Chess Game");
+    mRoot->initialise(true, "NALCG");
 }
 
 void View::initializeResourceGroups()
