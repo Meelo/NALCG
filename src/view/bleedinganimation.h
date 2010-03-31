@@ -18,6 +18,12 @@ public:
     {
         if (mSceneMgr->hasSceneNode(mAnimatedNodeName))
         {
+            SceneNode::ObjectIterator itr = mParticleNode->getAttachedObjectIterator();
+            while (itr.hasMoreElements())
+            {
+                MovableObject* object = itr.getNext();
+                mSceneMgr->destroyMovableObject(object);
+            }
             mAnimatedNode->removeAndDestroyChild(mParticleNode->getName());
         }
     }
