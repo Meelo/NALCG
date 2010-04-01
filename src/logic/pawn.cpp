@@ -5,7 +5,7 @@
 #include "chessboard.h"
 
 Pawn::Pawn(const Piece::Colour& colour) : Piece(colour, "Pawn",
-    colour == Piece::WHITE ? 'p' : 'P')
+    colour == Piece::WHITE ? ChessBoard::WHITE_PAWN_SYMBOL : ChessBoard::BLACK_PAWN_SYMBOL)
 {
 
 }

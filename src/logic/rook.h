@@ -13,6 +13,7 @@ class Rook : public Piece
     static const int Y_DIRECTIONS[];
 
     // Members
+    bool specialMoveAllowed;
 
     // Methods
 
@@ -22,10 +23,11 @@ public:
     Rook* clone() const { return new Rook(*this); }
 
     // Methods
+    virtual void specialMoveBehaviour(std::size_t from, std::size_t to);
 
     // Getters
     std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& squares) const;
-
+    virtual bool isSpecialMoveAllowed() const { return specialMoveAllowed; }
     // Setters
 };
 

@@ -8,7 +8,7 @@ const int Knight::X_DIRECTIONS[] = { -1,  1, -2,  2, -1, 1, -2, 2, 0 };
 const int Knight::Y_DIRECTIONS[] = { -2, -2, -1, -1,  2, 2,  1, 1, 0 };
 
 Knight::Knight(const Piece::Colour& colour) : Piece(colour, "Knight",
-    colour == Piece::WHITE ? 'n' : 'N')
+    colour == Piece::WHITE ? ChessBoard::WHITE_KNIGHT_SYMBOL : ChessBoard::BLACK_KNIGHT_SYMBOL)
 {
 
 }

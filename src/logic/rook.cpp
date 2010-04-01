@@ -8,7 +8,8 @@ const int Rook::X_DIRECTIONS[] = { 1, -1, 0,  0, 0 };
 const int Rook::Y_DIRECTIONS[] = { 0,  0, 1, -1, 0 };
 
 Rook::Rook(const Piece::Colour& colour) : Piece(colour, "Rook",
-    colour == Piece::WHITE ? 'r' : 'R')
+    colour == Piece::WHITE ? ChessBoard::WHITE_ROOK_SYMBOL : ChessBoard::BLACK_ROOK_SYMBOL),
+    specialMoveAllowed(true)
 {
 
 }
@@ -42,4 +43,9 @@ std::vector<std::size_t> Rook::getValidMoves(std::size_t location,
     }
 
     return validMoves;
+}
+
+void Rook::specialMoveBehaviour(std::size_t, std::size_t)
+{
+    specialMoveAllowed = false;
 }

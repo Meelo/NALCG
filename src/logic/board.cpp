@@ -110,7 +110,7 @@ bool Board::move(std::size_t fromX, std::size_t fromY,
         }
         // Then movement shall be done.
         squares.at(moveTo).addPiece(squares.at(moveFrom).removePiece());
-        //~ squares.at(moveFrom).removePiece();
+        squares.at(moveTo).getPiece()->specialMoveBehaviour(moveFrom, moveTo);
 
         return true;
     }

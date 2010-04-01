@@ -8,7 +8,7 @@ const int Queen::X_DIRECTIONS[] = { 1, -1, 0,  0,  1, -1, 1, -1, 0 };
 const int Queen::Y_DIRECTIONS[] = { 0,  0, 1, -1, -1, -1, 1,  1, 0 };
 
 Queen::Queen(const Piece::Colour& colour) : Piece(colour, "Queen",
-    colour == Piece::WHITE ? 'q' : 'Q')
+    colour == Piece::WHITE ? ChessBoard::WHITE_QUEEN_SYMBOL : ChessBoard::BLACK_QUEEN_SYMBOL)
 {
 
 }

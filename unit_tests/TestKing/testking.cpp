@@ -60,7 +60,11 @@ void TestKing::whiteValidMoves_data()
                                         PieceHolder(22, new Pawn(Piece::BLACK)),
                                         PieceHolder(23, new Pawn(Piece::BLACK)) };
     PieceHolder createUnitsAt08[] = {   PieceHolder(26, new King(Piece::WHITE)) };
-    
+    PieceHolder createUnitsAt09[] = {   PieceHolder(57, 0),
+                                        PieceHolder(58, 0),
+                                        PieceHolder(59, 0) };
+    PieceHolder createUnitsAt10[] = {   PieceHolder(61, 0),
+                                        PieceHolder(62, 0) };   
     // These are the expected valid move indices.
     std::size_t case01[] = { };
     std::size_t case02[] = { 61 };
@@ -70,6 +74,8 @@ void TestKing::whiteValidMoves_data()
     std::size_t case06[] = { 53 };
     std::size_t case07[] = {  5,  6,  7, 13, 15, 21, 22, 23 };
     std::size_t case08[] = { 17, 18, 19, 25, 27, 33, 34, 35 };
+    std::size_t case09[] = { 58, 59 };
+    std::size_t case10[] = { 61, 62 };
 
     QTest::newRow("starting positions, e1") << std::size_t(60)
         << std::vector<PieceHolder>
@@ -110,6 +116,16 @@ void TestKing::whiteValidMoves_data()
         << std::vector<PieceHolder>
             (createUnitsAt08, createUnitsAt08 + sizeof(createUnitsAt08) / sizeph)
         << std::vector<std::size_t>(case08, case08 + sizeof(case08) / sizet);
+    
+    QTest::newRow("Leftside castling possible") << std::size_t(60) 
+        << std::vector<PieceHolder>
+            (createUnitsAt09, createUnitsAt09 + sizeof(createUnitsAt09) / sizeph)
+        << std::vector<std::size_t>(case09, case09 + sizeof(case09) / sizet);
+
+    QTest::newRow("Rightside castling possible") << std::size_t(60) 
+        << std::vector<PieceHolder>
+            (createUnitsAt10, createUnitsAt10 + sizeof(createUnitsAt10) / sizeph)
+        << std::vector<std::size_t>(case10, case10 + sizeof(case10) / sizet);
 
 }
 
