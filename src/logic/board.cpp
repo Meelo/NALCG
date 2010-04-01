@@ -152,8 +152,29 @@ bool Board::isMoveValid(std::size_t moveFrom, std::size_t moveTo,
     // TODO do the actual validation
     // Validation should be about going through current states (is checked?),
     // going through selected unit's valid moves, etc.
+    if (!squares.at(moveFrom).hasPiece() ||
+        squares.at(moveFrom).getColourOfPiece() != player)
+    {
+        return false;
+    }
+    Piece* piece = squares.at(moveFrom).getPiece();
 
-    return squares.at(moveFrom).getColourOfPiece() == player && moveFrom != moveTo;
+    std::vector<std::size_t> validMoves = piece->getValidMoves(moveFrom, squares);
+    bool found = false;
+    for (std::size_t i = 0; i < validMoves.size(); ++i)
+    {
+        if (validMoves.at(i) == moveTo)
+        {
+            found = true;
+            break;
+        }
+    }
+    if (!found)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 // just forward this to the static version of this method.
