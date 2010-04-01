@@ -208,8 +208,9 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
 
         if (!created && alpha > 2)
         {
-              mView->createGround();
-              created = true;
+            mSceneMgr->getSceneNode("ground")->setVisible(true);
+            CEGUI::MouseCursor::getSingleton().setVisible(true);
+            created = true;
         }
     }
 

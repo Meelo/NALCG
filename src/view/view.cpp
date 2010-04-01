@@ -122,7 +122,7 @@ void View::setupCEGUI()
 
     CEGUI::MouseCursor::getSingleton().setImage(CEGUI::System::getSingleton().getDefaultMouseCursor());
     mSystem->setMultiClickTimeout(std::numeric_limits<double>::min());
-    //CEGUI::MouseCursor::getSingleton().setVisible(false);
+    CEGUI::MouseCursor::getSingleton().setVisible(false);
 }
 
 void View::createFrameListener()
@@ -357,7 +357,9 @@ void View::createGround()
 {
     Entity* ent = mSceneMgr->createEntity("ground", "ground.mesh");
     ent->setQueryFlags(0);
-    mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -50, 0))->attachObject(ent);
+    SceneNode* ground = mSceneMgr->getRootSceneNode()->createChildSceneNode("ground", Vector3(0, -50, 0));
+    ground->attachObject(ent);
+    ground->setVisible(false);
 
     /*ent = mSceneMgr->createEntity("podium", "podium.mesh");
     ent->setQueryFlags(0);

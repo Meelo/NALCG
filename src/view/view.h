@@ -37,6 +37,7 @@ public:
             createGUI();
             createScene();
             createBoard(board);
+            createGround();
             createInitialExplosion();
             startRenderLoop();
         } catch( Exception& e ) {
