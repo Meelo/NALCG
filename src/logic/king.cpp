@@ -54,7 +54,6 @@ std::vector<std::size_t> King::getValidMoves(std::size_t location,
                 if (squares.at(i).hasPiece())
                 {
                     castlingAllowed = false;
-                    std::cout << "found: " << squares.at(i).getNameOfPiece() << std::endl;
                     break;
                 }
             }
@@ -66,6 +65,22 @@ std::vector<std::size_t> King::getValidMoves(std::size_t location,
 
         // check for the rook on the right side
         std::size_t rightRook = ChessBoard::getPosition(RIGHT_ROOK_X, y);
+        if (colour == squares.at(rightRook).getColourOfPiece() &&
+            squares.at(rightRook).getPiece()->isSpecialMoveAllowed())
+        {
+            bool castlingAllowed = true;
+            for (std::size_t i = location + 1; i < rightRook; ++i) {
+                if (squares.at(i).hasPiece())
+                {
+                    castlingAllowed = false;
+                    break;
+                }
+            }
+            if (castlingAllowed)
+            {
+                validMoves.push_back(location + CASTLING);
+            }
+        }
     }
 
     return validMoves;
