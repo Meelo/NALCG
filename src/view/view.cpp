@@ -353,13 +353,13 @@ void View::createInitialExplosion()
 
 }
 
-void View::createGround()
+void View::createGround(bool visible)
 {
     Entity* ent = mSceneMgr->createEntity("ground", "ground.mesh");
     ent->setQueryFlags(0);
     SceneNode* ground = mSceneMgr->getRootSceneNode()->createChildSceneNode("ground", Vector3(0, -50, 0));
     ground->attachObject(ent);
-    ground->setVisible(false);
+    ground->setVisible(visible);
 
     /*ent = mSceneMgr->createEntity("podium", "podium.mesh");
     ent->setQueryFlags(0);

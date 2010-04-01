@@ -37,7 +37,7 @@ public:
             createGUI();
             createScene();
             createBoard(board);
-            createGround();
+            createGround(false);
             createInitialExplosion();
             startRenderLoop();
         } catch( Exception& e ) {
@@ -52,7 +52,7 @@ public:
         mListener->getAnimationManager().finishAnimations();
         mSceneMgr->getRootSceneNode()->removeAndDestroyAllChildren();
         mSceneMgr->destroyAllEntities();
-        createGround();
+        createGround(true);
         createBoard(board);
         mRound = round;
     }
@@ -69,7 +69,7 @@ public:
 
     virtual void convertPosition(const Vector3& position, int* x, int* y) const;
     virtual Vector3 convertPosition(int x, int y) const;
-    void createGround();
+    void createGround(bool visible);
     virtual ~View();
 
 protected:
