@@ -19,6 +19,8 @@ class Board
     std::size_t width;
     std::size_t height;
 
+    unsigned int rounds;
+
     // Methods
     bool isMoveValid(std::size_t moveFrom, std::size_t moveTo,
         Piece::Colour player) const;
@@ -42,6 +44,7 @@ public:
     bool move(  std::size_t fromX,  std::size_t fromY,
                 std::size_t toX,    std::size_t toY, Piece::Colour player);
     void printBoard() const;
+    void initRoundSpecificState();
 
     // Getters
     std::size_t getWidth() const { return width; }

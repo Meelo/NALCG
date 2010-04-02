@@ -6,7 +6,8 @@
 #include "chesspieces-meta.h"
 
 Board::Board(const std::vector<Square>& squares, std::size_t width,
-    std::size_t height) : squares(squares), width(width), height(height)
+    std::size_t height) : squares(squares), width(width), height(height),
+    rounds(0)
 {
 
 }
@@ -20,6 +21,7 @@ Board::Board(const Board& orig)
     }
     width = orig.width;
     height = orig.height;
+    rounds = orig.rounds;
 }
 
 Board::~Board()
@@ -109,9 +111,12 @@ bool Board::move(std::size_t fromX, std::size_t fromY,
             deadPieces.push_back(squares.at(moveTo).removePiece());
         }
         // Then movement shall be done.
-        squares.at(moveTo).addPiece(squares.at(moveFrom).removePiece());
-        squares.at(moveTo).getPiece()->specialMoveBehaviour(moveFrom, moveTo);
+        Piece* piece = squares.at(moveFrom).removePiece();
+        squares.at(moveTo).addPiece(piece);
+        piece->specialMoveBehaviour(moveFrom, moveTo);
 
+        ++rounds;
+        std::cout << rounds << std::endl;
         return true;
     }
 
@@ -141,6 +146,18 @@ void Board::printBoard() const
         std::cout << c;
     }
     std::cout << std::endl;
+}
+
+void Board::initRoundSpecificState()
+{
+    for (std::size_t i = 0; i < squares.size(); ++i)
+    {
+        Piece* piece = squares.at(i).getPiece();
+        if (piece)
+        {
+            piece->resetRoundSpecificState();
+        }
+    }
 }
 
 // private

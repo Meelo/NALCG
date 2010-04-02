@@ -43,6 +43,8 @@ const char ChessBoard::WHITE_BISHOP_SYMBOL = 'b';
 const char ChessBoard::WHITE_QUEEN_SYMBOL = 'q';
 const char ChessBoard::WHITE_KING_SYMBOL = 'k';
 
+const char ChessBoard::EMPTY_SYMBOL = 0;
+
 ChessBoard::ChessBoard(const std::vector<Square>& squares) :
     Board(squares, WIDTH, HEIGHT)
 {

@@ -54,6 +54,8 @@ public:
     static const char WHITE_QUEEN_SYMBOL;
     static const char WHITE_KING_SYMBOL;
 
+    static const char EMPTY_SYMBOL;
+
     ChessBoard(const std::vector<Square>& squares);
     virtual ~ChessBoard() { };
 

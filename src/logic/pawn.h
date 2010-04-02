@@ -14,8 +14,12 @@ class Pawn : public Piece
     // Constants
 
     // Members
+    bool specialMoveAllowed;
+    bool resetOnNextTurn;
 
     // Methods
+    bool isEnPassantAllowed(std::size_t diag, std::size_t side,
+        const std::vector<Square>& squares) const;
 
 public:
     Pawn(const Piece::Colour& colour);
@@ -23,9 +27,12 @@ public:
     Pawn* clone() const { return new Pawn(*this); }
 
     // Methods
-    std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& square) const;
+    virtual void specialMoveBehaviour(std::size_t from, std::size_t to);
+    virtual void resetRoundSpecificState();
 
     // Getters
+    std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& squares) const;
+    virtual bool isSpecialMoveAllowed() const { return specialMoveAllowed; }
 
     // Setters
 };

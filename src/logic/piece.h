@@ -40,6 +40,7 @@ public:
     virtual std::vector<std::size_t> getValidMoves(std::size_t location,
         const std::vector<Square>& square) const = 0;
     virtual void specialMoveBehaviour(std::size_t from, std::size_t to);
+    virtual void resetRoundSpecificState() { };
 
     // Getters
     const Colour& getColour() const { return colour; }

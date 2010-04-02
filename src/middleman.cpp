@@ -91,6 +91,7 @@ void Middleman::playRound()
     gameStates.push_back(new Board(*board));
     currentTurn = currentTurn == Piece::WHITE ? Piece::BLACK : Piece::WHITE;
     ++rounds;
+    std::cout << rounds << std::endl;
 }
 
 void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
@@ -100,6 +101,7 @@ void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
     {
         views.at(i)->move(fromX, fromY, toX, toY);
     }
+    board->initRoundSpecificState();
 }
 
 void Middleman::boardUpdate()
@@ -108,6 +110,7 @@ void Middleman::boardUpdate()
     {
         views.at(i)->setBoard(board, rounds);
     }
+    //~ board->initRoundSpecificState();
 }
 
 template <typename T>
