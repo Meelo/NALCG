@@ -213,10 +213,30 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
             mSceneMgr->setSkyDome(true, "Sky", 10, 4);
             created = true;
         }
+
     }
 
     mSceneMgr->getSceneNode("water")->setPosition(Vector3(0, 0,
         sin(alpha / 100.0) * 100000.0));
+
+    // We update all loaded animations each frame
+    SceneManager::AnimationIterator animationIt = mSceneMgr->getAnimationIterator();
+
+    while(animationIt.hasMoreElements()) {
+        Animation* animation = animationIt.getNext();
+
+        const Animation::NodeTrackList& trackList = animation->_getNodeTrackList();
+
+        Animation::NodeTrackList::const_iterator it = trackList.begin();
+        Animation::NodeTrackList::const_iterator iend = trackList.end();
+
+        for(; it != iend; ++it) {
+            const Ogre::NodeAnimationTrack* track = it->second;
+            track->getAssociatedNode()->resetToInitialState();
+        }
+
+        animation->apply(alpha);
+    }
 
 }
 
