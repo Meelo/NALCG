@@ -99,7 +99,6 @@ void View::setupInputSystem()
     {
         mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject(OIS::OISKeyboard, true));
         mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject(OIS::OISMouse, true));
-        //mJoy = static_cast<OIS::JoyStick*>(mInputManager->createInputObject(OIS::OISJoyStick, false));
     }
     catch (const OIS::Exception &e)
     {
@@ -276,7 +275,7 @@ void View::createGUI()
     CEGUI::Window* sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
     mSystem->setGUISheet(sheet);
 
-    createGUIComponent("Animation speed: 1x", 0, 0, 0.19, 0.05, "StaticText");//->setProperty("FrameEnabled", "False");
+    createGUIComponent("Animation speed: 1x", 0, 0, 0.19, 0.05, "StaticText");
 
     CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(win->
         createWindow("TaharezLook/HorizontalScrollbar", "View/AnimationSpeedSlider"));
@@ -367,10 +366,6 @@ void View::createGround(bool visible)
     water->attachObject(ent);
 
     ground->setVisible(visible);
-
-    /*ent = mSceneMgr->createEntity("podium", "podium.mesh");
-    ent->setQueryFlags(0);
-    mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, -50, 0))->attachObject(ent);*/
 }
 
 void View::createBoard(const Board* board)
@@ -393,11 +388,6 @@ void View::createBoard(const Board* board)
         }
     }
 
-    Plane plane(Vector3::UNIT_Y, 0);
-
-    /*MeshManager::getSingleton().createPrefabCube().createPlane("square",
-        ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
-        SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH, 1, 1, true, 1, 1, 1, Vector3::UNIT_Z);*/
     for (int j = 0; j < int(mBoardHeight); j++)
     {
         for (int i = 0; i < int(mBoardWidth); i++)
