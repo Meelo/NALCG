@@ -14,7 +14,7 @@ bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
 
     if (path.length() > distanceMoved)
     {
-        if (mTargetPiece && path.length() < 90 && !mCrushedEnemy)
+        if (mTargetPiece && path.length() < 50 && !mCrushedEnemy)
         {
             mAnimationManager->addAnimation(
                 AnimationFactory::createDyingAnimation(
@@ -31,12 +31,16 @@ bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
         Real verticalVelocity = (path.length() - mHalfTotalDistance) * JUMP_HEIGHT;
         mAnimatedNode->translate(Vector3(0, verticalVelocity * timeSinceLastFrame, 0)); 
 
+        Real flipAngle = path.length() * 180 / mHalfTotalDistance;
+
         // Normalising the vector so the speed remains constant.
         path.normalise();
         mAnimatedNode->translate(path * distanceMoved);
 
-        Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
+        mAnimatedNode->resetOrientation();
+        Vector3 src = Vector3::UNIT_Z;
         mAnimatedNode->rotate(src.getRotationTo(path));
+        mAnimatedNode->pitch(-Degree(flipAngle));
         return true; // Animation still running.
     }
     else if (mEndDelay >= 0)

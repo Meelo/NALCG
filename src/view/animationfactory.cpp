@@ -4,6 +4,7 @@
 #include "knightmovementanimation.h"
 #include "dyinganimation.h"
 #include "camerashakeanimation.h"
+#include "kingmovementanimation.h"
 
 MovementAnimation* AnimationFactory::createMovementAnimation(
     const char type, const Vector3& destination, SceneNode *movingNode,
@@ -18,6 +19,8 @@ MovementAnimation* AnimationFactory::createMovementAnimation(
         return new QueenMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
     case 'N':
         return new KnightMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
+    case 'K':
+        return new KingMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
     default:
         // TODO: change this to return 0 for testing when everything should be done.
         return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);

@@ -17,7 +17,7 @@ public:
     virtual bool animate(const Real& timeSinceLastFrame);
 protected:
     static const int MOVEMENT_SPEED = 500;
-    static const int JUMP_HEIGHT = 10;
+    static const int JUMP_HEIGHT = 18;
     static const Real END_DELAY;
     const Real mHalfTotalDistance;
     bool mCrushedEnemy;
