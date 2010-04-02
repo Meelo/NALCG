@@ -190,13 +190,13 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
     MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/move");
     mat->setDiffuse(0, 1.0, 0, sin(alpha * 3) * 0.25 + 0.5);
 
-    double lightX = sin(alpha / 2.0) * 2200;
-    double lightZ = cos(alpha / 2.0) * 2200;
+    double lightX = sin(alpha / 2.0) * 5200;
+    double lightZ = cos(alpha / 2.0) * 5200;
     Light* light = mSceneMgr->getLight("Blue");
-    light->setPosition(-lightX, 1000, -lightZ);
+    light->setPosition(-lightX, 2500, -lightZ);
 
     light = mSceneMgr->getLight("Yellow");
-    light->setPosition(lightX, 1000, lightZ);
+    light->setPosition(lightX, 2500, lightZ);
 
     static bool created;
     if (alpha < 4.5)
@@ -210,9 +210,13 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
         {
             mSceneMgr->getSceneNode("ground")->setVisible(true);
             CEGUI::MouseCursor::getSingleton().setVisible(true);
+            mSceneMgr->setSkyDome(true, "Sky", 10, 4);
             created = true;
         }
     }
+
+    mSceneMgr->getSceneNode("water")->setPosition(Vector3(0, 0,
+        sin(alpha / 100.0) * 100000.0));
 
 }
 

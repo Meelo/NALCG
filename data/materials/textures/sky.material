@@ -9,7 +9,7 @@ material Sky
 
 			texture_unit
 			{
-				texture sky.jpg
+				texture space.jpg
 				scroll_anim 0.001 0
 			}
 		}

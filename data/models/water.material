@@ -1,0 +1,23 @@
+
+material 14-Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 0.7
+			diffuse 0.588235 0.588235 0.588235 0.7
+			specular 0 0 0 10 0
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture water.jpg
+			}
+		}
+
+	}
+
+}
+
+

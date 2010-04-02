@@ -276,7 +276,7 @@ void View::createGUI()
     CEGUI::Window* sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
     mSystem->setGUISheet(sheet);
 
-    createGUIComponent("Animation speed: 1x", 0, 0, 0.19, 0.08, "StaticText");
+    createGUIComponent("Animation speed: 1x", 0, 0, 0.19, 0.05, "StaticText");//->setProperty("FrameEnabled", "False");
 
     CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(win->
         createWindow("TaharezLook/HorizontalScrollbar", "View/AnimationSpeedSlider"));
@@ -339,7 +339,7 @@ void View::createScene()
     makeMaterialReceiveDecal("22-Default");
     makeMaterialReceiveDecal("18-Default");*/
     //mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
-    mSceneMgr->setSkyDome(true, "Sky", 10, 4);
+    mSceneMgr->setSkyDome(false, "Sky", 10, 4);
 }
 
 
@@ -355,10 +355,17 @@ void View::createInitialExplosion()
 
 void View::createGround(bool visible)
 {
+    SceneNode* ground = mSceneMgr->getRootSceneNode()->createChildSceneNode("ground", Vector3(0, -50, 0));
+    SceneNode* water = ground->createChildSceneNode("water");
+
     Entity* ent = mSceneMgr->createEntity("ground", "ground.mesh");
     ent->setQueryFlags(0);
-    SceneNode* ground = mSceneMgr->getRootSceneNode()->createChildSceneNode("ground", Vector3(0, -50, 0));
     ground->attachObject(ent);
+
+    ent = mSceneMgr->createEntity("water", "water.mesh");
+    ent->setQueryFlags(0);
+    water->attachObject(ent);
+
     ground->setVisible(visible);
 
     /*ent = mSceneMgr->createEntity("podium", "podium.mesh");
