@@ -29,31 +29,25 @@ std::vector<std::size_t> Pawn::getValidMoves(std::size_t location,
     std::size_t left = ChessBoard::getPosition(x - 1, y);
     std::size_t right = ChessBoard::getPosition(x + 1, y);
 
-    if (diagL < squares.size() && (
-        isOppositeColour(squares.at(diagL).getColourOfPiece()) ||
-        isEnPassantAllowed(diagL, left, squares)) )
+    if (isEatingAllowed(diagL, left, squares))
     {
         validMoves.push_back(diagL);
     }
 
-    if (diagR < squares.size() && (
-        isOppositeColour(squares.at(diagR).getColourOfPiece()) ||
-        isEnPassantAllowed(diagR, right, squares)) )
+    if (isEatingAllowed(diagR, right, squares))
     {
         validMoves.push_back(diagR);
     }
 
     std::size_t possibility = ChessBoard::getPosition(x, y + direction);
-    if (possibility < squares.size() && !squares.at(possibility).hasPiece())
+    if (isMoveAllowed(possibility, squares))
     {
         validMoves.push_back(possibility);
 
-        if ((colour == Piece::WHITE && y == ChessBoard::WHITE_PAWN_ROW) ||
-            (colour == Piece::BLACK && y == ChessBoard::BLACK_PAWN_ROW))
+        if (isDoubleMoveAllowed(y))
         {
             possibility += (direction * ChessBoard::WIDTH);
-            if (possibility < squares.size() &&
-                !squares.at(possibility).hasPiece())
+            if (isMoveAllowed(possibility, squares))
             {
                 validMoves.push_back(possibility);
             }
@@ -82,11 +76,32 @@ void Pawn::resetRoundSpecificState()
 
 // private
 
+bool Pawn::isEatingAllowed(std::size_t target, std::size_t side,
+    const std::vector<Square>& squares) const
+{
+    return (target < squares.size() &&
+        (isOppositeColour(squares.at(target).getColourOfPiece()) ||
+        isEnPassantAllowed(target, side, squares)));
+}
+
 bool Pawn::isEnPassantAllowed(std::size_t diag, std::size_t side,
     const std::vector<Square>& squares) const
 {
-    // Opposite colour pawn
+    // Make sure your pawn is right next to opposite colour pawn,
+    // since en passant move is only allowed to be done over pawns.
     return (static_cast<char>(squares.at(side).getSymbolOfPiece() ^ (1 << 5)) == symbol
         && squares.at(side).getPiece()->isSpecialMoveAllowed()
         && !squares.at(diag).hasPiece());
+}
+
+bool Pawn::isMoveAllowed(std::size_t location,
+    const std::vector<Square>& squares) const
+{
+    return location < squares.size() && !squares.at(location).hasPiece();
+}
+
+bool Pawn::isDoubleMoveAllowed(std::size_t row) const
+{
+    return  (colour == Piece::WHITE && row == ChessBoard::WHITE_PAWN_ROW) ||
+            (colour == Piece::BLACK && row == ChessBoard::BLACK_PAWN_ROW);
 }

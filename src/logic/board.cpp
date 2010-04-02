@@ -116,7 +116,6 @@ bool Board::move(std::size_t fromX, std::size_t fromY,
         piece->specialMoveBehaviour(moveFrom, moveTo);
 
         ++rounds;
-        std::cout << rounds << std::endl;
         return true;
     }
 
