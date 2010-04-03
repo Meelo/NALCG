@@ -43,10 +43,11 @@ bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
 
             Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
             mAnimatedNode->rotate(src.getRotationTo(path));
+
+            playAnimation("walk", timeSinceLastFrame);
         }
         return true; // Animation still running.
     }
-
     mAnimatedNode->setPosition(mDestination);
     mAnimatedNode->setOrientation(mAnimatedNode->getInitialOrientation());
     return false; // Animation finished.

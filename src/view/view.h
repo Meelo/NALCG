@@ -104,6 +104,7 @@ protected:
     virtual void createCamera();
     virtual void createViewports();
     virtual void createInitialExplosion();
+    virtual Entity* loadEntity(const std::string& entityName, const std::string& modelName);
 
     // The function to create our decal projector
     void createProjector();

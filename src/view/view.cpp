@@ -226,18 +226,43 @@ void View::makeMaterialReceiveDecal(const String &matName)
     texState->setTextureFiltering(TFO_NONE);
 }
 
+Entity* View::loadEntity(const std::string& entityName, const std::string& modelName)
+{
+    Entity* ent = mSceneMgr->createEntity(entityName, modelName);
+    ent->setQueryFlags(0);
+
+    AnimationStateSet* animations = ent->getAllAnimationStates();
+    if (animations)
+    {
+        AnimationStateIterator it = animations->getAnimationStateIterator();
+        while (it.hasMoreElements())
+        {
+            AnimationState* animationState = it.getNext();
+            animationState->setEnabled(true);
+            animationState->setLoop(true);
+        }
+    }
+    return ent;
+}
+
 void View::createPiece(char type, const std::string& modelName,
                        const Vector3& location)
 {
     std::ostringstream entityName;
     entityName << type << modelName << location.x << location.y << location.z;
 
-    Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName);
+    SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(entityName.str(), location);
+
+    Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName + ".mesh");
     //ent->setCastShadows(true);
     ent->setQueryFlags(0);
-
-    SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(entityName.str(), location);
     node->attachObject(ent);
+    
+    if (type == 'P' && modelName.find("white") != 0)
+    {
+        node->attachObject(loadEntity(entityName.str() + "l", modelName + "_left_leg.mesh"));
+        node->attachObject(loadEntity(entityName.str() + "r", modelName + "_right_leg.mesh"));
+    }
 
     // Make white models face the opposite direction.
     if (modelName.find("white") == 0)
@@ -427,19 +452,19 @@ std::string View::getMeshName(char symbol) const
 {
     switch (symbol)
     {
-    case 'P': return "black_pawn.mesh";
-    case 'R': return "black_rook.mesh";
-    case 'N': return "black_knight.mesh";
-    case 'B': return "black_bishop.mesh";
-    case 'Q': return "black_queen.mesh";
-    case 'K': return "black_king.mesh";
+    case 'P': return "black_pawn";
+    case 'R': return "black_rook";
+    case 'N': return "black_knight";
+    case 'B': return "black_bishop";
+    case 'Q': return "black_queen";
+    case 'K': return "black_king";
 
-    case 'p': return "white_pawn.mesh";
-    case 'r': return "white_rook.mesh";
-    case 'n': return "white_knight.mesh";
-    case 'b': return "white_bishop.mesh";
-    case 'q': return "white_queen.mesh";
-    case 'k': return "white_king.mesh";
+    case 'p': return "white_pawn";
+    case 'r': return "white_rook";
+    case 'n': return "white_knight";
+    case 'b': return "white_bishop";
+    case 'q': return "white_queen";
+    case 'k': return "white_king";
     default:
         std::ostringstream errorMessage;
         errorMessage << "getMeshName(): Unknown symbol: " << symbol;

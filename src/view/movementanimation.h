@@ -30,6 +30,8 @@ public:
     virtual void restoreLights();
 
 protected:
+    virtual void playAnimation(const std::string& animationName, double time);
+
     Vector3 mDestination;
     SceneNode *mTargetPiece;
     const std::string mTargetPieceName;

@@ -14,3 +14,20 @@ void MovementAnimation::restoreLights()
     mSceneMgr->getLight("Yellow")->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
     mSceneMgr->getLight("Blue")->setDiffuseColour(ViewConstants::BLUE_COLOUR);
 }
+
+void MovementAnimation::playAnimation(const std::string& animationName, double time)
+{
+    SceneNode::ObjectIterator it = mAnimatedNode->getAttachedObjectIterator();
+    while (it.hasMoreElements())
+    {
+        MovableObject* obj = it.getNext();
+        Entity* ent = dynamic_cast<Entity*>(obj);
+
+        AnimationStateSet* animations = ent->getAllAnimationStates();
+        if (animations)
+        {
+            AnimationState* animationState = animations->getAnimationState(animationName);
+            animationState->addTime(time);
+        }
+    }
+}
