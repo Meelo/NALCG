@@ -48,6 +48,7 @@ bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
         }
         return true; // Animation still running.
     }
+    resetAnimation("walk");
     mAnimatedNode->setPosition(mDestination);
     mAnimatedNode->setOrientation(mAnimatedNode->getInitialOrientation());
     return false; // Animation finished.

@@ -15,7 +15,7 @@ void MovementAnimation::restoreLights()
     mSceneMgr->getLight("Blue")->setDiffuseColour(ViewConstants::BLUE_COLOUR);
 }
 
-void MovementAnimation::playAnimation(const std::string& animationName, double time)
+void MovementAnimation::playAnimation(const std::string& animationName, double time, bool stop)
 {
     SceneNode::ObjectIterator it = mAnimatedNode->getAttachedObjectIterator();
     while (it.hasMoreElements())
@@ -28,6 +28,10 @@ void MovementAnimation::playAnimation(const std::string& animationName, double t
         {
             AnimationState* animationState = animations->getAnimationState(animationName);
             animationState->addTime(time);
+            if (stop)
+            {
+                animationState->setTimePosition(0);
+            }
         }
     }
 }

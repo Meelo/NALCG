@@ -1,17 +1,17 @@
 
-material asdasddfhch
+material 17-Default
 {
 	technique
 	{
 		pass
 		{
-			ambient 0.588 0.588 0.588 1
-			diffuse 0.588 0.588 0.588 1
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
 			specular 0 0 0 10 0
 
 			texture_unit
 			{
-				texture good.jpg
+				texture skin.jpg
 			}
 		}
 
@@ -34,28 +34,6 @@ material asdfasf
 			texture_unit
 			{
 				texture wood.jpg
-			}
-		}
-
-	}
-
-}
-
-
-
-material 17-Default
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.588235 0.588235 0.588235 1
-			diffuse 0.588235 0.588235 0.588235 1
-			specular 0 0 0 10 0
-
-			texture_unit
-			{
-				texture skin.jpg
 			}
 		}
 
