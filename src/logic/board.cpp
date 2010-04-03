@@ -96,13 +96,14 @@ std::size_t Board::getPosition(std::size_t column, std::size_t row,
     return (row * boardWidth + column);
 }
 
-bool Board::move(std::size_t fromX, std::size_t fromY,
+unsigned int Board::move(std::size_t fromX, std::size_t fromY,
     std::size_t toX, std::size_t toY, Piece::Colour player)
 {
+    unsigned int retValue = 0;
     // first merge two dimensions into one.
     std::size_t moveFrom = getPosition(fromX, fromY);
     std::size_t moveTo = getPosition(toX, toY);
-    if (isMoveValid(moveFrom, moveTo, player))
+    if (isMoveValid(moveFrom, moveTo, player, retValue))
     {
         // Validation passed
         // First kill unit if such exists.
@@ -163,34 +164,40 @@ void Board::initRoundSpecificState()
 
 
 bool Board::isMoveValid(std::size_t moveFrom, std::size_t moveTo,
-    Piece::Colour player) const
+    Piece::Colour player, unsigned int& mask) const
 {
     // TODO do the actual validation
     // Validation should be about going through current states (is checked?),
     // going through selected unit's valid moves, etc.
-    if (!squares.at(moveFrom).hasPiece() ||
-        squares.at(moveFrom).getColourOfPiece() != player)
+    if (squares.at(moveFrom).getColourOfPiece() != player)
     {
-        return false;
+        mask |= INVALID_TURN;
     }
     Piece* piece = squares.at(moveFrom).getPiece();
-
-    std::vector<std::size_t> validMoves = piece->getValidMoves(moveFrom, squares);
-    bool found = false;
-    for (std::size_t i = 0; i < validMoves.size(); ++i)
+    if (piece)
     {
-        if (validMoves.at(i) == moveTo)
+        std::vector<std::size_t> validMoves = piece->getValidMoves(moveFrom, squares);
+        bool found = false;
+        for (std::size_t i = 0; i < validMoves.size(); ++i)
         {
-            found = true;
-            break;
+            if (validMoves.at(i) == moveTo)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            mask |= INVALID_MOVE;
         }
     }
-    if (!found)
+    else
     {
-        return false;
+        mask |= INVALID_MOVE;
     }
 
-    return true;
+    return mask == 0;
 }
 
 // just forward this to the static version of this method.
