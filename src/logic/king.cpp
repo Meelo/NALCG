@@ -46,18 +46,17 @@ std::vector<std::size_t> King::getValidMoves(std::size_t location,
 
         // check for the rook on the left side
         std::size_t leftRook = ChessBoard::getPosition(LEFT_ROOK_X, y);
-        if (colour == squares.at(leftRook).getColourOfPiece() &&
-            squares.at(leftRook).getPiece()->isSpecialMoveAllowed())
+        if (isCastlingAllowed(leftRook, squares))
         {
-            bool castlingAllowed = true;
+            bool castlingPossible = true;
             for (std::size_t i = leftRook + 1; i < location; ++i) {
                 if (squares.at(i).hasPiece())
                 {
-                    castlingAllowed = false;
+                    castlingPossible = false;
                     break;
                 }
             }
-            if (castlingAllowed)
+            if (castlingPossible)
             {
                 validMoves.push_back(location - CASTLING);
             }
@@ -65,18 +64,17 @@ std::vector<std::size_t> King::getValidMoves(std::size_t location,
 
         // check for the rook on the right side
         std::size_t rightRook = ChessBoard::getPosition(RIGHT_ROOK_X, y);
-        if (colour == squares.at(rightRook).getColourOfPiece() &&
-            squares.at(rightRook).getPiece()->isSpecialMoveAllowed())
+        if (isCastlingAllowed(rightRook, squares))
         {
-            bool castlingAllowed = true;
+            bool castlingPossible = true;
             for (std::size_t i = location + 1; i < rightRook; ++i) {
                 if (squares.at(i).hasPiece())
                 {
-                    castlingAllowed = false;
+                    castlingPossible = false;
                     break;
                 }
             }
-            if (castlingAllowed)
+            if (castlingPossible)
             {
                 validMoves.push_back(location + CASTLING);
             }
@@ -89,4 +87,13 @@ std::vector<std::size_t> King::getValidMoves(std::size_t location,
 void King::specialMoveBehaviour(std::size_t, std::size_t)
 {
     specialMoveAllowed = false;
+}
+
+// private
+
+bool King::isCastlingAllowed(std::size_t rookLocation,
+    const std::vector<Square>& squares) const
+{
+    return colour == squares.at(rookLocation).getColourOfPiece() &&
+        squares.at(rookLocation).getPiece()->isSpecialMoveAllowed();
 }

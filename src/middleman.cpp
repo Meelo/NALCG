@@ -58,9 +58,11 @@ std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t 
 void Middleman::move(   std::size_t fromX, std::size_t fromY,
                         std::size_t toX,   std::size_t toY)
 {
+    std::string currentMove = newLogEntry(fromX, fromY, toX, toY);
     if (board->move(fromX, fromY, toX, toY, currentTurn))
     {
         moveUpdate(fromX, fromY, toX, toY);
+        gameLog.push_back(currentMove);
         playRound();
     }
 }
@@ -77,6 +79,7 @@ void Middleman::undo(unsigned int steps)
         {
             delete gameStates.back();
             gameStates.pop_back();
+            gameLog.pop_back();
         }
         board = new Board(*gameStates.back());
         currentTurn = gameStates.size() % 2 ? Piece::WHITE : Piece::BLACK;
@@ -91,7 +94,6 @@ void Middleman::playRound()
     gameStates.push_back(new Board(*board));
     currentTurn = currentTurn == Piece::WHITE ? Piece::BLACK : Piece::WHITE;
     ++rounds;
-    std::cout << rounds << std::endl;
 }
 
 void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
@@ -110,8 +112,24 @@ void Middleman::boardUpdate()
     {
         views.at(i)->setBoard(board, rounds);
     }
-    //~ board->initRoundSpecificState();
 }
+
+const std::string Middleman::newLogEntry(std::size_t fromX, std::size_t fromY,
+    std::size_t toX, std::size_t toY) const
+{
+    std::string currentMove;
+    currentMove += board->getSymbolAt(fromX, fromY);
+    currentMove += static_cast<char>(fromX + 'A');
+    currentMove += static_cast<char>((board->getWidth() - fromY) + '0');
+
+    currentMove += " ";
+    currentMove += board->getSymbolAt(toX, toY);
+    currentMove += static_cast<char>(toX + 'A');
+    currentMove += static_cast<char>((board->getWidth() - toY) + '0');
+
+    return currentMove;
+}
+
 
 template <typename T>
 void Middleman::deleteAndClear(std::vector<T>& vector)

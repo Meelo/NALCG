@@ -20,6 +20,8 @@ class King : public Piece
 
 
     // Methods
+    bool isCastlingAllowed(std::size_t rookLocation,
+        const std::vector<Square>& squares) const;
 
 public:
     King(const Piece::Colour& colour);

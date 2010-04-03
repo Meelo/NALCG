@@ -46,12 +46,15 @@ private:
     std::vector<AI*> aiList;
     std::vector<AIInfo> aiInfos;
     std::vector<Board*> gameStates;
+    std::vector<std::string> gameLog;
 
     // Methods
     void playRound();
     void moveUpdate(std::size_t fromX, std::size_t fromY,
                     std::size_t toX,   std::size_t toY);
     void boardUpdate();
+    const std::string newLogEntry(  std::size_t fromX, std::size_t fromY,
+                                    std::size_t toX,   std::size_t toY) const;
     template <typename T>
     void deleteAndClear(std::vector<T>& vector);
 };

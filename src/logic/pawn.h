@@ -18,8 +18,13 @@ class Pawn : public Piece
     bool resetOnNextTurn;
 
     // Methods
+    bool isEatingAllowed(std::size_t target, std::size_t side,
+        const std::vector<Square>& squares) const;
     bool isEnPassantAllowed(std::size_t diag, std::size_t side,
         const std::vector<Square>& squares) const;
+    bool isMoveAllowed(std::size_t location,
+        const std::vector<Square>& squares) const;
+    bool isDoubleMoveAllowed(std::size_t row) const;
 
 public:
     Pawn(const Piece::Colour& colour);
