@@ -172,7 +172,7 @@ particle_system Effects/Smoke
         	rotation_speed_range_end    	200
    	}
 	
-	// Gravity
+	// Inverse gravity
     affector LinearForce
     {
         force_vector      0 200 0
@@ -185,4 +185,41 @@ particle_system Effects/Smoke
 		green -0.5
 		blue -0.5
 	}
+}
+
+
+particle_system Effects/EnergyBlast
+{
+	material 		Examples/Flare
+	particle_width 	100
+	particle_height	100
+	cull_each		true
+	quota			200
+	billboard_type	point
+
+	emitter Point
+	{
+		angle 5
+		emission_rate 400
+        time_to_live    1
+        direction       0 -0.65 0.5
+        velocity_min    650
+        velocity_max    900
+        colour_range_start  0.1 1.0 0.5
+        colour_range_end    0.1 1.0 0.1
+	}
+	affector ColourFader
+	{
+		red -0.8
+		green -0.7
+		blue -0.8
+	}
+
+	affector DeflectorPlane
+	{
+		plane_point	0 0 0
+		plane_normal	0 1 0
+		bounce	1
+	}
+	
 }
