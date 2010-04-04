@@ -26,9 +26,9 @@ public:
     void startGame();
     Piece::Colour endGame();
     std::vector<std::size_t> getValidMovesAt(std::size_t x, std::size_t y) const;
-    void move(  std::size_t fromX, std::size_t fromY,
-                std::size_t toX,   std::size_t toY,
-                unsigned int promoteTo = 0);
+    unsigned int move(  std::size_t fromX, std::size_t fromY,
+                        std::size_t toX,   std::size_t toY,
+                        unsigned int promoteTo = 0);
     void undo(unsigned int steps = FULL_TURN);
 
     // Getters

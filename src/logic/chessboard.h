@@ -20,6 +20,14 @@ public:
     static const std::size_t BOARD_SIZE;
     static const std::size_t BLACK_PAWN_ROW;
     static const std::size_t WHITE_PAWN_ROW;
+    static const std::size_t BLACK_PROMOTE_ROW;
+    static const std::size_t WHITE_PROMOTE_ROW;
+
+    static const unsigned int PROMOTE_TO_BISHOP;
+    static const unsigned int PROMOTE_TO_ROOK;
+    static const unsigned int PROMOTE_TO_KNIGHT;
+    static const unsigned int PROMOTE_TO_QUEEN;
+
 
     // default positions - black
     static const std::size_t BLACK_ROOK_LEFT;
@@ -68,12 +76,14 @@ public:
 
     // Setters
 
-private:
+protected:
     // Constants
 
     // Members
 
     // Methods
+    virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const;
+    virtual void promote(std::size_t location, unsigned int promoteTo);
 };
 
 #endif // _NALCG_CHESS_BOARD_H_

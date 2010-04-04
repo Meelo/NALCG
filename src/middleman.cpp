@@ -55,17 +55,20 @@ std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t 
     return board->getValidMoves(x, y);
 }
 
-void Middleman::move(   std::size_t fromX, std::size_t fromY,
-                        std::size_t toX,   std::size_t toY,
-                        unsigned int promoteTo)
+unsigned int Middleman::move(   std::size_t fromX, std::size_t fromY,
+                                std::size_t toX,   std::size_t toY,
+                                unsigned int promoteTo)
 {
     std::string currentMove = newLogEntry(fromX, fromY, toX, toY);
-    if (board->move(fromX, fromY, toX, toY, currentTurn, promoteTo) & Board::MOVE_OK)
+    unsigned int retValue = board->move(fromX, fromY, toX, toY, currentTurn, promoteTo);
+    if (retValue & Board::MOVE_OK)
     {
         moveUpdate(fromX, fromY, toX, toY);
         gameLog.push_back(currentMove);
         playRound();
     }
+
+    return retValue;
 }
 
 void Middleman::undo(unsigned int steps)

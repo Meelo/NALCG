@@ -106,18 +106,27 @@ unsigned int Board::move(std::size_t fromX, std::size_t fromY,
     std::size_t moveTo = getPosition(toX, toY);
     if (isMoveValid(moveFrom, moveTo, player, retValue))
     {
-        // Validation passed
-        // First kill unit if such exists.
-        if (squares.at(moveTo).hasPiece())
-        {
-            deadPieces.push_back(squares.at(moveTo).removePiece());
+        bool promotable = isPromotable(moveFrom, moveTo);
+        if (!promoteTo && promotable) {
+            retValue |= PROMOTION_REQUEST;
         }
-        // Then movement shall be done.
-        Piece* piece = squares.at(moveFrom).removePiece();
-        squares.at(moveTo).addPiece(piece);
-        piece->specialMoveBehaviour(moveFrom, moveTo);
-        retValue |= MOVE_OK;
-        ++rounds;
+        else
+        {
+            if (promotable)
+            {
+                promote(moveFrom, promoteTo);
+            }
+
+            // Validation passed
+            // First kill unit if such exists.
+            if (squares.at(moveTo).hasPiece())
+            {
+                deadPieces.push_back(squares.at(moveTo).removePiece());
+            }
+            // Then movement shall be done.
+            move(moveFrom, moveTo);
+            retValue |= MOVE_OK;
+        }
     }
 
     return retValue;
@@ -161,7 +170,6 @@ void Board::initRoundSpecificState()
 }
 
 // private
-
 
 bool Board::isMoveValid(std::size_t moveFrom, std::size_t moveTo,
     Piece::Colour player, unsigned int& mask) const
@@ -213,3 +221,24 @@ std::size_t Board::getPosition(std::size_t column, std::size_t row) const
     return getPosition(column, row, width, height);
 }
 
+void Board::move(std::size_t moveFrom, std::size_t moveTo)
+{
+    Piece* piece = squares.at(moveFrom).removePiece();
+    squares.at(moveTo).addPiece(piece);
+    piece->specialMoveBehaviour(moveFrom, moveTo);
+    ++rounds;
+}
+
+//~ bool Board::isPromotable(std::size_t, std::size_t) const
+//~ {
+    //~ // Real implementation should be in the implementing sub-class.
+    //~ // (chess, checkers, etc)
+    //~ return false;
+//~ }
+//~
+//~ void Board::promote(std::size_t, unsigned int)
+//~ {
+    //~ // Real implementation should be in the implementing sub-class.
+    //~ // (chess, checkers, etc)
+//~ }
+//~
