@@ -56,7 +56,8 @@ public:
         createBoard(board);
         mRound = round;
     }
-    virtual void move(int fromX, int fromY, int toX, int toY)
+    virtual void move(int fromX, int fromY, int toX, int toY,
+        bool continuous = false)
     {
         mListener->move(fromX, fromY, toX, toY);
         mRound++;

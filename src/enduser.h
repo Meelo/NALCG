@@ -14,8 +14,9 @@ public:
     // It's not safe to use it after these function calls have returned.
     virtual void init(const Board* board, Middleman* middleman) { mMiddleman = middleman; }
     virtual void setBoard(const Board* const board, unsigned int round) = 0;
-    
-    virtual void move(int fromX, int fromY, int toX, int toY) = 0;
+
+    virtual void move(int fromX, int fromY, int toX, int toY,
+        bool continuous = false) = 0;
     virtual void setControl(bool white, bool black) = 0;
     virtual Middleman* getMiddleman() const { return mMiddleman; }
 protected:

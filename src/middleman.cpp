@@ -59,11 +59,21 @@ unsigned int Middleman::move(   std::size_t fromX, std::size_t fromY,
                                 std::size_t toX,   std::size_t toY,
                                 unsigned int promoteTo)
 {
+    std::size_t mutableFromX = fromX;
+    std::size_t mutableFromY = fromY;
     std::string currentMove = newLogEntry(fromX, fromY, toX, toY);
-    unsigned int retValue = board->move(fromX, fromY, toX, toY, currentTurn, promoteTo);
+    unsigned int retValue = board->move(mutableFromX, mutableFromY, toX, toY, currentTurn, promoteTo);
     if (retValue & Board::MOVE_OK)
     {
-        moveUpdate(fromX, fromY, toX, toY);
+        if (mutableFromX == fromX && mutableFromY == fromY)
+        {
+            moveUpdate(fromX, fromY, toX, toY);
+        }
+        else
+        {
+            moveUpdate(fromX, fromY, mutableFromX, mutableFromY, true);
+            moveUpdate(mutableFromX, mutableFromY, toX, toY, false);
+        }
         gameLog.push_back(currentMove);
         playRound();
     }
@@ -101,7 +111,7 @@ void Middleman::playRound()
 }
 
 void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
-                            std::size_t toX,   std::size_t toY)
+                            std::size_t toX,   std::size_t toY, bool continuous)
 {
     for (std::size_t i = 0; i < views.size(); ++i)
     {

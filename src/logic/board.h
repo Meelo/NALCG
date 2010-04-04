@@ -30,7 +30,7 @@ public:
         std::size_t& row, std::size_t boardWidth, std::size_t boardHeight);
     static std::size_t getPosition(std::size_t column, std::size_t row,
         std::size_t boardWidth, std::size_t boardHeight);
-    unsigned int move(  std::size_t fromX,  std::size_t fromY,
+    unsigned int move(  std::size_t& fromX, std::size_t& fromY,
                         std::size_t toX,    std::size_t toY,
                         Piece::Colour player, unsigned int promoteTo = 0);
     void printBoard() const;

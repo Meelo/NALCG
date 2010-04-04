@@ -96,7 +96,7 @@ std::size_t Board::getPosition(std::size_t column, std::size_t row,
     return (row * boardWidth + column);
 }
 
-unsigned int Board::move(std::size_t fromX, std::size_t fromY,
+unsigned int Board::move(std::size_t& fromX, std::size_t& fromY,
     std::size_t toX, std::size_t toY,
     Piece::Colour player, unsigned int promoteTo)
 {

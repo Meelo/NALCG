@@ -52,7 +52,7 @@ private:
     // Methods
     void playRound();
     void moveUpdate(std::size_t fromX, std::size_t fromY,
-                    std::size_t toX,   std::size_t toY);
+                    std::size_t toX,   std::size_t toY, bool continuous = false);
     void boardUpdate();
     const std::string newLogEntry(  std::size_t fromX, std::size_t fromY,
                                     std::size_t toX,   std::size_t toY) const;
