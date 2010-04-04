@@ -19,6 +19,7 @@ public:
 
     Board(const std::vector<Square>& squares, std::size_t width = 8, std::size_t height = 8);
     Board(const Board& orig);
+    virtual Board* clone() const = 0;
     virtual ~Board();
 
     // Methods
@@ -44,7 +45,7 @@ public:
 
     // Setters
 
-private:
+protected:
     // Members
     std::vector<Square> squares;
     std::vector<Piece*> deadPieces;
@@ -60,6 +61,9 @@ private:
     bool getCoordinates(std::size_t index, std::size_t& column,
         std::size_t& row) const;
     std::size_t getPosition(std::size_t column, std::size_t row) const;
+    void move(std::size_t moveFrom, std::size_t moveTo);
+    virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const = 0;
+    virtual void promote(std::size_t location, unsigned int promoteTo) = 0;
 };
 
 #endif // _NALCG_BOARD_H_

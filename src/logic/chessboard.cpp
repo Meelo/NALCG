@@ -5,45 +5,53 @@
 #include "chesspieces-meta.h"
 
 // Constant definitions
-const std::size_t ChessBoard::WIDTH = 8;
-const std::size_t ChessBoard::HEIGHT = 8;
-const std::size_t ChessBoard::BOARD_SIZE = 64;
-const std::size_t ChessBoard::BLACK_PAWN_ROW = 1;
-const std::size_t ChessBoard::WHITE_PAWN_ROW = 6;
-// default positions - black
-const std::size_t ChessBoard::BLACK_ROOK_LEFT = 0;
-const std::size_t ChessBoard::BLACK_KNIGHT_LEFT = 1;
-const std::size_t ChessBoard::BLACK_BISHOP_LEFT = 2;
-const std::size_t ChessBoard::BLACK_QUEEN = 3;
-const std::size_t ChessBoard::BLACK_KING = 4;
-const std::size_t ChessBoard::BLACK_BISHOP_RIGHT = 5;
-const std::size_t ChessBoard::BLACK_KNIGHT_RIGHT = 6;
-const std::size_t ChessBoard::BLACK_ROOK_RIGHT = 7;
-// default positions - white
-const std::size_t ChessBoard::WHITE_ROOK_LEFT = 56;
-const std::size_t ChessBoard::WHITE_KNIGHT_LEFT = 57;
-const std::size_t ChessBoard::WHITE_BISHOP_LEFT = 58;
-const std::size_t ChessBoard::WHITE_QUEEN = 59;
-const std::size_t ChessBoard::WHITE_KING = 60;
-const std::size_t ChessBoard::WHITE_BISHOP_RIGHT = 61;
-const std::size_t ChessBoard::WHITE_KNIGHT_RIGHT = 62;
-const std::size_t ChessBoard::WHITE_ROOK_RIGHT = 63;
-// piece symbols - black
-const char ChessBoard::BLACK_PAWN_SYMBOL = 'P';
-const char ChessBoard::BLACK_ROOK_SYMBOL = 'R';
-const char ChessBoard::BLACK_KNIGHT_SYMBOL = 'N';
-const char ChessBoard::BLACK_BISHOP_SYMBOL = 'B';
-const char ChessBoard::BLACK_QUEEN_SYMBOL = 'Q';
-const char ChessBoard::BLACK_KING_SYMBOL = 'K';
-// piece symbols - white
-const char ChessBoard::WHITE_PAWN_SYMBOL = 'p';
-const char ChessBoard::WHITE_ROOK_SYMBOL = 'r';
-const char ChessBoard::WHITE_KNIGHT_SYMBOL = 'n';
-const char ChessBoard::WHITE_BISHOP_SYMBOL = 'b';
-const char ChessBoard::WHITE_QUEEN_SYMBOL = 'q';
-const char ChessBoard::WHITE_KING_SYMBOL = 'k';
+const std::size_t ChessBoard::WIDTH                 = 8;
+const std::size_t ChessBoard::HEIGHT                = 8;
+const std::size_t ChessBoard::BOARD_SIZE            = 64;
+const std::size_t ChessBoard::BLACK_PAWN_ROW        = 1;
+const std::size_t ChessBoard::WHITE_PAWN_ROW        = 6;
+const std::size_t ChessBoard::BLACK_PROMOTE_ROW     = 7;
+const std::size_t ChessBoard::WHITE_PROMOTE_ROW     = 0;
 
-const char ChessBoard::EMPTY_SYMBOL = 0;
+const unsigned int ChessBoard::PROMOTE_TO_BISHOP    = 1;
+const unsigned int ChessBoard::PROMOTE_TO_ROOK      = 2;
+const unsigned int ChessBoard::PROMOTE_TO_KNIGHT    = 3;
+const unsigned int ChessBoard::PROMOTE_TO_QUEEN     = 4;
+
+// default positions - black
+const std::size_t ChessBoard::BLACK_ROOK_LEFT       = 0;
+const std::size_t ChessBoard::BLACK_KNIGHT_LEFT     = 1;
+const std::size_t ChessBoard::BLACK_BISHOP_LEFT     = 2;
+const std::size_t ChessBoard::BLACK_QUEEN           = 3;
+const std::size_t ChessBoard::BLACK_KING            = 4;
+const std::size_t ChessBoard::BLACK_BISHOP_RIGHT    = 5;
+const std::size_t ChessBoard::BLACK_KNIGHT_RIGHT    = 6;
+const std::size_t ChessBoard::BLACK_ROOK_RIGHT      = 7;
+// default positions - white
+const std::size_t ChessBoard::WHITE_ROOK_LEFT       = 56;
+const std::size_t ChessBoard::WHITE_KNIGHT_LEFT     = 57;
+const std::size_t ChessBoard::WHITE_BISHOP_LEFT     = 58;
+const std::size_t ChessBoard::WHITE_QUEEN           = 59;
+const std::size_t ChessBoard::WHITE_KING            = 60;
+const std::size_t ChessBoard::WHITE_BISHOP_RIGHT    = 61;
+const std::size_t ChessBoard::WHITE_KNIGHT_RIGHT    = 62;
+const std::size_t ChessBoard::WHITE_ROOK_RIGHT      = 63;
+// piece symbols - black
+const char ChessBoard::BLACK_PAWN_SYMBOL            = 'P';
+const char ChessBoard::BLACK_ROOK_SYMBOL            = 'R';
+const char ChessBoard::BLACK_KNIGHT_SYMBOL          = 'N';
+const char ChessBoard::BLACK_BISHOP_SYMBOL          = 'B';
+const char ChessBoard::BLACK_QUEEN_SYMBOL           = 'Q';
+const char ChessBoard::BLACK_KING_SYMBOL            = 'K';
+// piece symbols - white
+const char ChessBoard::WHITE_PAWN_SYMBOL            = 'p';
+const char ChessBoard::WHITE_ROOK_SYMBOL            = 'r';
+const char ChessBoard::WHITE_KNIGHT_SYMBOL          = 'n';
+const char ChessBoard::WHITE_BISHOP_SYMBOL          = 'b';
+const char ChessBoard::WHITE_QUEEN_SYMBOL           = 'q';
+const char ChessBoard::WHITE_KING_SYMBOL            = 'k';
+
+const char ChessBoard::EMPTY_SYMBOL                 = 0;
 
 ChessBoard::ChessBoard(const std::vector<Square>& squares) :
     Board(squares, WIDTH, HEIGHT)
@@ -143,3 +151,40 @@ std::size_t ChessBoard::getPosition(std::size_t column, std::size_t row)
     return Board::getPosition(column, row, WIDTH, HEIGHT);
 }
 
+// private
+
+bool ChessBoard::isPromotable(std::size_t moveFrom, std::size_t moveTo) const
+{
+    const char pieceSymbol = squares.at(moveFrom).getSymbolOfPiece();
+    std::size_t x = 0, y = 0;
+    getCoordinates(moveTo, x, y);
+    return ((pieceSymbol == WHITE_PAWN_SYMBOL && y == WHITE_PROMOTE_ROW) ||
+            (pieceSymbol == BLACK_PAWN_SYMBOL && y == BLACK_PROMOTE_ROW));
+}
+
+void ChessBoard::promote(std::size_t location, unsigned int promoteTo)
+{
+    Piece* newPiece = 0;
+    Piece::Colour colour = squares.at(location).getColourOfPiece();
+    switch (promoteTo)
+    {
+        case PROMOTE_TO_BISHOP:
+            newPiece = new Bishop(colour);
+            break;
+        case PROMOTE_TO_ROOK:
+            newPiece = new Rook(colour);
+            break;
+        case PROMOTE_TO_KNIGHT:
+            newPiece = new Knight(colour);
+            break;
+        case PROMOTE_TO_QUEEN:
+        default:
+            newPiece = new Queen(colour);
+            break;
+    }
+    if (newPiece)
+    {
+        delete squares.at(location).removePiece();
+        squares.at(location).addPiece(newPiece);
+    }
+}

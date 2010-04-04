@@ -27,7 +27,7 @@ void Middleman::startGame()
     rounds = 0;
 
     deleteAndClear(gameStates);
-    gameStates.push_back(new Board(*board));
+    gameStates.push_back(board->clone());
 
     // white starts
     currentTurn = Piece::WHITE;
@@ -55,17 +55,20 @@ std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t 
     return board->getValidMoves(x, y);
 }
 
-void Middleman::move(   std::size_t fromX, std::size_t fromY,
-                        std::size_t toX,   std::size_t toY,
-                        unsigned int promoteTo)
+unsigned int Middleman::move(   std::size_t fromX, std::size_t fromY,
+                                std::size_t toX,   std::size_t toY,
+                                unsigned int promoteTo)
 {
     std::string currentMove = newLogEntry(fromX, fromY, toX, toY);
-    if (board->move(fromX, fromY, toX, toY, currentTurn, promoteTo) & Board::MOVE_OK)
+    unsigned int retValue = board->move(fromX, fromY, toX, toY, currentTurn, promoteTo);
+    if (retValue & Board::MOVE_OK)
     {
         moveUpdate(fromX, fromY, toX, toY);
         gameLog.push_back(currentMove);
         playRound();
     }
+
+    return retValue;
 }
 
 void Middleman::undo(unsigned int steps)
@@ -82,7 +85,7 @@ void Middleman::undo(unsigned int steps)
             gameStates.pop_back();
             gameLog.pop_back();
         }
-        board = new Board(*gameStates.back());
+        board = gameStates.back()->clone();
         currentTurn = gameStates.size() % 2 ? Piece::WHITE : Piece::BLACK;
         rounds -= steps;
         boardUpdate();
@@ -92,7 +95,7 @@ void Middleman::undo(unsigned int steps)
 // private methods
 void Middleman::playRound()
 {
-    gameStates.push_back(new Board(*board));
+    gameStates.push_back(board->clone());
     currentTurn = currentTurn == Piece::WHITE ? Piece::BLACK : Piece::WHITE;
     ++rounds;
 }

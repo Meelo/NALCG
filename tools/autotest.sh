@@ -110,7 +110,10 @@ function run_test_at() {
 
 while "$keep_going" == true
 do
-    if [[ -z "$tracked_files" ]]; then
+    if [[ "${#tracked_files[@]}" == 0 ]]; then
+        # make sure tracked_files doesn't exist.
+        unset tracked_files
+        # create associative array for tracked_files
         declare -A tracked_files
     fi
     
