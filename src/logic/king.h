@@ -30,6 +30,9 @@ public:
 
     // Methods
     virtual void specialMoveBehaviour(std::size_t from, std::size_t to);
+    virtual bool trySpecialMove(std::size_t& fromX, std::size_t& fromY,
+                                std::size_t& toX,   std::size_t& toY,
+                                std::vector<Square>& squares) const;
 
     // Getters
     std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& squares) const;

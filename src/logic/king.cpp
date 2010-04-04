@@ -97,3 +97,32 @@ bool King::isCastlingAllowed(std::size_t rookLocation,
     return colour == squares.at(rookLocation).getColourOfPiece() &&
         squares.at(rookLocation).getPiece()->isSpecialMoveAllowed();
 }
+
+bool King::trySpecialMove(  std::size_t& fromX, std::size_t& fromY,
+                            std::size_t& toX,   std::size_t& toY,
+                            std::vector<Square>& squares) const
+{
+    int moveLength = fromX - toX;
+
+    if (moveLength == CASTLING)
+    {
+        fromX = LEFT_ROOK_X;
+        toX++;
+    }
+    else if (moveLength == -CASTLING)
+    {
+        fromX = RIGHT_ROOK_X;
+        toX--;
+    }
+    else
+    {
+        return false;
+    }
+    std::size_t moveFrom = ChessBoard::getPosition(fromX, fromY);
+    std::size_t moveTo = ChessBoard::getPosition(toX, toY);
+    Piece* rook = squares.at(moveFrom).removePiece();
+    squares.at(moveTo).addPiece(rook);
+    rook->specialMoveBehaviour(moveFrom, moveTo);
+
+    return true;
+}

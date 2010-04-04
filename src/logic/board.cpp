@@ -96,9 +96,9 @@ std::size_t Board::getPosition(std::size_t column, std::size_t row,
     return (row * boardWidth + column);
 }
 
-unsigned int Board::move(std::size_t& fromX, std::size_t& fromY,
-    std::size_t toX, std::size_t toY,
-    Piece::Colour player, unsigned int promoteTo)
+unsigned int Board::move(   std::size_t& fromX, std::size_t& fromY,
+                            std::size_t& toX,   std::size_t& toY,
+                            Piece::Colour player, unsigned int promoteTo)
 {
     unsigned int retValue = 0;
     // first merge two dimensions into one.
@@ -123,6 +123,13 @@ unsigned int Board::move(std::size_t& fromX, std::size_t& fromY,
             {
                 deadPieces.push_back(squares.at(moveTo).removePiece());
             }
+
+            // Try if moved piece has a special move.
+            // Special move will set fromX, fromY, toX and toY
+            // if special move was made and then return's true
+            squares.at(moveFrom).getPiece()->trySpecialMove(fromX, fromY, toX,
+                toY, squares);
+
             // Then movement shall be done.
             move(moveFrom, moveTo);
             retValue |= MOVE_OK;

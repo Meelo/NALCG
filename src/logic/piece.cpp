@@ -31,3 +31,10 @@ bool Piece::isEmptyOrEdible(std::size_t index, const std::vector<Square>& square
 // By default this function doesn't do anything and that's why we declare
 // implement it here, without naming our function's parameters.
 void Piece::specialMoveBehaviour(std::size_t, std::size_t) {}
+
+bool Piece::trySpecialMove( std::size_t&,   std::size_t&,
+                            std::size_t&,   std::size_t&,
+                            std::vector<Square>&) const
+{
+    return false;
+}
