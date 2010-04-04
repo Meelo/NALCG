@@ -264,6 +264,10 @@ void View::createPiece(char type, const std::string& modelName,
     }
     else if (type == 'R' && modelName.find("white") == 0)
     {
+        
+        node->attachObject(loadEntity(entityName.str() + "l", modelName + "_left_leg.mesh"));
+        node->attachObject(loadEntity(entityName.str() + "r", modelName + "_right_leg.mesh"));
+
         node->attachObject(loadEntity(entityName.str() + "a", modelName + "_right_arm.mesh"));
         node->attachObject(loadEntity(entityName.str() + "wb", modelName + "_weapon_base.mesh"));
         node->attachObject(loadEntity(entityName.str() + "w", modelName + "_weapon.mesh"));

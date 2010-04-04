@@ -28,7 +28,7 @@ void MovementAnimation::playAnimation(const std::string& animationName, double t
         Entity* ent = dynamic_cast<Entity*>(obj);
 
         AnimationStateSet* animations = ent->getAllAnimationStates();
-        if (animations)
+        if (animations && animations->hasAnimationState(animationName))
         {
             AnimationState* animationState = animations->getAnimationState(animationName);
             animationState->setEnabled(true);

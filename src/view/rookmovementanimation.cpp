@@ -11,17 +11,17 @@ bool RookMovementAnimation::animate(const Real& timeSinceLastFrame)
     {
         if (path.length() < 180 && mAttackDuration > 0)
         {
-            if (mAttackDuration >= 2.2)
+            if (mAttackDuration >= 2.0)
             {
                 playAnimation("attack", timeSinceLastFrame);
             }
-            else
+            if (mAttackDuration <= 2.3)
             {
                 Vector3 toTarget = mTargetPiece->getPosition() - mAnimatedNode->getPosition();
                 toTarget.normalise();
 
-                toTarget.y = (mAttackDuration - 1.2);
-                Real speed = timeSinceLastFrame * 1100;
+                toTarget.y = (mAttackDuration - 1.3);
+                Real speed = timeSinceLastFrame * 1200;
                 mTargetPiece->translate(toTarget * speed);
             }
             if (!mStartedAttacking)
@@ -44,7 +44,7 @@ bool RookMovementAnimation::animate(const Real& timeSinceLastFrame)
             Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
             mAnimatedNode->rotate(src.getRotationTo(path));
 
-            //playAnimation("walk", timeSinceLastFrame);
+            playAnimation("walk", timeSinceLastFrame);
         }
         return true; // Animation still running.
     }
