@@ -30,7 +30,8 @@ public:
     virtual void restoreLights();
 
 protected:
-    virtual void playAnimation(const std::string& animationName, double time, bool stop = false);
+    virtual void playAnimation(const std::string& animationName, double time,
+        bool stop = false, SceneNode* animatedNode = 0, bool loop = true);
     virtual void resetAnimation(const std::string& animationName)
     {
         playAnimation(animationName, 0, true);

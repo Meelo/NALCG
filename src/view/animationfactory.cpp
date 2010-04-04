@@ -5,6 +5,7 @@
 #include "dyinganimation.h"
 #include "camerashakeanimation.h"
 #include "kingmovementanimation.h"
+#include "pawnmovementanimation.h"
 
 MovementAnimation* AnimationFactory::createMovementAnimation(
     const char type, const Vector3& destination, SceneNode *movingNode,
@@ -13,6 +14,8 @@ MovementAnimation* AnimationFactory::createMovementAnimation(
 {
     switch (type)
     {
+    case 'P':
+        return new PawnMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
     case 'B':
         return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
     case 'Q':

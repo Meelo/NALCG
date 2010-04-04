@@ -185,6 +185,8 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
         mCamera->setPosition(newPosition);
     }
 
+
+    //FIXME: refactor
     static double alpha;
     alpha += timeSinceLastFrame;
     MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/move");
