@@ -1,13 +1,13 @@
-#include "bishopmovementanimation.h"
+#include "pawnmovementanimation.h"
 #include "animationfactory.h"
 #include "dyinganimation.h"
 
-bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
+bool PawnMovementAnimation::animate(const Real& timeSinceLastFrame)
 {
     Real distanceMoved = MOVEMENT_SPEED * timeSinceLastFrame;
     Vector3 path = mDestination - mAnimatedNode->getPosition();
 
-    if (path.length() > distanceMoved || mParticleNode)
+    if (path.length() > distanceMoved)
     {
         if (path.length() < 280 && mAttackDuration > 0)
         {
@@ -16,51 +16,56 @@ bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
                 createBlasts();
                 mAnimationManager->addAnimation(
                     AnimationFactory::createDyingAnimation(
-                    mTargetPiece, mSceneMgr, 0.5, 2));
+                    mTargetPiece, mSceneMgr, 2, 1.5));
                 mAnimationManager->addAnimation(
                     AnimationFactory::createBleedingAnimation(
-                    mTargetPiece, mSceneMgr, 0.3, 2, "Effects/Burn"));
-                mAnimationManager->addAnimation(
+                    mTargetPiece, mSceneMgr, 1.5, 1.5));
+                /*mAnimationManager->addAnimation(
                     AnimationFactory::createBleedingAnimation(
-                    mTargetPiece, mSceneMgr, 0.3, 2.5, "Effects/Smoke"));
+                    mTargetPiece, mSceneMgr, 0.3, 2.5, "Effects/Smoke"));*/
             }
-            if (mAttackDuration < 2.5 && mSceneMgr->hasSceneNode(mTargetPieceName))
+            /*if (mAttackDuration < 2.5 && mSceneMgr->hasSceneNode(mTargetPieceName))
             {
                 mTargetPiece->yaw(Degree(timeSinceLastFrame * 140));
+            }*/
+            if (mParticleNode->getPosition().y > 100)
+            {
+                mParticleNode->translate(0, -timeSinceLastFrame * 600, 0);
+                
+                if (mParticleNode->getPosition().y < 200)
+                {
+                    mTargetPiece->translate(0, -timeSinceLastFrame * 300, 0);
+                }
             }
-
+            else
+            {
+                playAnimation("eat", timeSinceLastFrame, false, mParticleNode, false);
+            }
             mAttackDuration -= timeSinceLastFrame;
         }
         else {
-            if (mParticleNode)
-            {
-                mAnimatedNode->removeAndDestroyChild(mParticleNode->getName());
-                mParticleNode = 0;
-            }
             // Normalising the vector so the speed remains constant.
             path.normalise();
             mAnimatedNode->translate(path * distanceMoved);
 
             Vector3 src = mAnimatedNode->getOrientation() * Vector3::UNIT_Z;
             mAnimatedNode->rotate(src.getRotationTo(path));
+
+            playAnimation("walk", timeSinceLastFrame);
         }
         return true; // Animation still running.
     }
+    resetAnimation("walk");
     mAnimatedNode->setPosition(mDestination);
     mAnimatedNode->setOrientation(mAnimatedNode->getInitialOrientation());
     return false; // Animation finished.
 }
 
-void BishopMovementAnimation::createBlasts()
+void PawnMovementAnimation::createBlasts()
 {
-    // Create a bloodstorm
-    ParticleSystem* pSys = mSceneMgr->createParticleSystem(
-        nextName(), "Effects/Flame");
-    mParticleNode = mAnimatedNode->createChildSceneNode();
-    //const Vector3& position = pieceNode->getPosition();
-    mParticleNode->translate(-90, 270, 90);
-    mParticleNode->attachObject(pSys);
-    ParticleEmitter *emitter = pSys->getEmitter(0);
-    //emitter->setTimeToLive(mAttackDuration + 1);
-    pSys->setParticleQuota(emitter->getEmissionRate() * mAttackDuration);
+    mParticleNode = mTargetPiece->createChildSceneNode();
+    mParticleNode->translate(0, 1000, 0);
+
+    Entity* pacman = mSceneMgr->createEntity(nextName(), "pacman.mesh");
+    mParticleNode->attachObject(pacman);
 }
