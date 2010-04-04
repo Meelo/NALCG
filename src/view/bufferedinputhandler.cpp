@@ -351,6 +351,9 @@ bool BufferedInputHandler::toggleMovementPossibilities()
 
 SceneNode* BufferedInputHandler::findPieceAbove(Node* squareNode) const
 {
+    // TODO: When everything is done, we should do a null check here
+    // for the squareNode in case query mask for some env is not correctly set
+
     const Vector3& squarePosition = squareNode->getPosition();
     Node::ChildNodeIterator it = mSceneMgr->getRootSceneNode()->getChildIterator();
     while (it.hasMoreElements())

@@ -19,7 +19,7 @@ bool PawnMovementAnimation::animate(const Real& timeSinceLastFrame)
                     mTargetPiece, mSceneMgr, 2, 1.5));
                 mAnimationManager->addAnimation(
                     AnimationFactory::createBleedingAnimation(
-                    mTargetPiece, mSceneMgr, 1.5, 1.5));
+                    mTargetPiece, mSceneMgr, 1, 1.5));
                 /*mAnimationManager->addAnimation(
                     AnimationFactory::createBleedingAnimation(
                     mTargetPiece, mSceneMgr, 0.3, 2.5, "Effects/Smoke"));*/
@@ -28,13 +28,17 @@ bool PawnMovementAnimation::animate(const Real& timeSinceLastFrame)
             {
                 mTargetPiece->yaw(Degree(timeSinceLastFrame * 140));
             }*/
-            if (mParticleNode->getPosition().y > 100)
+            if (mParticleNode->getPosition().y + mTargetPiece->getPosition().y >= 0)
             {
-                mParticleNode->translate(0, -timeSinceLastFrame * 600, 0);
                 
                 if (mParticleNode->getPosition().y < 200)
                 {
-                    mTargetPiece->translate(0, -timeSinceLastFrame * 300, 0);
+                    mTargetPiece->translate(0, -timeSinceLastFrame * 600, 0);
+                    mParticleNode->translate(0, -timeSinceLastFrame * 400, 0);
+                }
+                else
+                {
+                    mParticleNode->translate(0, -timeSinceLastFrame * 1000, 0);
                 }
             }
             else
@@ -67,5 +71,6 @@ void PawnMovementAnimation::createBlasts()
     mParticleNode->translate(0, 1000, 0);
 
     Entity* pacman = mSceneMgr->createEntity(nextName(), "pacman.mesh");
+    pacman->setQueryFlags(0);
     mParticleNode->attachObject(pacman);
 }

@@ -52,6 +52,7 @@ bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
                 AnimationFactory::createCameraShakeAnimation(
                 camera, mSceneMgr));
             mCameraShaken = true;
+            mAnimatedNode->setPosition(mDestination);
         }
 
         mEndDelay -= timeSinceLastFrame;
