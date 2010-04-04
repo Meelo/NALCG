@@ -65,6 +65,7 @@ public:
     static const char EMPTY_SYMBOL;
 
     ChessBoard(const std::vector<Square>& squares);
+    virtual ChessBoard* clone() const { return new ChessBoard(*this); }
     virtual ~ChessBoard() { };
 
     // Methods

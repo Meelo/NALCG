@@ -228,17 +228,3 @@ void Board::move(std::size_t moveFrom, std::size_t moveTo)
     piece->specialMoveBehaviour(moveFrom, moveTo);
     ++rounds;
 }
-
-//~ bool Board::isPromotable(std::size_t, std::size_t) const
-//~ {
-    //~ // Real implementation should be in the implementing sub-class.
-    //~ // (chess, checkers, etc)
-    //~ return false;
-//~ }
-//~
-//~ void Board::promote(std::size_t, unsigned int)
-//~ {
-    //~ // Real implementation should be in the implementing sub-class.
-    //~ // (chess, checkers, etc)
-//~ }
-//~

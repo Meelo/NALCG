@@ -19,6 +19,7 @@ public:
 
     Board(const std::vector<Square>& squares, std::size_t width = 8, std::size_t height = 8);
     Board(const Board& orig);
+    virtual Board* clone() const = 0;
     virtual ~Board();
 
     // Methods

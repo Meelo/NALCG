@@ -27,7 +27,7 @@ void Middleman::startGame()
     rounds = 0;
 
     deleteAndClear(gameStates);
-    gameStates.push_back(new Board(*board));
+    gameStates.push_back(board->clone());
 
     // white starts
     currentTurn = Piece::WHITE;
@@ -85,7 +85,7 @@ void Middleman::undo(unsigned int steps)
             gameStates.pop_back();
             gameLog.pop_back();
         }
-        board = new Board(*gameStates.back());
+        board = gameStates.back()->clone();
         currentTurn = gameStates.size() % 2 ? Piece::WHITE : Piece::BLACK;
         rounds -= steps;
         boardUpdate();
@@ -95,7 +95,7 @@ void Middleman::undo(unsigned int steps)
 // private methods
 void Middleman::playRound()
 {
-    gameStates.push_back(new Board(*board));
+    gameStates.push_back(board->clone());
     currentTurn = currentTurn == Piece::WHITE ? Piece::BLACK : Piece::WHITE;
     ++rounds;
 }
