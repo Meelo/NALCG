@@ -342,9 +342,9 @@ bool BufferedInputHandler::toggleMovementPossibilities()
         name << column << " " << row << " s";
         Entity* ent = mSceneMgr->getEntity(name.str());
         ent->setVisible(!ent->isVisible());
-        if (ent->isVisible())
+        if (ent->isVisible() && ent->getParentNode())
         {
-            if (findPieceAbove(ent->getParentNode()))
+            if (findPieceAbove(ent->getParentNode()->getParent()))
             {
                 ent->setMaterialName("board/square/attack");
             }

@@ -257,20 +257,16 @@ void View::createPiece(char type, const std::string& modelName,
     ent->setQueryFlags(0);
     node->attachObject(ent);
     
-    if (type == 'P')
+    if (type == 'P' || type == 'R')
     {
         node->attachObject(loadEntity(entityName.str() + "l", modelName + "_left_leg.mesh"));
         node->attachObject(loadEntity(entityName.str() + "r", modelName + "_right_leg.mesh"));
-    }
-    else if (type == 'R' && modelName.find("white") == 0)
-    {
-        
-        node->attachObject(loadEntity(entityName.str() + "l", modelName + "_left_leg.mesh"));
-        node->attachObject(loadEntity(entityName.str() + "r", modelName + "_right_leg.mesh"));
-
-        node->attachObject(loadEntity(entityName.str() + "a", modelName + "_right_arm.mesh"));
-        node->attachObject(loadEntity(entityName.str() + "wb", modelName + "_weapon_base.mesh"));
-        node->attachObject(loadEntity(entityName.str() + "w", modelName + "_weapon.mesh"));
+        if (type == 'R')
+        {
+            node->attachObject(loadEntity(entityName.str() + "a", modelName + "_right_arm.mesh"));
+            node->attachObject(loadEntity(entityName.str() + "wb", modelName + "_weapon_base.mesh"));
+            node->attachObject(loadEntity(entityName.str() + "w", modelName + "_weapon.mesh"));
+        }
     }
 
     // Make white models face the opposite direction.
@@ -278,13 +274,6 @@ void View::createPiece(char type, const std::string& modelName,
     {
         node->yaw(Degree(180));
     }
-    /*else if (type == 'K')
-    {
-        AnimationState *mAnimationState = ent->getAnimationState("wrooktest");
-        mAnimationState->setLoop(true);
-        mAnimationState->setEnabled(true);
-        mAnimationState->addTime(2);
-    }*/
     node->setInitialState();
 }
 

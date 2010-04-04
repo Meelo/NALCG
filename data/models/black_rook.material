@@ -1,27 +1,5 @@
 
-material 08-Default
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.588235 0.588235 0.588235 1
-			diffuse 0.588235 0.588235 0.588235 1
-			specular 0 0 0 10 0
-
-			texture_unit
-			{
-				texture smooth_rock.jpg
-			}
-		}
-
-	}
-
-}
-
-
-
-material asdfasf
+material color_247_242_229
 {
 	technique
 	{
@@ -33,7 +11,7 @@ material asdfasf
 
 			texture_unit
 			{
-				texture wood.jpg
+				texture evil.jpg
 			}
 		}
 
@@ -65,19 +43,19 @@ material 06-Default
 
 
 
-material color_247_242_229
+material 18-Default
 {
 	technique
 	{
 		pass
 		{
-			ambient 0.588 0.588 0.588 1
-			diffuse 0.588 0.588 0.588 1
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
 			specular 0 0 0 10 0
 
 			texture_unit
 			{
-				texture evil.jpg
+				texture dark_skin.jpg
 			}
 		}
 
@@ -100,28 +78,6 @@ material 21-Default
 			texture_unit
 			{
 				texture skull.jpg
-			}
-		}
-
-	}
-
-}
-
-
-
-material 18-Default
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.588235 0.588235 0.588235 1
-			diffuse 0.588235 0.588235 0.588235 1
-			specular 0 0 0 10 0
-
-			texture_unit
-			{
-				texture dark_skin.jpg
 			}
 		}
 
