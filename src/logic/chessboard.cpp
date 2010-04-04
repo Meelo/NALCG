@@ -182,7 +182,7 @@ void ChessBoard::promote(std::size_t location, unsigned int promoteTo)
             newPiece = new Queen(colour);
             break;
     }
-    if (!newPiece)
+    if (newPiece)
     {
         delete squares.at(location).removePiece();
         squares.at(location).addPiece(newPiece);
