@@ -158,10 +158,9 @@ void View::windowClosed(RenderWindow* rw)
 void View::createCamera()
 {
     mCamera = mSceneMgr->createCamera("PlayerCam");
-    // set its position, direction
-    mCamera->setPosition(Vector3(0, 1800, 1900));
-    mCamera->lookAt(Vector3(0, 0, -45.0));
+
     mCamera->setPosition(Vector3(0, 18000, 19000));
+    mCamera->lookAt(Vector3(0, 0, 0));
     mCamera->setNearClipDistance(5);
 }
 
