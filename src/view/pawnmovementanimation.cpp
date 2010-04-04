@@ -20,14 +20,8 @@ bool PawnMovementAnimation::animate(const Real& timeSinceLastFrame)
                 mAnimationManager->addAnimation(
                     AnimationFactory::createBleedingAnimation(
                     mTargetPiece, mSceneMgr, 1, 1.5));
-                /*mAnimationManager->addAnimation(
-                    AnimationFactory::createBleedingAnimation(
-                    mTargetPiece, mSceneMgr, 0.3, 2.5, "Effects/Smoke"));*/
             }
-            /*if (mAttackDuration < 2.5 && mSceneMgr->hasSceneNode(mTargetPieceName))
-            {
-                mTargetPiece->yaw(Degree(timeSinceLastFrame * 140));
-            }*/
+
             if (mParticleNode->getPosition().y + mTargetPiece->getPosition().y >= 0)
             {
                 

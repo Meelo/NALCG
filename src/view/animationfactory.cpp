@@ -6,6 +6,7 @@
 #include "camerashakeanimation.h"
 #include "kingmovementanimation.h"
 #include "pawnmovementanimation.h"
+#include "rookmovementanimation.h"
 
 MovementAnimation* AnimationFactory::createMovementAnimation(
     const char type, const Vector3& destination, SceneNode *movingNode,
@@ -24,9 +25,10 @@ MovementAnimation* AnimationFactory::createMovementAnimation(
         return new KnightMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
     case 'K':
         return new KingMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
+    case 'R':
+        return new RookMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
     default:
-        // TODO: change this to return 0 for testing when everything should be done.
-        return new BishopMovementAnimation(destination, movingNode, targetPiece, sceneMgr, animationManager);
+        return 0;
     }
 }
 
