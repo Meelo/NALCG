@@ -9,6 +9,7 @@ material 14-Default
 			diffuse 0.588235 0.588235 0.588235 0.7
 			specular 0 0 0 10 0
 			scene_blend alpha_blend
+                        depth_write off
 
 			texture_unit
 			{
