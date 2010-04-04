@@ -12,9 +12,10 @@ class Board
 {
 public:
     // Constants
-    static const unsigned int INVALID_TURN      = 1 << 0;
-    static const unsigned int INVALID_MOVE      = 1 << 1;
-    static const unsigned int PROMOTION_REQUEST = 1 << 2;
+    static const unsigned int MOVE_OK           = 1 << 0;
+    static const unsigned int INVALID_TURN      = 1 << 1;
+    static const unsigned int INVALID_MOVE      = 1 << 2;
+    static const unsigned int PROMOTION_REQUEST = 1 << 3;
 
     Board(const std::vector<Square>& squares, std::size_t width = 8, std::size_t height = 8);
     Board(const Board& orig);
@@ -30,7 +31,7 @@ public:
         std::size_t boardWidth, std::size_t boardHeight);
     unsigned int move(  std::size_t fromX,  std::size_t fromY,
                         std::size_t toX,    std::size_t toY,
-                        Piece::Colour player);
+                        Piece::Colour player, unsigned int promoteTo = 0);
     void printBoard() const;
     void initRoundSpecificState();
 

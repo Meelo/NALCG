@@ -56,10 +56,11 @@ std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t 
 }
 
 void Middleman::move(   std::size_t fromX, std::size_t fromY,
-                        std::size_t toX,   std::size_t toY)
+                        std::size_t toX,   std::size_t toY,
+                        unsigned int promoteTo)
 {
     std::string currentMove = newLogEntry(fromX, fromY, toX, toY);
-    if (board->move(fromX, fromY, toX, toY, currentTurn))
+    if (board->move(fromX, fromY, toX, toY, currentTurn, promoteTo) & Board::MOVE_OK)
     {
         moveUpdate(fromX, fromY, toX, toY);
         gameLog.push_back(currentMove);

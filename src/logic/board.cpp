@@ -97,7 +97,8 @@ std::size_t Board::getPosition(std::size_t column, std::size_t row,
 }
 
 unsigned int Board::move(std::size_t fromX, std::size_t fromY,
-    std::size_t toX, std::size_t toY, Piece::Colour player)
+    std::size_t toX, std::size_t toY,
+    Piece::Colour player, unsigned int promoteTo)
 {
     unsigned int retValue = 0;
     // first merge two dimensions into one.
@@ -115,12 +116,11 @@ unsigned int Board::move(std::size_t fromX, std::size_t fromY,
         Piece* piece = squares.at(moveFrom).removePiece();
         squares.at(moveTo).addPiece(piece);
         piece->specialMoveBehaviour(moveFrom, moveTo);
-
+        retValue |= MOVE_OK;
         ++rounds;
-        return true;
     }
 
-    return false;
+    return retValue;
 }
 
 char Board::getSymbolAt(std::size_t column, std::size_t row) const
