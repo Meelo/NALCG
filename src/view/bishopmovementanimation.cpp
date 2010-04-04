@@ -34,6 +34,12 @@ bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
         else {
             if (mParticleNode)
             {
+                SceneNode::ObjectIterator itr = mParticleNode->getAttachedObjectIterator();
+                while (itr.hasMoreElements())
+                {
+                    MovableObject* object = itr.getNext();
+                    mSceneMgr->destroyMovableObject(object);
+                }
                 mAnimatedNode->removeAndDestroyChild(mParticleNode->getName());
                 mParticleNode = 0;
             }
