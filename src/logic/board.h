@@ -10,25 +10,13 @@
 
 class Board
 {
-    // Constants
-
-    // Members
-    std::vector<Square> squares;
-    std::vector<Piece*> deadPieces;
-
-    std::size_t width;
-    std::size_t height;
-
-    unsigned int rounds;
-
-    // Methods
-    bool isMoveValid(std::size_t moveFrom, std::size_t moveTo,
-        Piece::Colour player) const;
-    bool getCoordinates(std::size_t index, std::size_t& column,
-        std::size_t& row) const;
-    std::size_t getPosition(std::size_t column, std::size_t row) const;
-
 public:
+    // Constants
+    static const unsigned int MOVE_OK           = 1 << 0;
+    static const unsigned int INVALID_TURN      = 1 << 1;
+    static const unsigned int INVALID_MOVE      = 1 << 2;
+    static const unsigned int PROMOTION_REQUEST = 1 << 3;
+
     Board(const std::vector<Square>& squares, std::size_t width = 8, std::size_t height = 8);
     Board(const Board& orig);
     virtual ~Board();
@@ -41,8 +29,9 @@ public:
         std::size_t& row, std::size_t boardWidth, std::size_t boardHeight);
     static std::size_t getPosition(std::size_t column, std::size_t row,
         std::size_t boardWidth, std::size_t boardHeight);
-    bool move(  std::size_t fromX,  std::size_t fromY,
-                std::size_t toX,    std::size_t toY, Piece::Colour player);
+    unsigned int move(  std::size_t fromX,  std::size_t fromY,
+                        std::size_t toX,    std::size_t toY,
+                        Piece::Colour player, unsigned int promoteTo = 0);
     void printBoard() const;
     void initRoundSpecificState();
 
@@ -54,6 +43,23 @@ public:
     std::string getNameAt(std::size_t column, std::size_t row) const;
 
     // Setters
+
+private:
+    // Members
+    std::vector<Square> squares;
+    std::vector<Piece*> deadPieces;
+
+    std::size_t width;
+    std::size_t height;
+
+    unsigned int rounds;
+
+    // Methods
+    bool isMoveValid(std::size_t moveFrom, std::size_t moveTo,
+        Piece::Colour player, unsigned int& mask) const;
+    bool getCoordinates(std::size_t index, std::size_t& column,
+        std::size_t& row) const;
+    std::size_t getPosition(std::size_t column, std::size_t row) const;
 };
 
 #endif // _NALCG_BOARD_H_
