@@ -16,6 +16,14 @@ bool BufferedInputHandler::keyPressed(const OIS::KeyEvent& arg)
 
     switch (arg.key)
     {
+    case OIS::KC_1:
+        mCamera->setPosition(ViewConstants::WHITE_CAMERA_POSITION);
+        mCamera->lookAt(Vector3::ZERO);
+        break;
+    case OIS::KC_2:
+        mCamera->setPosition(ViewConstants::BLACK_CAMERA_POSITION);
+        mCamera->lookAt(Vector3::ZERO);
+        break;
     case OIS::KC_UP:
     case OIS::KC_W:
         mDirection.z -= CAMERA_MOVEMENT_SPEED;
@@ -203,10 +211,8 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
     static bool created;
     if (alpha < 4.5)
     {
-        Vector3 newPosition = mCamera->getPosition();
-        newPosition.y -= timeSinceLastFrame * 3600;
-        newPosition.z -= timeSinceLastFrame * 3800;
-        mCamera->setPosition(newPosition);
+        Vector3 adjustment = 2 * timeSinceLastFrame * ViewConstants::WHITE_CAMERA_POSITION;
+        mCamera->setPosition(mCamera->getPosition() - adjustment);
 
         if (!created && alpha > 2)
         {

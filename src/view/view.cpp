@@ -159,8 +159,8 @@ void View::createCamera()
 {
     mCamera = mSceneMgr->createCamera("PlayerCam");
 
-    mCamera->setPosition(Vector3(0, 18000, 19000));
-    mCamera->lookAt(Vector3(0, 0, 0));
+    mCamera->setPosition(ViewConstants::WHITE_CAMERA_POSITION * 10);
+    mCamera->lookAt(Vector3::ZERO);
     mCamera->setNearClipDistance(5);
 }
 
