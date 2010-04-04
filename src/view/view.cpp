@@ -451,7 +451,7 @@ void View::createBoard(const Board* board)
             ent = mSceneMgr->createEntity(name.str(), "square.mesh");
             ent->setMaterialName("board/square/move");
             ent->setQueryFlags(0);
-            node->attachObject(ent);
+            node->createChildSceneNode(Vector3(0, 1, 0))->attachObject(ent);
             ent->setVisible(false);
         }
     }
