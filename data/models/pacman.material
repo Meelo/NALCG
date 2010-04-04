@@ -1,18 +1,30 @@
 
+material 24-Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 10 0
+		}
+
+	}
+
+}
+
+
+
 material 11-Default
 {
 	technique
 	{
 		pass
 		{
-			ambient 0.588235 0.588235 0.588235 1
-			diffuse 0.588235 0.588235 0.588235 1
+			ambient 1 0.917647 0 1
+			diffuse 1 0.917647 0 1
 			specular 0 0 0 10 0
-
-			texture_unit
-			{
-				texture gold.jpg
-			}
 		}
 
 	}
