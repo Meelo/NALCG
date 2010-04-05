@@ -270,31 +270,54 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 
 void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY, bool continuous)
 {
-    std::ostringstream sourceName;
-    sourceName << fromX << " " << fromY;
-    SceneNode* pieceNode = findPieceAbove(mSceneMgr->getSceneNode(sourceName.str()));
-
-    std::ostringstream targetName;
-    targetName << toX << " " << toY;
-    SceneNode* targetNode = mSceneMgr->getSceneNode(targetName.str());
-
-    SceneNode* targetPiece = findPieceAbove(targetNode);
-
-    GenericAnimation* animation = AnimationFactory::createMovementAnimation(
-        *pieceNode->getName().begin(), targetNode->getPosition(),
-        pieceNode, targetPiece, mSceneMgr, mAnimationManager);
-
-    mAnimationManager->addAnimation(animation);
-
-    if (continuous)
+    if (mQueueAnimations && mAnimationManager->animationsRunning())
     {
-        animation->enableCallback(this);
+        std::vector<int> moveOrder;
+        moveOrder.push_back(fromX);
+        moveOrder.push_back(fromY);
+        moveOrder.push_back(toX);
+        moveOrder.push_back(toY);
+        moveOrder.push_back(continuous);
+
+        mAnimationQueue.push_back(moveOrder);
+    }
+    else
+    {
+        std::ostringstream sourceName;
+        sourceName << fromX << " " << fromY;
+        SceneNode* pieceNode = findPieceAbove(mSceneMgr->getSceneNode(sourceName.str()));
+
+        std::ostringstream targetName;
+        targetName << toX << " " << toY;
+        SceneNode* targetNode = mSceneMgr->getSceneNode(targetName.str());
+
+        SceneNode* targetPiece = findPieceAbove(targetNode);
+
+        GenericAnimation* animation = AnimationFactory::createMovementAnimation(
+            *pieceNode->getName().begin(), targetNode->getPosition(),
+            pieceNode, targetPiece, mSceneMgr, mAnimationManager);
+
+        mAnimationManager->addAnimation(animation);
+
+        if (continuous)
+        {
+            animation->enableCallback(this);
+            mQueueAnimations = true;
+        }
+        else
+        {
+            mQueueAnimations = false;
+        }
     }
 }
 
 void BufferedInputHandler::animationFinished()
 {
-    std::cout << "finished" << std::endl;
+    std::vector<int> moveOrder = mAnimationQueue.back();
+    mAnimationQueue.pop_back();
+    move(moveOrder.at(0), moveOrder.at(1),
+        moveOrder.at(2), moveOrder.at(3),
+        moveOrder.at(4) != 0);
 }
 
 bool BufferedInputHandler::toggleMovementPossibilities()

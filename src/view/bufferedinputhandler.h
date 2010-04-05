@@ -17,7 +17,7 @@ public:
         : mLMouseDown(false), mRMouseDown(false), mWindow(window), mCamera(camera),
         mSceneMgr(sceneMgr), mRaySceneQuery(sceneMgr->createRayQuery(Ray())),
         mSelectedObject(0), mDirection(Vector3::ZERO), mAnimationManager(animationManager),
-        mView(view), mSafeMode(true)
+        mView(view), mSafeMode(true), mQueueAnimations(false)
     {
     }
 
@@ -49,7 +49,8 @@ protected:
     View* mView;
     bool mSafeMode;
     static const int CAMERA_MOVEMENT_SPEED = 500;
-
+    std::deque<std::vector<int> > mAnimationQueue;
+    bool mQueueAnimations;
 
     virtual void onLeftPressed(const OIS::MouseEvent& arg);
     virtual SceneNode* findPieceAbove(Node* squareNode) const;
