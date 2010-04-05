@@ -302,10 +302,13 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 
 void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY)
 {
+    std::ostringstream sourceName;
+    sourceName << fromX << " " << fromY;
+    SceneNode* pieceNode = findPieceAbove(mSceneMgr->getSceneNode(sourceName.str()));
+
     std::ostringstream targetName;
     targetName << toX << " " << toY;
     SceneNode* targetNode = mSceneMgr->getSceneNode(targetName.str());
-    SceneNode* pieceNode = findPieceAbove(mSelectedObject);
 
     SceneNode* targetPiece = findPieceAbove(targetNode);
 
