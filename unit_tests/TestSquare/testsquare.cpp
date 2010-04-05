@@ -6,6 +6,7 @@
 
 // classes to be tested
 #include "../../src/logic/square.h"
+#include "../../src/logic/colour.h"
 #include "../../src/logic/chessboard.h"
 #include "../../src/logic/chesspieces-meta.h"
 
@@ -28,7 +29,7 @@ private slots:
 // Use Q_DECLARE_METATYPE in order to use 'custom' types in _data() functions.
 Q_DECLARE_METATYPE(std::string)
 Q_DECLARE_METATYPE(Square)
-Q_DECLARE_METATYPE(Piece::Colour)
+Q_DECLARE_METATYPE(Colour)
 Q_DECLARE_METATYPE(Piece*)
 
 // Test case implementations
@@ -42,9 +43,9 @@ void TestSquare::constructing_data()
     QTest::newRow("empty construction") << piece << false << true;
     QTest::newRow("construct with null") << piece << true << true;
     QTest::newRow("construct with white pawn") 
-        << (piece = new Pawn(Piece::WHITE)) << true << false;
+        << (piece = new Pawn(WHITE)) << true << false;
     QTest::newRow("construct with black pawn") 
-        << (piece = new Pawn(Piece::BLACK)) << true << false;
+        << (piece = new Pawn(BLACK)) << true << false;
 }
 
 void TestSquare::constructing()
@@ -67,8 +68,8 @@ void TestSquare::constructing()
 
 void TestSquare::addingPiecesToSquare_data()
 {
-    Piece::Colour white = Piece::WHITE;
-    Piece::Colour black = Piece::BLACK;
+    Colour white = WHITE;
+    Colour black = BLACK;
     std::string pawn("Pawn");
     std::string rook("Rook");
     std::string knight("Knight");
@@ -77,7 +78,7 @@ void TestSquare::addingPiecesToSquare_data()
     std::string king("King");
     QTest::addColumn<Piece*>("piece");
     QTest::addColumn<std::string>("expectedName");
-    QTest::addColumn<Piece::Colour>("expectedColour");
+    QTest::addColumn<Colour>("expectedColour");
 
     Piece* piece = 0;
     QTest::newRow("adding a white pawn") 
@@ -111,7 +112,7 @@ void TestSquare::addingPiecesToSquare()
 {
     QFETCH(Piece*, piece);
     QFETCH(std::string, expectedName);
-    QFETCH(Piece::Colour, expectedColour);
+    QFETCH(Colour, expectedColour);
     
     Square square;
     QVERIFY(!square.hasPiece());
@@ -166,8 +167,8 @@ void TestSquare::getPiece_data()
     QTest::addColumn<Square>("square");
     QTest::addColumn<std::string>("expected");
 
-    QTest::newRow("get, expect pawn") << Square(new Pawn(Piece::WHITE)) << pawn;
-    QTest::newRow("get, expect king") << Square(new King(Piece::BLACK)) << king;
+    QTest::newRow("get, expect pawn") << Square(new Pawn(WHITE)) << pawn;
+    QTest::newRow("get, expect king") << Square(new King(BLACK)) << king;
     QTest::newRow("get, expect nothing") << Square() << empty;
 }
 

@@ -4,6 +4,7 @@
 
 // classes to be tested
 #include "../../src/logic/board.h"
+#include "../../src/logic/colour.h"
 #include "../../src/logic/chessboard.h"
 #include "../../src/logic/square.h"
 #include "../../src/logic/chesspieces-meta.h"
@@ -50,22 +51,22 @@ void TestPawn::whiteValidMoves_data()
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
     PieceHolder createUnitsAt02[] = { };
-    PieceHolder createUnitsAt03[] = { PieceHolder(32, new Pawn(Piece::WHITE)) };
-    PieceHolder createUnitsAt04[] = { PieceHolder(40, new Pawn(Piece::WHITE)) };
-    PieceHolder createUnitsAt05[] = { PieceHolder(32, new Pawn(Piece::BLACK)) };
-    PieceHolder createUnitsAt06[] = { PieceHolder(40, new Pawn(Piece::BLACK)) };
-    PieceHolder createUnitsAt07[] = {   PieceHolder(43, new Pawn(Piece::WHITE)),
-                                        PieceHolder(34, new Pawn(Piece::BLACK))};
-    PieceHolder createUnitsAt08[] = {   PieceHolder(43, new Pawn(Piece::WHITE)),
-                                        PieceHolder(36, new Pawn(Piece::BLACK))};
-    PieceHolder createUnitsAt09[] = {   PieceHolder(43, new Pawn(Piece::WHITE)),
-                                        PieceHolder(34, new Pawn(Piece::WHITE))};
-    PieceHolder createUnitsAt10[] = {   PieceHolder(43, new Pawn(Piece::WHITE)),
-                                        PieceHolder(36, new Pawn(Piece::WHITE))};
-    PieceHolder createUnitsAt11[] = {   PieceHolder(8, new Pawn(Piece::WHITE)),
-                                        PieceHolder(1, new Pawn(Piece::WHITE)),
+    PieceHolder createUnitsAt03[] = { PieceHolder(32, new Pawn(WHITE)) };
+    PieceHolder createUnitsAt04[] = { PieceHolder(40, new Pawn(WHITE)) };
+    PieceHolder createUnitsAt05[] = { PieceHolder(32, new Pawn(BLACK)) };
+    PieceHolder createUnitsAt06[] = { PieceHolder(40, new Pawn(BLACK)) };
+    PieceHolder createUnitsAt07[] = {   PieceHolder(43, new Pawn(WHITE)),
+                                        PieceHolder(34, new Pawn(BLACK))};
+    PieceHolder createUnitsAt08[] = {   PieceHolder(43, new Pawn(WHITE)),
+                                        PieceHolder(36, new Pawn(BLACK))};
+    PieceHolder createUnitsAt09[] = {   PieceHolder(43, new Pawn(WHITE)),
+                                        PieceHolder(34, new Pawn(WHITE))};
+    PieceHolder createUnitsAt10[] = {   PieceHolder(43, new Pawn(WHITE)),
+                                        PieceHolder(36, new Pawn(WHITE))};
+    PieceHolder createUnitsAt11[] = {   PieceHolder(8, new Pawn(WHITE)),
+                                        PieceHolder(1, new Pawn(WHITE)),
                                         PieceHolder(0, 0)};
-    PieceHolder createUnitsAt12[] = { PieceHolder(15, new Pawn(Piece::WHITE)) };
+    PieceHolder createUnitsAt12[] = { PieceHolder(15, new Pawn(WHITE)) };
 
     // These are the expected valid move indices.
     std::size_t case01[] = { 32, 40 };
@@ -196,15 +197,15 @@ void TestPawn::blackValidMoves_data()
     // These will be handled as instructions for creating new units
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
-    PieceHolder createUnitsAt02[] = { PieceHolder(18, new Pawn(Piece::BLACK)) };
-    PieceHolder createUnitsAt03[] = { PieceHolder(44, new Pawn(Piece::BLACK)) };
-    PieceHolder createUnitsAt04[] = {   PieceHolder(27, new Pawn(Piece::BLACK)), 
-                                        PieceHolder(35, new Pawn(Piece::BLACK))};
-    PieceHolder createUnitsAt05[] = {   PieceHolder(27, new Pawn(Piece::BLACK)), 
-                                        PieceHolder(35, new Pawn(Piece::WHITE))};
-    PieceHolder createUnitsAt06[] = {   PieceHolder(36, new Pawn(Piece::BLACK)),
-                                        PieceHolder(43, new Pawn(Piece::WHITE)),
-                                        PieceHolder(45, new Pawn(Piece::WHITE))};
+    PieceHolder createUnitsAt02[] = { PieceHolder(18, new Pawn(BLACK)) };
+    PieceHolder createUnitsAt03[] = { PieceHolder(44, new Pawn(BLACK)) };
+    PieceHolder createUnitsAt04[] = {   PieceHolder(27, new Pawn(BLACK)), 
+                                        PieceHolder(35, new Pawn(BLACK))};
+    PieceHolder createUnitsAt05[] = {   PieceHolder(27, new Pawn(BLACK)), 
+                                        PieceHolder(35, new Pawn(WHITE))};
+    PieceHolder createUnitsAt06[] = {   PieceHolder(36, new Pawn(BLACK)),
+                                        PieceHolder(43, new Pawn(WHITE)),
+                                        PieceHolder(45, new Pawn(WHITE))};
                                        
     // These are the expected valid move indices.
     std::size_t case01[] = { 21, 29 };

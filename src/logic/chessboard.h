@@ -1,15 +1,15 @@
 #ifndef _NALCG_CHESS_BOARD_H_
 #define _NALCG_CHESS_BOARD_H_
 
-// system includes
-#include <iostream>
-#include <vector>
-
 // class includes
 #include "board.h"
+#include "colour.h"
 #include "square.h"
 #include "chesspieces-meta.h"
 
+// system includes
+#include <iostream>
+#include <vector>
 
 class ChessBoard : public Board
 {

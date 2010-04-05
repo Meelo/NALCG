@@ -4,6 +4,7 @@
 
 // classes to be tested
 #include "../../src/logic/board.h"
+#include "../../src/logic/colour.h"
 #include "../../src/logic/chessboard.h"
 #include "../../src/logic/square.h"
 #include "../../src/logic/chesspieces-meta.h"
@@ -50,25 +51,25 @@ void TestBishop::whiteValidMoves_data()
     // These will be handled as instructions for creating new units
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
-    PieceHolder createUnitsAt02[] = {   PieceHolder(46, new Bishop(Piece::WHITE)),
-                                        PieceHolder(37, new Bishop(Piece::WHITE))};
-    PieceHolder createUnitsAt03[] = {   PieceHolder(46, new Bishop(Piece::WHITE)),
-                                        PieceHolder(39, new Bishop(Piece::WHITE)),
-                                        PieceHolder(28, new Bishop(Piece::WHITE))};
-    PieceHolder createUnitsAt04[] = {   PieceHolder(39, new Bishop(Piece::WHITE)),
-                                        PieceHolder(30, new Bishop(Piece::WHITE))};
-    PieceHolder createUnitsAt05[] = {   PieceHolder(53, new Bishop(Piece::WHITE)),
-                                        PieceHolder(44, new Bishop(Piece::WHITE))};
-    PieceHolder createUnitsAt06[] = {   PieceHolder(53, new Bishop(Piece::WHITE)),
-                                        PieceHolder(44, new Bishop(Piece::WHITE)),
-                                        PieceHolder(39, new Bishop(Piece::BLACK))};
-    PieceHolder createUnitsAt07[] = {   PieceHolder(53, new Bishop(Piece::WHITE)),
-                                        PieceHolder(44, new Bishop(Piece::WHITE)),
-                                        PieceHolder(46, new Bishop(Piece::BLACK)),
-                                        PieceHolder(39, new Bishop(Piece::BLACK))};
-    PieceHolder createUnitsAt08[] = {   PieceHolder(35, new Bishop(Piece::WHITE))};
-    PieceHolder createUnitsAt09[] = {   PieceHolder(35, new Bishop(Piece::WHITE)),
-                                        PieceHolder(53, new Bishop(Piece::BLACK))};
+    PieceHolder createUnitsAt02[] = {   PieceHolder(46, new Bishop(WHITE)),
+                                        PieceHolder(37, new Bishop(WHITE))};
+    PieceHolder createUnitsAt03[] = {   PieceHolder(46, new Bishop(WHITE)),
+                                        PieceHolder(39, new Bishop(WHITE)),
+                                        PieceHolder(28, new Bishop(WHITE))};
+    PieceHolder createUnitsAt04[] = {   PieceHolder(39, new Bishop(WHITE)),
+                                        PieceHolder(30, new Bishop(WHITE))};
+    PieceHolder createUnitsAt05[] = {   PieceHolder(53, new Bishop(WHITE)),
+                                        PieceHolder(44, new Bishop(WHITE))};
+    PieceHolder createUnitsAt06[] = {   PieceHolder(53, new Bishop(WHITE)),
+                                        PieceHolder(44, new Bishop(WHITE)),
+                                        PieceHolder(39, new Bishop(BLACK))};
+    PieceHolder createUnitsAt07[] = {   PieceHolder(53, new Bishop(WHITE)),
+                                        PieceHolder(44, new Bishop(WHITE)),
+                                        PieceHolder(46, new Bishop(BLACK)),
+                                        PieceHolder(39, new Bishop(BLACK))};
+    PieceHolder createUnitsAt08[] = {   PieceHolder(35, new Bishop(WHITE))};
+    PieceHolder createUnitsAt09[] = {   PieceHolder(35, new Bishop(WHITE)),
+                                        PieceHolder(53, new Bishop(BLACK))};
 
     // These are the expected valid move indices.
     std::size_t case01[] = { };
@@ -183,22 +184,22 @@ void TestBishop::blackValidMoves_data()
     PieceHolder createUnitsAt01[] = { };
     PieceHolder createUnitsAt02[] = { PieceHolder(9, 0) };
     PieceHolder createUnitsAt03[] = { PieceHolder(11, 0) };
-    PieceHolder createUnitsAt04[] = { PieceHolder(11, new Bishop(Piece::WHITE)) };
-    PieceHolder createUnitsAt05[] = { PieceHolder(58, new Bishop(Piece::BLACK)) };
-    PieceHolder createUnitsAt06[] = {   PieceHolder(44, new Bishop(Piece::BLACK)),
-                                        PieceHolder(35, new Bishop(Piece::WHITE)),
-                                        PieceHolder(36, new Bishop(Piece::WHITE)),
-                                        PieceHolder(37, new Bishop(Piece::WHITE)),
-                                        PieceHolder(43, new Bishop(Piece::WHITE)),
-                                        PieceHolder(45, new Bishop(Piece::WHITE))};
-    PieceHolder createUnitsAt07[] = {   PieceHolder(20, new Bishop(Piece::BLACK)),
-                                        PieceHolder(19, new Bishop(Piece::BLACK)),
-                                        PieceHolder(21, new Bishop(Piece::BLACK)),
-                                        PieceHolder(27, new Bishop(Piece::BLACK)),
-                                        PieceHolder(28, new Bishop(Piece::BLACK)),
-                                        PieceHolder(29, new Bishop(Piece::BLACK))};
-    PieceHolder createUnitsAt08[] = { PieceHolder(23, new Bishop(Piece::BLACK)) };
-    PieceHolder createUnitsAt09[] = { PieceHolder(32, new Bishop(Piece::BLACK)) };
+    PieceHolder createUnitsAt04[] = { PieceHolder(11, new Bishop(WHITE)) };
+    PieceHolder createUnitsAt05[] = { PieceHolder(58, new Bishop(BLACK)) };
+    PieceHolder createUnitsAt06[] = {   PieceHolder(44, new Bishop(BLACK)),
+                                        PieceHolder(35, new Bishop(WHITE)),
+                                        PieceHolder(36, new Bishop(WHITE)),
+                                        PieceHolder(37, new Bishop(WHITE)),
+                                        PieceHolder(43, new Bishop(WHITE)),
+                                        PieceHolder(45, new Bishop(WHITE))};
+    PieceHolder createUnitsAt07[] = {   PieceHolder(20, new Bishop(BLACK)),
+                                        PieceHolder(19, new Bishop(BLACK)),
+                                        PieceHolder(21, new Bishop(BLACK)),
+                                        PieceHolder(27, new Bishop(BLACK)),
+                                        PieceHolder(28, new Bishop(BLACK)),
+                                        PieceHolder(29, new Bishop(BLACK))};
+    PieceHolder createUnitsAt08[] = { PieceHolder(23, new Bishop(BLACK)) };
+    PieceHolder createUnitsAt09[] = { PieceHolder(32, new Bishop(BLACK)) };
 
 
     // These are the expected valid move indices.

@@ -1,16 +1,17 @@
 #ifndef _NALCG_MIDDLEMAN_H_
 #define _NALCG_MIDDLEMAN_H_
 
-// system includes
-#include <cassert>
-#include <vector>
-
 // class includes
 #include "ai.h"
 #include "aiinfo.h"
 #include "enduser.h"
+#include "logic/colour.h"
 #include "logic/board.h"
 #include "logic/chesspieces-meta.h"
+
+// system includes
+#include <cassert>
+#include <vector>
 
 class Middleman
 {
@@ -24,7 +25,7 @@ public:
 
     // Methods
     void startGame();
-    Piece::Colour endGame();
+    Colour endGame();
     std::vector<std::size_t> getValidMovesAt(std::size_t x, std::size_t y) const;
     unsigned int move(  std::size_t fromX, std::size_t fromY,
                         std::size_t toX,   std::size_t toY,
@@ -42,7 +43,7 @@ public:
 private:
     // Members
     Board* board;
-    Piece::Colour currentTurn;
+    Colour currentTurn;
     unsigned int rounds;
     std::vector<EndUser*> views;
     std::vector<AI*> aiList;

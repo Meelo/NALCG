@@ -1,10 +1,5 @@
 // class dependencies
-#include "ai.h"
+#include "colour.h"
 
 // system includes
-
-AI::AI()
-{
-
-}
 

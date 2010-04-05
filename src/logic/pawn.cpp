@@ -1,11 +1,11 @@
-// system includes
-
 // class dependencies
 #include "pawn.h"
 #include "chessboard.h"
 
-Pawn::Pawn(const Piece::Colour& colour) : Piece(colour, "Pawn",
-    colour == Piece::WHITE ? ChessBoard::WHITE_PAWN_SYMBOL : ChessBoard::BLACK_PAWN_SYMBOL),
+// system includes
+
+Pawn::Pawn(const Colour& colour) : Piece(colour, "Pawn",
+    colour == WHITE ? ChessBoard::WHITE_PAWN_SYMBOL : ChessBoard::BLACK_PAWN_SYMBOL),
     specialMoveAllowed(false), resetOnNextTurn(true)
 {
 
@@ -17,8 +17,8 @@ std::vector<std::size_t> Pawn::getValidMoves(std::size_t location,
     std::vector<std::size_t> validMoves;
 
     int direction = 0;
-    if (colour == Piece::WHITE) direction = -1;
-    else if (colour == Piece::BLACK) direction = 1;
+    if (colour == WHITE) direction = -1;
+    else if (colour == BLACK) direction = 1;
     else return validMoves;
 
     std::size_t x = 0, y = 0;
@@ -102,8 +102,8 @@ bool Pawn::isMoveAllowed(std::size_t location,
 
 bool Pawn::isDoubleMoveAllowed(std::size_t row) const
 {
-    return  (colour == Piece::WHITE && row == ChessBoard::WHITE_PAWN_ROW) ||
-            (colour == Piece::BLACK && row == ChessBoard::BLACK_PAWN_ROW);
+    return  (colour == WHITE && row == ChessBoard::WHITE_PAWN_ROW) ||
+            (colour == BLACK && row == ChessBoard::BLACK_PAWN_ROW);
 }
 
 bool Pawn::trySpecialMove(  std::size_t& fromX, std::size_t& fromY,

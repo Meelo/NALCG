@@ -1,10 +1,10 @@
 #ifndef _NALCG_A_I_H_
 #define _NALCG_A_I_H_
 
-// system includes
-
 // class includes
 #include "enduser.h"
+
+// system includes
 
 class AI : public EndUser
 {

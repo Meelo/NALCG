@@ -1,10 +1,12 @@
 #ifndef _NALCG_BISHOP_H_
 #define _NALCG_BISHOP_H_
 
-// system includes
-
 // class includes
 #include "piece.h"
+#include "colour.h"
+#include "square.h"
+
+// system includes
 
 class Bishop : public Piece
 {
@@ -17,7 +19,7 @@ class Bishop : public Piece
     // Methods
 
 public:
-    Bishop(const Piece::Colour& colour);
+    Bishop(const Colour& colour);
     virtual ~Bishop() { }
     Bishop* clone() const { return new Bishop(*this); }
 

@@ -1,10 +1,12 @@
 #ifndef _NALCG_KNIGHT_H_
 #define _NALCG_KNIGHT_H_
 
-// system includes
-
 // class includes
 #include "piece.h"
+#include "colour.h"
+#include "square.h"
+
+// system includes
 
 class Knight : public Piece
 {
@@ -17,7 +19,7 @@ class Knight : public Piece
     // Methods
 
 public:
-    Knight(const Piece::Colour& colour);
+    Knight(const Colour& colour);
     virtual ~Knight() { }
     Knight* clone() const { return new Knight(*this); }
 

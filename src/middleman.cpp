@@ -1,12 +1,12 @@
-// system includes
-
 // class dependencies
 #include "middleman.h"
 #include "logic/chessboard.h"
 
+// system includes
+
 Middleman::Middleman(const std::vector<AI*>& aiList,
     const std::vector<AIInfo>& aiInfos) :
-    board(0), currentTurn(Piece::WHITE), rounds(0), aiList(aiList),
+    board(0), currentTurn(WHITE), rounds(0), aiList(aiList),
     aiInfos(aiInfos)
 {
     assert(aiList.size() == aiInfos.size());
@@ -30,7 +30,7 @@ void Middleman::startGame()
     gameStates.push_back(board->clone());
 
     // white starts
-    currentTurn = Piece::WHITE;
+    currentTurn = WHITE;
 
     // add players
     for (std::size_t i = 0; i < views.size(); i++)
@@ -40,14 +40,14 @@ void Middleman::startGame()
 
 }
 
-Piece::Colour Middleman::endGame()
+Colour Middleman::endGame()
 {
     // TODO: Cleaning up the mess
     delete board;
     board = 0;
 
     // winner
-    return Piece::WHITE;
+    return WHITE;
 }
 
 std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t y) const
@@ -112,7 +112,7 @@ void Middleman::undo(unsigned int steps)
             gameLog.pop_back();
         }
         board = gameStates.back()->clone();
-        currentTurn = gameStates.size() % 2 ? Piece::WHITE : Piece::BLACK;
+        currentTurn = gameStates.size() % 2 ? WHITE : BLACK;
         rounds -= steps;
         boardUpdate();
     }
@@ -122,7 +122,7 @@ void Middleman::undo(unsigned int steps)
 void Middleman::playRound()
 {
     gameStates.push_back(board->clone());
-    currentTurn = currentTurn == Piece::WHITE ? Piece::BLACK : Piece::WHITE;
+    currentTurn = currentTurn == WHITE ? BLACK : WHITE;
     ++rounds;
 }
 

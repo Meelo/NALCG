@@ -1,8 +1,8 @@
-// system includes
-
 // class dependencies
 #include "king.h"
 #include "chessboard.h"
+
+// system includes
 
 const int King::X_DIRECTIONS[] = { 1, -1, 0,  0, -1, -1, 1,  1, 0 };
 const int King::Y_DIRECTIONS[] = { 0,  0, 1, -1,  1, -1, 1, -1, 0 };
@@ -10,8 +10,8 @@ const int King::CASTLING = 2;
 const int King::LEFT_ROOK_X = 0;
 const int King::RIGHT_ROOK_X = ChessBoard::WIDTH - 1;
 
-King::King(const Piece::Colour& colour) : Piece(colour, "King",
-    colour == Piece::WHITE ? ChessBoard::WHITE_KING_SYMBOL : ChessBoard::BLACK_KING_SYMBOL),
+King::King(const Colour& colour) : Piece(colour, "King",
+    colour == WHITE ? ChessBoard::WHITE_KING_SYMBOL : ChessBoard::BLACK_KING_SYMBOL),
     specialMoveAllowed(true)
 {
 

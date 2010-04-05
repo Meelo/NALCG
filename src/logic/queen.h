@@ -1,10 +1,12 @@
 #ifndef _NALCG_QUEEN_H_
 #define _NALCG_QUEEN_H_
 
-// system includes
-
 // class includes
 #include "piece.h"
+#include "colour.h"
+#include "square.h"
+
+// system includes
 
 class Queen : public Piece
 {
@@ -17,7 +19,7 @@ class Queen : public Piece
     // Methods
 
 public:
-    Queen(const Piece::Colour& colour);
+    Queen(const Colour& colour);
     virtual ~Queen() { }
     Queen* clone() const { return new Queen(*this); }
 
