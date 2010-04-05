@@ -66,6 +66,11 @@ public:
             recreateLog();
         }
     }
+    virtual void promoteMove(int fromX, int fromY, int toX, int toY,
+        unsigned int promoteTo)
+    {
+
+    }
     virtual void setControl(bool white, bool black) { }
 
     virtual int getBoardWidth() const { return mBoardWidth; }

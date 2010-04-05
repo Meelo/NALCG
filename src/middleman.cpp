@@ -75,7 +75,14 @@ unsigned int Middleman::move(   std::size_t fromX, std::size_t fromY,
         // nothing changed, do original move
         if (x0 == fromX && y0 == fromY && x1 == toX && y1 == toY)
         {
-            moveUpdate(fromX, fromY, toX, toY);
+            if (retValue & Board::PROMOTION_OK)
+            {
+                promoteUpdate(fromX, fromY, toX, toY, promoteTo);
+            }
+            else
+            {
+                moveUpdate(fromX, fromY, toX, toY);
+            }
         }
         else
         {
@@ -125,6 +132,17 @@ void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
     for (std::size_t i = 0; i < views.size(); ++i)
     {
         views.at(i)->move(fromX, fromY, toX, toY, continuous);
+    }
+    board->initRoundSpecificState();
+}
+
+void Middleman::promoteUpdate(  std::size_t fromX,  std::size_t fromY,
+                                std::size_t toX,    std::size_t toY,
+                                unsigned int promoteTo)
+{
+    for (std::size_t i = 0; i < views.size(); ++i)
+    {
+        views.at(i)->promoteMove(fromX, fromY, toX, toY, promoteTo);
     }
     board->initRoundSpecificState();
 }

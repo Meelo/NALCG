@@ -16,6 +16,7 @@ public:
     static const unsigned int INVALID_TURN      = 1 << 1;
     static const unsigned int INVALID_MOVE      = 1 << 2;
     static const unsigned int PROMOTION_REQUEST = 1 << 3;
+    static const unsigned int PROMOTION_OK      = 1 << 4;
 
     Board(const std::vector<Square>& squares, std::size_t width = 8, std::size_t height = 8);
     Board(const Board& orig);

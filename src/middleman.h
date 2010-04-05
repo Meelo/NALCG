@@ -54,6 +54,9 @@ private:
     void playRound();
     void moveUpdate(std::size_t fromX, std::size_t fromY,
                     std::size_t toX,   std::size_t toY, bool continuous = false);
+    void promoteUpdate( std::size_t fromX, std::size_t fromY,
+                        std::size_t toX,   std::size_t toY,
+                        unsigned int promoteTo);
     void boardUpdate();
     const std::string newLogEntry(  std::size_t fromX, std::size_t fromY,
                                     std::size_t toX,   std::size_t toY) const;

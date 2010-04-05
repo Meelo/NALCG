@@ -115,6 +115,7 @@ unsigned int Board::move(   std::size_t& fromX, std::size_t& fromY,
             if (promotable)
             {
                 promote(moveFrom, promoteTo);
+                retValue |= PROMOTION_OK;
             }
 
 
