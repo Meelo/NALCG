@@ -326,6 +326,28 @@ void View::createGUI()
 
     createGUIComponent("Dev", 0, 0.34, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::dev, this));
+
+    createGUIComponent("Game log", 0.875, 0.005, 0.12, 0.05, "StaticText");
+    createGUIComponent("Log", 0.875, 0.06, 0.12, 0.4, "Listbox");
+}
+
+void View::recreateLog()
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* logWindow = wmgr.getWindow("View/LogListbox");
+    CEGUI::Listbox* logList = static_cast<CEGUI::Listbox*>(logWindow);
+    logList->resetList();
+
+    const std::vector<std::string>& gameLog = mMiddleman->getGameLog();
+
+    for (std::size_t i = 0; i < gameLog.size(); i++)
+    {
+        std::ostringstream text;
+        text << (i + 1) << ". " << gameLog.at(i);
+        CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(text.str());
+        logList->addItem(item);
+    }
+    logList->ensureItemIsVisible(logList->getItemCount() - 1);
 }
 
 void View::createScene()

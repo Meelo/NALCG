@@ -70,6 +70,8 @@ unsigned int Middleman::move(   std::size_t fromX, std::size_t fromY,
     unsigned int retValue = board->move(x0, y0, x1, y1, currentTurn, promoteTo);
     if (retValue & Board::MOVE_OK)
     {
+        gameLog.push_back(currentMove);
+
         // nothing changed, do original move
         if (x0 == fromX && y0 == fromY && x1 == toX && y1 == toY)
         {
@@ -84,7 +86,6 @@ unsigned int Middleman::move(   std::size_t fromX, std::size_t fromY,
             // and then make the original move
             moveUpdate(fromX, fromY, toX, toY, false);
         }
-        gameLog.push_back(currentMove);
         playRound();
     }
 

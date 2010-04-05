@@ -20,7 +20,6 @@ public:
     {
     }
 
-    // TODO: implement
     virtual void init(const Board* board, Middleman *middleman) {
         EndUser::init(board, middleman);
         try {
@@ -55,12 +54,17 @@ public:
         createGround(true);
         createBoard(board);
         mRound = round;
+        recreateLog();
     }
     virtual void move(int fromX, int fromY, int toX, int toY,
         bool continuous = false)
     {
         mListener->move(fromX, fromY, toX, toY);
-        mRound++;
+        if (!continuous)
+        {
+            mRound++;
+            recreateLog();
+        }
     }
     virtual void setControl(bool white, bool black) { }
 
@@ -106,6 +110,7 @@ protected:
     virtual void createViewports();
     virtual void createInitialExplosion();
     virtual Entity* loadEntity(const std::string& entityName, const std::string& modelName);
+    virtual void recreateLog();
 
     // The function to create our decal projector
     void createProjector();

@@ -34,6 +34,7 @@ public:
     // Getters
     std::size_t getAICount() const { return aiList.size(); }
     const AIInfo& getAIInfoAt(std::size_t index) const { return aiInfos.at(index); }
+    const std::vector<std::string>& getGameLog() const { return gameLog; }
 
     // Setters
     void addView(EndUser* view) { views.push_back(view); }
