@@ -1,22 +1,16 @@
 #ifndef _NALCG_PIECE_H_
 #define _NALCG_PIECE_H_
 
+// class includes
+#include "square.h"
+#include "colour.h"
+
 // system includes
 #include <string>
 #include <vector>
 
-// class includes
-
-class Square;
 class Piece
 {
-public:
-    enum Colour
-    {
-        UNDEFINED,
-        WHITE,
-        BLACK
-    };
 
 protected:
     // Constants
@@ -27,8 +21,8 @@ protected:
     const char symbol;
 
     // Methods
-    Piece::Colour getOppositeColour() const;
-    bool isOppositeColour(const Piece::Colour& colour) const;
+    Colour getOppositeColour() const;
+    bool isOppositeColour(const Colour& colour) const;
     bool isEmptyOrEdible(std::size_t index, const std::vector<Square>& squares) const;
 
 public:

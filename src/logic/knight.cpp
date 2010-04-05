@@ -1,14 +1,14 @@
-// system includes
-
 // class dependencies
 #include "knight.h"
 #include "chessboard.h"
 
+// system includes
+
 const int Knight::X_DIRECTIONS[] = { -1,  1, -2,  2, -1, 1, -2, 2, 0 };
 const int Knight::Y_DIRECTIONS[] = { -2, -2, -1, -1,  2, 2,  1, 1, 0 };
 
-Knight::Knight(const Piece::Colour& colour) : Piece(colour, "Knight",
-    colour == Piece::WHITE ? ChessBoard::WHITE_KNIGHT_SYMBOL : ChessBoard::BLACK_KNIGHT_SYMBOL)
+Knight::Knight(const Colour& colour) : Piece(colour, "Knight",
+    colour == WHITE ? ChessBoard::WHITE_KNIGHT_SYMBOL : ChessBoard::BLACK_KNIGHT_SYMBOL)
 {
 
 }

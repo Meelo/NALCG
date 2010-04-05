@@ -1,10 +1,12 @@
 #ifndef _NALCG_ROOK_H_
 #define _NALCG_ROOK_H_
 
-// system includes
-
 // class includes
 #include "piece.h"
+#include "colour.h"
+#include "square.h"
+
+// system includes
 
 class Rook : public Piece
 {
@@ -18,7 +20,7 @@ class Rook : public Piece
     // Methods
 
 public:
-    Rook(const Piece::Colour& colour);
+    Rook(const Colour& colour);
     virtual ~Rook() { }
     Rook* clone() const { return new Rook(*this); }
 

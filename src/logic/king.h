@@ -1,10 +1,12 @@
 #ifndef _NALCG_KING_H_
 #define _NALCG_KING_H_
 
-// system includes
-
 // class includes
 #include "piece.h"
+#include "colour.h"
+#include "square.h"
+
+// system includes
 
 class King : public Piece
 {
@@ -24,7 +26,7 @@ class King : public Piece
         const std::vector<Square>& squares) const;
 
 public:
-    King(const Piece::Colour& colour);
+    King(const Colour& colour);
     virtual ~King() { }
     King* clone() const { return new King(*this); }
 

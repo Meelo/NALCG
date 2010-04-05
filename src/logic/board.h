@@ -1,12 +1,13 @@
 #ifndef _NALCG_BOARD_H_
 #define _NALCG_BOARD_H_
 
+// class includes
+#include "square.h"
+#include "colour.h"
+
 // system includes
 #include <iostream>
 #include <vector>
-
-// class includes
-#include "square.h"
 
 class Board
 {
@@ -16,6 +17,7 @@ public:
     static const unsigned int INVALID_TURN      = 1 << 1;
     static const unsigned int INVALID_MOVE      = 1 << 2;
     static const unsigned int PROMOTION_REQUEST = 1 << 3;
+    static const unsigned int PROMOTION_OK      = 1 << 4;
 
     Board(const std::vector<Square>& squares, std::size_t width = 8, std::size_t height = 8);
     Board(const Board& orig);
@@ -32,7 +34,7 @@ public:
         std::size_t boardWidth, std::size_t boardHeight);
     unsigned int move(  std::size_t& fromX, std::size_t& fromY,
                         std::size_t& toX,   std::size_t& toY,
-                        Piece::Colour player, unsigned int promoteTo = 0);
+                        Colour player, unsigned int promoteTo = 0);
     void printBoard() const;
     void initRoundSpecificState();
 
@@ -57,7 +59,7 @@ protected:
 
     // Methods
     bool isMoveValid(std::size_t moveFrom, std::size_t moveTo,
-        Piece::Colour player, unsigned int& mask) const;
+        Colour player, unsigned int& mask) const;
     bool getCoordinates(std::size_t index, std::size_t& column,
         std::size_t& row) const;
     std::size_t getPosition(std::size_t column, std::size_t row) const;

@@ -1,8 +1,8 @@
-// system includes
-
 // class dependencies
 #include "chessboard.h"
 #include "chesspieces-meta.h"
+
+// system includes
 
 // Constant definitions
 const std::size_t ChessBoard::WIDTH                 = 8;
@@ -90,8 +90,8 @@ ChessBoard::ChessBoard(const std::vector<Square>& squares) :
 //    A  B  C  D  E  F  G  H
 std::vector<Square> ChessBoard::createBoard()
 {
-    Piece::Colour black = Piece::BLACK;
-    Piece::Colour white = Piece::WHITE;
+    Colour black = BLACK;
+    Colour white = WHITE;
 
     std::vector<Square> squares;
 
@@ -165,7 +165,7 @@ bool ChessBoard::isPromotable(std::size_t moveFrom, std::size_t moveTo) const
 void ChessBoard::promote(std::size_t location, unsigned int promoteTo)
 {
     Piece* newPiece = 0;
-    Piece::Colour colour = squares.at(location).getColourOfPiece();
+    Colour colour = squares.at(location).getColourOfPiece();
     switch (promoteTo)
     {
         case PROMOTE_TO_BISHOP:

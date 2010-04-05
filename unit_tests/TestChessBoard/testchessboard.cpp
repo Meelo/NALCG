@@ -7,6 +7,7 @@
 
 // classes to be tested
 #include "../../src/logic/board.h"
+#include "../../src/logic/colour.h"
 #include "../../src/logic/chessboard.h"
 #include "../../src/logic/square.h"
 #include "../../src/logic/chesspieces-meta.h"
@@ -29,7 +30,7 @@ private slots:
 
 // Use Q_DECLARE_METATYPE in order to use 'custom' types in _data() functions.
 Q_DECLARE_METATYPE(std::string)
-Q_DECLARE_METATYPE(Piece::Colour)
+Q_DECLARE_METATYPE(Colour)
 
 // Test case implementations
 void TestChessBoard::createBoard_data()
@@ -76,9 +77,9 @@ void TestChessBoard::createBoard()
 
 void TestChessBoard::checkUnits_data()
 {
-    Piece::Colour white = Piece::WHITE;
-    Piece::Colour black = Piece::BLACK;
-    Piece::Colour undefined = Piece::UNDEFINED;
+    Colour white = WHITE;
+    Colour black = BLACK;
+    Colour undefined = UNDEFINED;
     std::string empty("");
     std::string pawn("Pawn");
     std::string rook("Rook");
@@ -88,7 +89,7 @@ void TestChessBoard::checkUnits_data()
     std::string king("King");
 
     QTest::addColumn<std::size_t>("position");
-    QTest::addColumn<Piece::Colour>("colour");
+    QTest::addColumn<Colour>("colour");
     QTest::addColumn<std::string>("unit");
 
     QTest::newRow("black rook at a8")   << std::size_t(0)  << black << rook;
@@ -137,7 +138,7 @@ void TestChessBoard::checkUnits_data()
 void TestChessBoard::checkUnits()
 {
     QFETCH(std::size_t, position);
-    QFETCH(Piece::Colour, colour);
+    QFETCH(Colour, colour);
     QFETCH(std::string, unit);
 
     std::vector<Square> squares = ChessBoard::createBoard();

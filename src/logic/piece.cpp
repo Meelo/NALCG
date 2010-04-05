@@ -1,24 +1,22 @@
+// class dependencies
+#include "piece.h"
+
 // system includes
 
-// class dependencies
-#include "chessboard.h"
-#include "piece.h"
-#include "square.h"
-
-Piece::Piece(const Piece::Colour& colour, const std::string& name,
+Piece::Piece(const Colour& colour, const std::string& name,
     const char symbol) : colour(colour), name(name), symbol(symbol)
 {
 
 }
 
-Piece::Colour Piece::getOppositeColour() const
+Colour Piece::getOppositeColour() const
 {
-    if (colour == Piece::WHITE) return Piece::BLACK;
-    if (colour == Piece::BLACK) return Piece::WHITE;
-    return Piece::UNDEFINED;
+    if (colour == WHITE) return BLACK;
+    if (colour == BLACK) return WHITE;
+    return UNDEFINED;
 }
 
-bool Piece::isOppositeColour(const Piece::Colour& colour) const
+bool Piece::isOppositeColour(const Colour& colour) const
 {
     return colour == getOppositeColour();
 }

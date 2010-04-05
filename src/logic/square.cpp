@@ -1,7 +1,8 @@
-// system includes
-
 // class dependencies
 #include "square.h"
+#include "piece.h"
+
+// system includes
 
 Square::Square(Piece* piece) : piece(piece)
 {
@@ -23,14 +24,14 @@ const std::string Square::getNameOfPiece() const
     return "";
 }
 
-Piece::Colour Square::getColourOfPiece() const
+Colour Square::getColourOfPiece() const
 {
     if (piece)
     {
         return piece->getColour();
     }
 
-    return Piece::UNDEFINED;
+    return UNDEFINED;
 }
 
 char Square::getSymbolOfPiece() const

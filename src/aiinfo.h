@@ -1,10 +1,10 @@
 #ifndef _NALCG_A_I_INFO_H_
 #define _NALCG_A_I_INFO_H_
 
+// class includes
+
 // system includes
 #include <string>
-
-// class includes
 
 class AIInfo
 {

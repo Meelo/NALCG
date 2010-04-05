@@ -1,14 +1,14 @@
-// system includes
-
 // class dependencies
 #include "rook.h"
 #include "chessboard.h"
 
+// system includes
+
 const int Rook::X_DIRECTIONS[] = { 1, -1, 0,  0, 0 };
 const int Rook::Y_DIRECTIONS[] = { 0,  0, 1, -1, 0 };
 
-Rook::Rook(const Piece::Colour& colour) : Piece(colour, "Rook",
-    colour == Piece::WHITE ? ChessBoard::WHITE_ROOK_SYMBOL : ChessBoard::BLACK_ROOK_SYMBOL),
+Rook::Rook(const Colour& colour) : Piece(colour, "Rook",
+    colour == WHITE ? ChessBoard::WHITE_ROOK_SYMBOL : ChessBoard::BLACK_ROOK_SYMBOL),
     specialMoveAllowed(true)
 {
 

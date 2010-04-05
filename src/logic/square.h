@@ -1,12 +1,13 @@
 #ifndef _NALCG_SQUARE_H_
 #define _NALCG_SQUARE_H_
 
+// class includes
+#include "colour.h"
+
 // system includes
 #include <string>
 
-// class includes
-#include "piece.h"
-
+class Piece;
 class Square
 {
     // Constants
@@ -29,7 +30,7 @@ public:
 
     // Getters
     const std::string getNameOfPiece() const;
-    Piece::Colour getColourOfPiece() const;
+    Colour getColourOfPiece() const;
     char getSymbolOfPiece() const;
 
     // Setters

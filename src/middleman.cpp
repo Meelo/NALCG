@@ -1,12 +1,12 @@
-// system includes
-
 // class dependencies
 #include "middleman.h"
 #include "logic/chessboard.h"
 
+// system includes
+
 Middleman::Middleman(const std::vector<AI*>& aiList,
     const std::vector<AIInfo>& aiInfos) :
-    board(0), currentTurn(Piece::WHITE), rounds(0), aiList(aiList),
+    board(0), currentTurn(WHITE), rounds(0), aiList(aiList),
     aiInfos(aiInfos)
 {
     assert(aiList.size() == aiInfos.size());
@@ -30,7 +30,7 @@ void Middleman::startGame()
     gameStates.push_back(board->clone());
 
     // white starts
-    currentTurn = Piece::WHITE;
+    currentTurn = WHITE;
 
     // add players
     for (std::size_t i = 0; i < views.size(); i++)
@@ -40,14 +40,14 @@ void Middleman::startGame()
 
 }
 
-Piece::Colour Middleman::endGame()
+Colour Middleman::endGame()
 {
     // TODO: Cleaning up the mess
     delete board;
     board = 0;
 
     // winner
-    return Piece::WHITE;
+    return WHITE;
 }
 
 std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t y) const
@@ -75,7 +75,14 @@ unsigned int Middleman::move(   std::size_t fromX, std::size_t fromY,
         // nothing changed, do original move
         if (x0 == fromX && y0 == fromY && x1 == toX && y1 == toY)
         {
-            moveUpdate(fromX, fromY, toX, toY);
+            if (retValue & Board::PROMOTION_OK)
+            {
+                promoteUpdate(fromX, fromY, toX, toY, promoteTo);
+            }
+            else
+            {
+                moveUpdate(fromX, fromY, toX, toY);
+            }
         }
         else
         {
@@ -105,7 +112,7 @@ void Middleman::undo(unsigned int steps)
             gameLog.pop_back();
         }
         board = gameStates.back()->clone();
-        currentTurn = gameStates.size() % 2 ? Piece::WHITE : Piece::BLACK;
+        currentTurn = gameStates.size() % 2 ? WHITE : BLACK;
         rounds -= steps;
         boardUpdate();
     }
@@ -115,7 +122,7 @@ void Middleman::undo(unsigned int steps)
 void Middleman::playRound()
 {
     gameStates.push_back(board->clone());
-    currentTurn = currentTurn == Piece::WHITE ? Piece::BLACK : Piece::WHITE;
+    currentTurn = currentTurn == WHITE ? BLACK : WHITE;
     ++rounds;
 }
 
@@ -125,6 +132,17 @@ void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
     for (std::size_t i = 0; i < views.size(); ++i)
     {
         views.at(i)->move(fromX, fromY, toX, toY, continuous);
+    }
+    board->initRoundSpecificState();
+}
+
+void Middleman::promoteUpdate(  std::size_t fromX,  std::size_t fromY,
+                                std::size_t toX,    std::size_t toY,
+                                unsigned int promoteTo)
+{
+    for (std::size_t i = 0; i < views.size(); ++i)
+    {
+        views.at(i)->promoteMove(fromX, fromY, toX, toY, promoteTo);
     }
     board->initRoundSpecificState();
 }

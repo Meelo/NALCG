@@ -1,13 +1,13 @@
 #ifndef _NALCG_PAWN_H_
 #define _NALCG_PAWN_H_
 
+// class includes
+#include "piece.h"
+#include "colour.h"
+#include "square.h"
+
 // system includes
 #include <vector>
-
-// class includes
-#include "board.h"
-#include "piece.h"
-#include "square.h"
 
 class Pawn : public Piece
 {
@@ -27,7 +27,7 @@ class Pawn : public Piece
     bool isDoubleMoveAllowed(std::size_t row) const;
 
 public:
-    Pawn(const Piece::Colour& colour);
+    Pawn(const Colour& colour);
     virtual ~Pawn() { }
     Pawn* clone() const { return new Pawn(*this); }
 

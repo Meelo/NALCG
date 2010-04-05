@@ -1,14 +1,14 @@
-// system includes
-
 // class dependencies
 #include "bishop.h"
 #include "chessboard.h"
 
+// system includes
+
 const int Bishop::X_DIRECTIONS[] = {  1, -1, 1, -1, 0 };
 const int Bishop::Y_DIRECTIONS[] = { -1, -1, 1,  1, 0 };
 
-Bishop::Bishop(const Piece::Colour& colour) : Piece(colour, "Bishop",
-    colour == Piece::WHITE ? ChessBoard::WHITE_BISHOP_SYMBOL : ChessBoard::BLACK_BISHOP_SYMBOL)
+Bishop::Bishop(const Colour& colour) : Piece(colour, "Bishop",
+    colour == WHITE ? ChessBoard::WHITE_BISHOP_SYMBOL : ChessBoard::BLACK_BISHOP_SYMBOL)
 {
 
 }
