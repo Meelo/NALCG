@@ -223,9 +223,6 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
         }
 
     }
-
-    mSceneMgr->getSceneNode("water")->setPosition(Vector3(0, 0,
-        sin(alpha / 100.0) * 100000.0));
 }
 
 void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
