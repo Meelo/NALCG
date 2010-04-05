@@ -86,6 +86,9 @@ public:
     void createGround(bool visible);
     virtual void createPiece(char type, const std::string& modelName, const Vector3& location);
     std::string getMeshName(char symbol) const;
+    CEGUI::Window* createGUIComponent(const std::string& text, double x, double y,
+        double sizeX, double sizeY, const std::string& type = "Button");
+    virtual void setPromotionMove(int fromX, int fromY, int toX, int toY);
     virtual ~View();
 
 protected:
@@ -105,6 +108,7 @@ protected:
     std::size_t mBoardWidth;
     std::size_t mBoardHeight;
     unsigned int mRound;
+    std::vector<int> promotionMove;
 
     void createRoot();
     void defineResources();
@@ -132,12 +136,16 @@ protected:
     void createScene();
     void createGUI();
     void createBoard(const Board* board);
-    CEGUI::Window* createGUIComponent(const std::string& text, double x, double y,
-        double sizeX, double sizeY, const std::string& type = "Button");
+
     bool undo(const CEGUI::EventArgs& e);
     bool restart(const CEGUI::EventArgs& e);
     bool dev(const CEGUI::EventArgs& e);
     bool rollbackToSelectedLog(const CEGUI::EventArgs& e);
+    bool chooseQueen(const CEGUI::EventArgs& e);
+    bool chooseRook(const CEGUI::EventArgs& e);
+    bool chooseKnight(const CEGUI::EventArgs& e);
+    bool chooseBishop(const CEGUI::EventArgs& e);
+    void sendPromotionMove(unsigned int promoteTo);
 };
 
 #endif // _NALCG_VIEW_H_

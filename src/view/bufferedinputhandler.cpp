@@ -7,7 +7,6 @@
 #include "../middleman.h"
 #include "view.h"
 #include "viewconstants.h"
-#include "../logic/chessboard.h"
 
 bool BufferedInputHandler::keyPressed(const OIS::KeyEvent& arg)
 {
@@ -145,7 +144,11 @@ bool BufferedInputHandler::mouseMoved(const OIS::MouseEvent& arg)
 }
 bool BufferedInputHandler::mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id)
 {
-    CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
+    bool processed = CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
+    if (processed)
+    {
+        return true;
+    }
 
     // Left mouse button down
     if (id == OIS::MB_Left)
@@ -164,7 +167,11 @@ bool BufferedInputHandler::mousePressed(const OIS::MouseEvent& arg, OIS::MouseBu
 }
 bool BufferedInputHandler::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseButtonID id)
 {
-    CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
+    bool processed = CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
+    if (processed)
+    {
+        return true;
+    }
 
     // Left mouse button up
     if (id == OIS::MB_Left)
@@ -250,8 +257,12 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                             }
                             if (returnValue & Board::PROMOTION_REQUEST)
                             {
-                                mView->getMiddleman()->move(fromX, fromY,
-                                    toX, toY, ChessBoard::PROMOTE_TO_QUEEN);
+                                mView->setPromotionMove(fromX, fromY, toX, toY);
+                                CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+                                wmgr.getWindow("View/Choose queenButton")->setVisible(true);
+                                wmgr.getWindow("View/Choose rookButton")->setVisible(true);
+                                wmgr.getWindow("View/Choose knightButton")->setVisible(true);
+                                wmgr.getWindow("View/Choose bishopButton")->setVisible(true);
                             }
                         }
                     }

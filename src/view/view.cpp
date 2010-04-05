@@ -5,6 +5,7 @@
 #include "../middleman.h"
 #include "animationfactory.h"
 #include "bleedinganimation.h"
+#include "../logic/chessboard.h"
 
 View::~View()
 {
@@ -258,7 +259,7 @@ void View::createPiece(char type, const std::string& modelName,
     //ent->setCastShadows(true);
     ent->setQueryFlags(0);
     node->attachObject(ent);
-    
+
     if (type == 'P' || type == 'R')
     {
         node->attachObject(loadEntity(entityName.str() + "l", modelName + "_left_leg.mesh"));
@@ -333,6 +334,22 @@ void View::createGUI()
     createGUIComponent("Log", 0.875, 0.06, 0.12, 0.4, "Listbox")->subscribeEvent(
         CEGUI::Listbox::EventSelectionChanged,
         CEGUI::Event::Subscriber(&View::rollbackToSelectedLog, this));
+
+    CEGUI::Window* chooseButton = createGUIComponent("Choose queen", 0.4, 0.30, 0.2, 0.1);
+    chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseQueen, this));
+    chooseButton->setVisible(false);
+
+    chooseButton = createGUIComponent("Choose rook", 0.4, 0.40, 0.2, 0.1);
+    chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseRook, this));
+    chooseButton->setVisible(false);
+
+    chooseButton = createGUIComponent("Choose knight", 0.4, 0.50, 0.2, 0.1);
+    chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseKnight, this));
+    chooseButton->setVisible(false);
+
+    chooseButton = createGUIComponent("Choose bishop", 0.4, 0.60, 0.2, 0.1);
+    chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseBishop, this));
+    chooseButton->setVisible(false);
 }
 
 void View::recreateLog()
@@ -379,7 +396,7 @@ void View::createScene()
 
     // Make all of the materials in the head entities receive the decal
     //for (unsigned int i = 0; i < ent->getNumSubEntities(); i++)
-        //makeMaterialReceiveDecal(ent->getSubEntity(i)->getMaterialName());
+    //makeMaterialReceiveDecal(ent->getSubEntity(i)->getMaterialName());
     makeMaterialReceiveDecal("board/square/white");
     makeMaterialReceiveDecal("board/square/black");
     makeMaterialReceiveDecal("asdfasf");
@@ -554,4 +571,51 @@ bool View::rollbackToSelectedLog(const CEGUI::EventArgs& e)
         }
     }
     return true;
+}
+
+void View::setPromotionMove(int fromX, int fromY, int toX, int toY)
+{
+    // TODO: change to actual move class.
+    promotionMove.clear();
+    promotionMove.push_back(fromX);
+    promotionMove.push_back(fromY);
+    promotionMove.push_back(toX);
+    promotionMove.push_back(toY);
+}
+
+bool View::chooseQueen(const CEGUI::EventArgs& e)
+{
+    sendPromotionMove(ChessBoard::PROMOTE_TO_QUEEN);
+    return true;
+}
+
+bool View::chooseRook(const CEGUI::EventArgs& e)
+{
+    sendPromotionMove(ChessBoard::PROMOTE_TO_ROOK);
+    return true;
+}
+
+bool View::chooseKnight(const CEGUI::EventArgs& e)
+{
+    sendPromotionMove(ChessBoard::PROMOTE_TO_KNIGHT);
+    return true;
+}
+
+bool View::chooseBishop(const CEGUI::EventArgs& e)
+{
+    sendPromotionMove(ChessBoard::PROMOTE_TO_BISHOP);
+    return true;
+}
+
+void View::sendPromotionMove(unsigned int promoteTo)
+{
+    mMiddleman->move(promotionMove.at(0), promotionMove.at(1),
+        promotionMove.at(2), promotionMove.at(3),
+        promoteTo);
+
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    wmgr.getWindow("View/Choose queenButton")->setVisible(false);
+    wmgr.getWindow("View/Choose rookButton")->setVisible(false);
+    wmgr.getWindow("View/Choose knightButton")->setVisible(false);
+    wmgr.getWindow("View/Choose bishopButton")->setVisible(false);
 }
