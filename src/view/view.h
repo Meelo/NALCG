@@ -70,7 +70,7 @@ public:
     virtual void promoteMove(int fromX, int fromY, int toX, int toY,
         unsigned int promoteTo)
     {
-
+        move(fromX, fromY, toX, toY);
     }
     virtual void setControl(bool white, bool black) { }
 

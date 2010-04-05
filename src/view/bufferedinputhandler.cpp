@@ -6,6 +6,7 @@
 #include "../middleman.h"
 #include "view.h"
 #include "viewconstants.h"
+#include "../logic/chessboard.h"
 
 bool BufferedInputHandler::keyPressed(const OIS::KeyEvent& arg)
 {
@@ -233,8 +234,25 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                     Middleman* middleman = mView->getMiddleman();
                     if (middleman)
                     {
+                        unsigned int returnValue = mView->getMiddleman()->move(
+                            fromX, fromY, toX, toY);
 
-                        mView->getMiddleman()->move(fromX, fromY, toX, toY);
+                        if (!(returnValue & Board::MOVE_OK))
+                        {
+                            if (returnValue & Board::INVALID_MOVE)
+                            {
+                                // TODO: handle
+                            }
+                            if (returnValue & Board::INVALID_TURN)
+                            {
+                                // TODO: handle
+                            }
+                            if (returnValue & Board::PROMOTION_REQUEST)
+                            {
+                                mView->getMiddleman()->move(fromX, fromY,
+                                    toX, toY, ChessBoard::PROMOTE_TO_QUEEN);
+                            }
+                        }
                     }
                     else
                     {
@@ -315,6 +333,9 @@ void BufferedInputHandler::animationFinished()
 {
     std::vector<int> moveOrder = mAnimationQueue.back();
     mAnimationQueue.pop_back();
+
+    // fromX, fromY, toX, toY, continuous.
+    // TODO: a struct or class for this so it won't seem so magical
     move(moveOrder.at(0), moveOrder.at(1),
         moveOrder.at(2), moveOrder.at(3),
         moveOrder.at(4) != 0);
