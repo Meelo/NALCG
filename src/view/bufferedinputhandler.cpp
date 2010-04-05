@@ -149,6 +149,10 @@ bool BufferedInputHandler::mousePressed(const OIS::MouseEvent& arg, OIS::MouseBu
     {
         return true;
     }
+    if (CEGUI::WindowManager::getSingleton().getWindow("View/Choose queenButton")->isVisible())
+    {
+        mView->setChooseButtonsVisibility(false);
+    }
 
     // Left mouse button down
     if (id == OIS::MB_Left)
@@ -258,11 +262,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                             if (returnValue & Board::PROMOTION_REQUEST)
                             {
                                 mView->setPromotionMove(fromX, fromY, toX, toY);
-                                CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-                                wmgr.getWindow("View/Choose queenButton")->setVisible(true);
-                                wmgr.getWindow("View/Choose rookButton")->setVisible(true);
-                                wmgr.getWindow("View/Choose knightButton")->setVisible(true);
-                                wmgr.getWindow("View/Choose bishopButton")->setVisible(true);
+                                mView->setChooseButtonsVisibility(true);
                             }
                         }
                     }

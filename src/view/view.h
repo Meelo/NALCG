@@ -89,6 +89,7 @@ public:
     CEGUI::Window* createGUIComponent(const std::string& text, double x, double y,
         double sizeX, double sizeY, const std::string& type = "Button");
     virtual void setPromotionMove(int fromX, int fromY, int toX, int toY);
+    void setChooseButtonsVisibility(bool visible);
     virtual ~View();
 
 protected:

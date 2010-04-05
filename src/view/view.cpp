@@ -613,9 +613,14 @@ void View::sendPromotionMove(unsigned int promoteTo)
         promotionMove.at(2), promotionMove.at(3),
         promoteTo);
 
+    setChooseButtonsVisibility(false);
+}
+
+void View::setChooseButtonsVisibility(bool visible)
+{
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-    wmgr.getWindow("View/Choose queenButton")->setVisible(false);
-    wmgr.getWindow("View/Choose rookButton")->setVisible(false);
-    wmgr.getWindow("View/Choose knightButton")->setVisible(false);
-    wmgr.getWindow("View/Choose bishopButton")->setVisible(false);
+    wmgr.getWindow("View/Choose queenButton")->setVisible(visible);
+    wmgr.getWindow("View/Choose rookButton")->setVisible(visible);
+    wmgr.getWindow("View/Choose knightButton")->setVisible(visible);
+    wmgr.getWindow("View/Choose bishopButton")->setVisible(visible);
 }
