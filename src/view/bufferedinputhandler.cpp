@@ -192,37 +192,6 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
         newPosition.y = 10;
         mCamera->setPosition(newPosition);
     }
-
-
-    //FIXME: refactor
-    static double alpha;
-    alpha += timeSinceLastFrame;
-    MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/move");
-    mat->setDiffuse(0, 1.0, 0, sin(alpha * 3) * 0.25 + 0.5);
-
-    double lightX = sin(alpha / 2.0) * 5200;
-    double lightZ = cos(alpha / 2.0) * 5200;
-    Light* light = mSceneMgr->getLight("Blue");
-    light->setPosition(-lightX, 2500, -lightZ);
-
-    light = mSceneMgr->getLight("Yellow");
-    light->setPosition(lightX, 2500, lightZ);
-
-    static bool created;
-    if (alpha < 4.5)
-    {
-        Vector3 adjustment = 2 * timeSinceLastFrame * ViewConstants::WHITE_CAMERA_POSITION;
-        mCamera->setPosition(mCamera->getPosition() - adjustment);
-
-        if (!created && alpha > 2)
-        {
-            mSceneMgr->getSceneNode("ground")->setVisible(true);
-            CEGUI::MouseCursor::getSingleton().setVisible(true);
-            mSceneMgr->setSkyDome(true, "Sky", 10, 4);
-            created = true;
-        }
-
-    }
 }
 
 void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)

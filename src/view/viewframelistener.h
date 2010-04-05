@@ -18,7 +18,8 @@ public:
         View* view)
         : mKeyboard(keyboard), mMouse(mouse), mAnimationManager(),
         mHandler(window, camera, sceneManager, &mAnimationManager, view),
-        mContinue(true), mWindow(window)
+        mContinue(true), mWindow(window), mTime(0), mSceneMgr(sceneManager),
+        mCamera(camera), mCreated(false)
     {
         mDebugOverlay = OverlayManager::getSingleton().getByName("Core/DebugOverlay");
         mKeyboard->setEventCallback(&mHandler);
@@ -47,8 +48,15 @@ protected:
     bool mContinue;
     Overlay* mDebugOverlay;
     RenderWindow* mWindow;
+    double mTime;
+    SceneManager* mSceneMgr;
+    Camera* mCamera;
+    bool mCreated;
 
     virtual void updateStats();
+    void flashMovableSquares(const Real& timeSinceLastFrame);
+    void moveLights(const Real& timeSinceLastFrame);
+    void playOpeningAnimation(const Real& timeSinceLastFrame);
 };
 
 #endif // _NALCG_VIEW_FRAME_LISTENER_H_

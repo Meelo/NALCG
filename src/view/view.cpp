@@ -385,7 +385,11 @@ void View::createScene()
     makeMaterialReceiveDecal("22-Default");
     makeMaterialReceiveDecal("18-Default");*/
     //mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
-    mSceneMgr->setSkyDome(false, "Sky", 10, 4);
+
+    // Loading the sky material so it doesn't have to be loaded while
+    // playing the opening animation sequence.
+    mSceneMgr->setSkyDome(true, "Sky");
+    mSceneMgr->setSkyDome(false, "Sky");
 }
 
 

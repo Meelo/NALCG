@@ -1,4 +1,5 @@
 #include "viewframelistener.h"
+#include "viewconstants.h"
 
 bool ViewFrameListener::frameStarted(const FrameEvent& evt)
 {
@@ -8,7 +9,12 @@ bool ViewFrameListener::frameStarted(const FrameEvent& evt)
     }
     mKeyboard->capture();
     mMouse->capture();
+
     mHandler.moveCamera(evt.timeSinceLastFrame);
+    flashMovableSquares(evt.timeSinceLastFrame);
+    moveLights(evt.timeSinceLastFrame);
+    playOpeningAnimation(evt.timeSinceLastFrame);
+
     mAnimationManager.executeAnimations(evt.timeSinceLastFrame);
     return !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
 }
@@ -17,6 +23,41 @@ bool ViewFrameListener::frameEnded(const FrameEvent& evt)
 {
     updateStats();
     return true;
+}
+
+void ViewFrameListener::flashMovableSquares(const Real& timeSinceLastFrame)
+{
+    mTime += timeSinceLastFrame;
+    MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/move");
+    mat->setDiffuse(0, 1.0, 0, sin(mTime * 3) * 0.25 + 0.5);
+}
+
+void ViewFrameListener::moveLights(const Real& timeSinceLastFrame)
+{
+    double lightX = sin(mTime / 2.0) * 5200;
+    double lightZ = cos(mTime / 2.0) * 5200;
+    Light* light = mSceneMgr->getLight("Blue");
+    light->setPosition(-lightX, 2500, -lightZ);
+
+    light = mSceneMgr->getLight("Yellow");
+    light->setPosition(lightX, 2500, lightZ);
+}
+
+void ViewFrameListener::playOpeningAnimation(const Real& timeSinceLastFrame)
+{
+    if (mTime < 4.5)
+    {
+        Vector3 adjustment = 2 * timeSinceLastFrame * ViewConstants::WHITE_CAMERA_POSITION;
+        mCamera->setPosition(mCamera->getPosition() - adjustment);
+
+        if (!mCreated && mTime > 2)
+        {
+            mSceneMgr->getSceneNode("ground")->setVisible(true);
+            CEGUI::MouseCursor::getSingleton().setVisible(true);
+            mSceneMgr->setSkyDome(true, "Sky", 10, 4);
+            mCreated = true;
+        }
+    }
 }
 
 bool ViewFrameListener::quit(const CEGUI::EventArgs& e)
