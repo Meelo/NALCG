@@ -1,8 +1,6 @@
 #ifndef _NALCG_ANIMATION_MANAGER_H_
 #define _NALCG_ANIMATION_MANAGER_H_
 
-#include <vector>
-
 #include <Ogre.h>
 
 using namespace Ogre;

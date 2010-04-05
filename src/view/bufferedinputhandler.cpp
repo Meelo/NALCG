@@ -1,6 +1,5 @@
-#include <OIS/OIS.h>
-
 #include "bufferedinputhandler.h"
+
 #include "animationmanager.h"
 #include "animationfactory.h"
 #include "movementanimation.h"
@@ -269,7 +268,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
     }
 }
 
-void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY)
+void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY, bool continuous)
 {
     std::ostringstream sourceName;
     sourceName << fromX << " " << fromY;
@@ -281,10 +280,21 @@ void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY)
 
     SceneNode* targetPiece = findPieceAbove(targetNode);
 
-    mAnimationManager->addAnimation(
-        AnimationFactory::createMovementAnimation(
+    GenericAnimation* animation = AnimationFactory::createMovementAnimation(
         *pieceNode->getName().begin(), targetNode->getPosition(),
-        pieceNode, targetPiece, mSceneMgr, mAnimationManager));
+        pieceNode, targetPiece, mSceneMgr, mAnimationManager);
+
+    mAnimationManager->addAnimation(animation);
+
+    if (continuous)
+    {
+        animation->enableCallback(this);
+    }
+}
+
+void BufferedInputHandler::animationFinished()
+{
+    std::cout << "finished" << std::endl;
 }
 
 bool BufferedInputHandler::toggleMovementPossibilities()

@@ -1,8 +1,10 @@
 #include "view.h"
+
 #include "viewframelistener.h"
 #include "viewconstants.h"
 #include "../middleman.h"
 #include "animationfactory.h"
+#include "bleedinganimation.h"
 
 View::~View()
 {

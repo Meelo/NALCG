@@ -1,12 +1,13 @@
 #ifndef _NALCG_VIEW_H_
 #define _NALCG_VIEW_H_
 
+#include "../enduser.h"
+#include "viewframelistener.h"
+
 #include <Ogre.h>
 #include <CEGUI/CEGUI.h>
 #include <OIS/OIS.h>
 #include <OgreCEGUIRenderer.h>
-#include "../enduser.h"
-#include "viewframelistener.h"
 
 using namespace Ogre;
 
@@ -59,7 +60,7 @@ public:
     virtual void move(int fromX, int fromY, int toX, int toY,
         bool continuous = false)
     {
-        mListener->move(fromX, fromY, toX, toY);
+        mListener->move(fromX, fromY, toX, toY, continuous);
         if (!continuous)
         {
             mRound++;

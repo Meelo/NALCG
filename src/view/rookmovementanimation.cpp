@@ -1,6 +1,8 @@
 #include "rookmovementanimation.h"
+
 #include "animationfactory.h"
 #include "dyinganimation.h"
+#include "bleedinganimation.h"
 
 bool RookMovementAnimation::animate(const Real& timeSinceLastFrame)
 {

@@ -1,12 +1,12 @@
 #ifndef _NALCG_VIEW_FRAME_LISTENER_H_
 #define _NALCG_VIEW_FRAME_LISTENER_H_
 
+#include "animationmanager.h"
+#include "bufferedinputhandler.h"
+
 #include <Ogre.h>
 #include <CEGUI/CEGUI.h>
 #include <OIS/OIS.h>
-
-#include "animationmanager.h"
-#include "bufferedinputhandler.h"
 
 using namespace Ogre;
 
@@ -31,9 +31,9 @@ public:
     bool quit(const CEGUI::EventArgs& e);
     bool toggleDebugInfo(const CEGUI::EventArgs& e);
     bool handleAnimationSpeedChanged(const CEGUI::EventArgs& e);
-    void move(int fromX, int fromY, int toX, int toY)
+    void move(int fromX, int fromY, int toX, int toY, bool continuous)
     {
-        mHandler.move(fromX, fromY, toX, toY);
+        mHandler.move(fromX, fromY, toX, toY, continuous);
     }
     AnimationManager& getAnimationManager()
     {

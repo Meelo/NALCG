@@ -1,7 +1,9 @@
 #include "queenmovementanimation.h"
+
 #include "animationmanager.h"
 #include "animationfactory.h"
 #include "dyinganimation.h"
+#include "bleedinganimation.h"
 
 const int QueenMovementAnimation::MOVEMENT_SPEED = 600;
 const int QueenMovementAnimation::ATTACK_ALTITUDE = 500;

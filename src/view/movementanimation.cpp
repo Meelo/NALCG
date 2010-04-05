@@ -1,4 +1,5 @@
 #include "movementanimation.h"
+
 #include "viewconstants.h"
 
 void MovementAnimation::dimLights()

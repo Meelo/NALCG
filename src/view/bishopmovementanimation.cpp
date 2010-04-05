@@ -1,6 +1,8 @@
 #include "bishopmovementanimation.h"
+
 #include "animationfactory.h"
 #include "dyinganimation.h"
+#include "bleedinganimation.h"
 
 bool BishopMovementAnimation::animate(const Real& timeSinceLastFrame)
 {

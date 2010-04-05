@@ -1,4 +1,5 @@
 #include "animationfactory.h"
+
 #include "bishopmovementanimation.h"
 #include "queenmovementanimation.h"
 #include "knightmovementanimation.h"
@@ -7,6 +8,7 @@
 #include "kingmovementanimation.h"
 #include "pawnmovementanimation.h"
 #include "rookmovementanimation.h"
+#include "bleedinganimation.h"
 
 MovementAnimation* AnimationFactory::createMovementAnimation(
     const char type, const Vector3& destination, SceneNode *movingNode,

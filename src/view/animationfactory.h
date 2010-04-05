@@ -3,14 +3,13 @@
 
 #include <Ogre.h>
 
-#include "bleedinganimation.h"
-
 using namespace Ogre;
 
 class MovementAnimation;
 class AnimationManager;
 class DyingAnimation;
 class CameraShakeAnimation;
+class BleedingAnimation;
 class AnimationFactory
 {
 public:

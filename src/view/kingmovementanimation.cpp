@@ -1,6 +1,8 @@
 #include "kingmovementanimation.h"
+
 #include "animationfactory.h"
 #include "dyinganimation.h"
+#include "bleedinganimation.h"
 
 bool KingMovementAnimation::animate(const Real& timeSinceLastFrame)
 {

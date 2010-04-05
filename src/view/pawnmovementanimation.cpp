@@ -1,6 +1,8 @@
 #include "pawnmovementanimation.h"
+
 #include "animationfactory.h"
 #include "dyinganimation.h"
+#include "bleedinganimation.h"
 
 bool PawnMovementAnimation::animate(const Real& timeSinceLastFrame)
 {

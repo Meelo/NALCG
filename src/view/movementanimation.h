@@ -4,6 +4,7 @@
 #include "genericanimation.h"
 #include "animationmanager.h"
 
+class BufferedInputHandler;
 class MovementAnimation : public GenericAnimation
 {
 public:
@@ -38,9 +39,9 @@ protected:
     }
 
     Vector3 mDestination;
-    SceneNode *mTargetPiece;
+    SceneNode* mTargetPiece;
     const std::string mTargetPieceName;
-    AnimationManager *mAnimationManager;
+    AnimationManager* mAnimationManager;
 };
 
 #endif // _NALCG_MOVEMENT_ANIMATION_H_

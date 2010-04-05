@@ -1,9 +1,9 @@
 #ifndef _NALCG_QUEEN_MOVEMENT_ANIMATION_H_
 #define _NALCG_QUEEN_MOVEMENT_ANIMATION_H_
 
-#include <Ogre.h>
-
 #include "movementanimation.h"
+
+#include <Ogre.h>
 
 using namespace Ogre;
 

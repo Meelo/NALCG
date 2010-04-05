@@ -3,6 +3,7 @@
 
 #include <Ogre.h>
 #include <CEGUI/CEGUI.h>
+#include <OIS/OIS.h>
 
 using namespace Ogre;
 
@@ -33,7 +34,8 @@ public:
     virtual bool mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id);
     virtual bool mouseReleased(const OIS::MouseEvent& arg, OIS::MouseButtonID id);
     virtual void moveCamera(const Real& timeSinceLastFrame);
-    virtual void move(int fromX, int fromY, int toX, int toY);
+    virtual void move(int fromX, int fromY, int toX, int toY, bool continuous = false);
+    virtual void animationFinished();
 
 protected:
     bool mLMouseDown, mRMouseDown;     // True if the mouse buttons are down
