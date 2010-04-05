@@ -117,18 +117,20 @@ unsigned int Board::move(   std::size_t& fromX, std::size_t& fromY,
                 promote(moveFrom, promoteTo);
             }
 
-            // Validation passed
-            // First kill unit if such exists.
-            if (squares.at(moveTo).hasPiece())
-            {
-                deadPieces.push_back(squares.at(moveTo).removePiece());
-            }
+
 
             // Try if moved piece has a special move.
             // Special move will set fromX, fromY, toX and toY
             // if special move was made and then return's true
             squares.at(moveFrom).getPiece()->trySpecialMove(fromX, fromY, toX,
                 toY, squares);
+
+            if (squares.at(moveTo).hasPiece())
+            {
+                // Validation passed
+                // First kill unit if such exists.
+                deadPieces.push_back(squares.at(moveTo).removePiece());
+            }
 
             // Then movement shall be done.
             move(moveFrom, moveTo);

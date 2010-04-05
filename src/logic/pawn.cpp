@@ -105,3 +105,21 @@ bool Pawn::isDoubleMoveAllowed(std::size_t row) const
     return  (colour == Piece::WHITE && row == ChessBoard::WHITE_PAWN_ROW) ||
             (colour == Piece::BLACK && row == ChessBoard::BLACK_PAWN_ROW);
 }
+
+bool Pawn::trySpecialMove(  std::size_t& fromX, std::size_t& fromY,
+                            std::size_t& toX,   std::size_t& toY,
+                            std::vector<Square>& squares) const
+{
+    if (fromX != toX && fromY != toY)
+    {
+        std::size_t target =  ChessBoard::getPosition(toX, toY);
+        std::size_t side = ChessBoard::getPosition(toX, fromY);
+        if (isEnPassantAllowed(target, side, squares))
+        {
+            squares.at(target).addPiece(squares.at(side).removePiece());
+            fromX = toX;
+            return true;
+        }
+    }
+    return false;
+}
