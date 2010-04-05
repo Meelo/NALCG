@@ -128,7 +128,7 @@ protected:
     bool undo(const CEGUI::EventArgs& e);
     bool restart(const CEGUI::EventArgs& e);
     bool dev(const CEGUI::EventArgs& e);
-
+    bool rollbackToSelectedLog(const CEGUI::EventArgs& e);
 };
 
 #endif // _NALCG_VIEW_H_

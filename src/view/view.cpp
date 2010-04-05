@@ -328,7 +328,9 @@ void View::createGUI()
         CEGUI::Event::Subscriber(&View::dev, this));
 
     createGUIComponent("Game log", 0.875, 0.005, 0.12, 0.05, "StaticText");
-    createGUIComponent("Log", 0.875, 0.06, 0.12, 0.4, "Listbox");
+    createGUIComponent("Log", 0.875, 0.06, 0.12, 0.4, "Listbox")->subscribeEvent(
+        CEGUI::Listbox::EventSelectionChanged,
+        CEGUI::Event::Subscriber(&View::rollbackToSelectedLog, this));
 }
 
 void View::recreateLog()
@@ -527,5 +529,23 @@ bool View::restart(const CEGUI::EventArgs& e)
 bool View::dev(const CEGUI::EventArgs& e)
 {
     mMiddleman->undo(Middleman::HALF_TURN);
+    return true;
+}
+
+bool View::rollbackToSelectedLog(const CEGUI::EventArgs& e)
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* logWindow = wmgr.getWindow("View/LogListbox");
+    CEGUI::Listbox* logList = static_cast<CEGUI::Listbox*>(logWindow);
+
+    CEGUI::ListboxItem* selected = logList->getFirstSelectedItem();
+    if (selected)
+    {
+        std::size_t selectedIndex = logList->getItemIndex(selected);
+        while (logList->getItemCount() - 1 > selectedIndex)
+        {
+            mMiddleman->undo(Middleman::HALF_TURN);
+        }
+    }
     return true;
 }
