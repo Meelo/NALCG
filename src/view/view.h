@@ -70,7 +70,10 @@ public:
     virtual void promoteMove(int fromX, int fromY, int toX, int toY,
         unsigned int promoteTo)
     {
-        move(fromX, fromY, toX, toY);
+        mListener->move(fromX, fromY, toX, toY, true, 0);
+        mListener->move(toX, toY, toX, toY, false, promoteTo);
+        mRound++;
+        recreateLog();
     }
     virtual void setControl(bool white, bool black) { }
 
@@ -81,6 +84,8 @@ public:
     virtual void convertPosition(const Vector3& position, int* x, int* y) const;
     virtual Vector3 convertPosition(int x, int y) const;
     void createGround(bool visible);
+    virtual void createPiece(char type, const std::string& modelName, const Vector3& location);
+    std::string getMeshName(char symbol) const;
     virtual ~View();
 
 protected:
@@ -124,11 +129,9 @@ protected:
     // A function to take an existing material and make it receive the projected decal
     void makeMaterialReceiveDecal(const String &matName);
 
-    virtual void createPiece(char type, const std::string& modelName, const Vector3& location);
     void createScene();
     void createGUI();
     void createBoard(const Board* board);
-    std::string getMeshName(char symbol) const;
     CEGUI::Window* createGUIComponent(const std::string& text, double x, double y,
         double sizeX, double sizeY, const std::string& type = "Button");
     bool undo(const CEGUI::EventArgs& e);

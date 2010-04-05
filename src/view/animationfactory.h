@@ -10,6 +10,8 @@ class AnimationManager;
 class DyingAnimation;
 class CameraShakeAnimation;
 class BleedingAnimation;
+class PromotionAnimation;
+class View;
 class AnimationFactory
 {
 public:
@@ -27,6 +29,8 @@ public:
 
     static CameraShakeAnimation* createCameraShakeAnimation(Camera* camera, SceneManager* sceneMgr);
 
+    static PromotionAnimation* createPromotionAnimation(
+        unsigned int promoteTo, SceneNode *movingNode, SceneManager *sceneMgr, View* view);
 };
 
 #endif // _NALCG_ANIMATION_FACTORY_H_

@@ -3,6 +3,7 @@
 #include "animationmanager.h"
 #include "animationfactory.h"
 #include "movementanimation.h"
+#include "promotionanimation.h"
 #include "../middleman.h"
 #include "view.h"
 #include "viewconstants.h"
@@ -286,7 +287,8 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
     }
 }
 
-void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY, bool continuous)
+void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY,
+                                bool continuous, unsigned int promoteTo)
 {
     if (mQueueAnimations && mAnimationManager->animationsRunning())
     {
@@ -296,6 +298,7 @@ void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY, bool con
         moveOrder.push_back(toX);
         moveOrder.push_back(toY);
         moveOrder.push_back(continuous);
+        moveOrder.push_back(promoteTo);
 
         mAnimationQueue.push_back(moveOrder);
     }
@@ -311,9 +314,18 @@ void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY, bool con
 
         SceneNode* targetPiece = findPieceAbove(targetNode);
 
-        GenericAnimation* animation = AnimationFactory::createMovementAnimation(
-            *pieceNode->getName().begin(), targetNode->getPosition(),
-            pieceNode, targetPiece, mSceneMgr, mAnimationManager);
+        GenericAnimation* animation;
+        if (promoteTo)
+        {
+            animation = AnimationFactory::createPromotionAnimation(
+                promoteTo, pieceNode, mSceneMgr, mView);
+        }
+        else
+        {
+            animation = AnimationFactory::createMovementAnimation(
+                *pieceNode->getName().begin(), targetNode->getPosition(),
+                pieceNode, targetPiece, mSceneMgr, mAnimationManager);
+        }
 
         mAnimationManager->addAnimation(animation);
 
@@ -334,11 +346,11 @@ void BufferedInputHandler::animationFinished()
     std::vector<int> moveOrder = mAnimationQueue.back();
     mAnimationQueue.pop_back();
 
-    // fromX, fromY, toX, toY, continuous.
+    // fromX, fromY, toX, toY, continuous, promote
     // TODO: a struct or class for this so it won't seem so magical
     move(moveOrder.at(0), moveOrder.at(1),
         moveOrder.at(2), moveOrder.at(3),
-        moveOrder.at(4) != 0);
+        moveOrder.at(4) != 0, moveOrder.at(5));
 }
 
 bool BufferedInputHandler::toggleMovementPossibilities()

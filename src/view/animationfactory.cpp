@@ -9,6 +9,7 @@
 #include "pawnmovementanimation.h"
 #include "rookmovementanimation.h"
 #include "bleedinganimation.h"
+#include "promotionanimation.h"
 
 MovementAnimation* AnimationFactory::createMovementAnimation(
     const char type, const Vector3& destination, SceneNode *movingNode,
@@ -63,4 +64,10 @@ DyingAnimation* AnimationFactory::createDyingAnimation(SceneNode *pieceNode,
 CameraShakeAnimation* AnimationFactory::createCameraShakeAnimation(Camera* camera, SceneManager* sceneMgr)
 {
     return new CameraShakeAnimation(camera, sceneMgr);
+}
+
+PromotionAnimation* AnimationFactory::createPromotionAnimation(
+    unsigned int promoteTo, SceneNode *movingNode, SceneManager *sceneMgr, View* view)
+{
+    return new PromotionAnimation(promoteTo, movingNode, sceneMgr, view);
 }

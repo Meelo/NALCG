@@ -31,9 +31,10 @@ public:
     bool quit(const CEGUI::EventArgs& e);
     bool toggleDebugInfo(const CEGUI::EventArgs& e);
     bool handleAnimationSpeedChanged(const CEGUI::EventArgs& e);
-    void move(int fromX, int fromY, int toX, int toY, bool continuous)
+    void move(int fromX, int fromY, int toX, int toY,
+        bool continuous, unsigned int promoteTo = 0)
     {
-        mHandler.move(fromX, fromY, toX, toY, continuous);
+        mHandler.move(fromX, fromY, toX, toY, continuous, promoteTo);
     }
     AnimationManager& getAnimationManager()
     {
