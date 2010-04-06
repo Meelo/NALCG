@@ -38,10 +38,10 @@ void ViewFrameListener::moveLights(const Real& timeSinceLastFrame)
     double lightX = sin(mTime / 2.0) * 5200;
     double lightZ = cos(mTime / 2.0) * 5200;
     Light* light = mSceneMgr->getLight("Blue");
-    //light->setPosition(-lightX, 2500, -lightZ);
+    light->setPosition(-lightX, 2500, -lightZ);
 
     light = mSceneMgr->getLight("Yellow");
-    //light->setPosition(lightX, 2500, lightZ);
+    light->setPosition(lightX, 2500, lightZ);
 }
 
 void ViewFrameListener::playOpeningAnimation(const Real& timeSinceLastFrame)
