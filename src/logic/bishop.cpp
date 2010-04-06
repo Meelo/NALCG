@@ -20,7 +20,7 @@ std::vector<std::size_t> Bishop::getValidMoves(std::size_t location, const std::
     std::size_t x = 0, y = 0;
     ChessBoard::getCoordinates(location, x, y);
 
-    for (std::size_t i = 0; X_DIRECTIONS[i] != 0 && Y_DIRECTIONS[i] != 0; ++i)
+    for (std::size_t i = 0; (X_DIRECTIONS[i] != 0 || Y_DIRECTIONS[i] != 0); ++i)
     {
         std::size_t location = ChessBoard::getPosition(x + X_DIRECTIONS[i],
             y + Y_DIRECTIONS[i]);
