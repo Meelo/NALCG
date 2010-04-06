@@ -70,6 +70,8 @@ public:
 
     // Methods
     static std::vector<Square> createBoard();
+    virtual std::vector<std::size_t> getValidMoves(std::size_t location) const;
+
     static bool isUnderAttack(std::size_t location,
         const std::vector<Square>& squares, std::size_t ignoreAt = BOARD_SIZE);
 
@@ -98,6 +100,7 @@ protected:
     // Methods
     virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const;
     virtual void promote(std::size_t location, unsigned int promoteTo);
+    std::size_t findKing(Colour colour) const;
 };
 
 #endif // _NALCG_CHESS_BOARD_H_

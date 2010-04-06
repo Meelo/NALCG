@@ -18,7 +18,7 @@ King::King(const Colour& colour) : Piece(colour, "King",
 }
 
 std::vector<std::size_t> King::getValidMoves(std::size_t location,
-    const std::vector<Square>& squares) const
+    const std::vector<Square>& squares, std::size_t protect) const
 {
     std::vector<std::size_t> validMoves;
 

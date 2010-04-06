@@ -41,15 +41,6 @@ Board::~Board()
 
 // public
 
-std::vector<std::size_t> Board::getValidMoves(std::size_t location)
-{
-    if (location >= squares.size()) { return std::vector<std::size_t>(); }
-    Piece* piece = squares.at(location).getPiece();
-    if (!piece) { return std::vector<std::size_t>(); }
-
-    return piece->getValidMoves(location, squares);
-}
-
 std::vector<std::size_t> Board::getValidMoves(std::size_t x, std::size_t y)
 {
     return getValidMoves(getPosition(x, y));
@@ -194,7 +185,7 @@ bool Board::isMoveValid(std::size_t moveFrom, std::size_t moveTo,
     Piece* piece = squares.at(moveFrom).getPiece();
     if (piece)
     {
-        std::vector<std::size_t> validMoves = piece->getValidMoves(moveFrom, squares);
+        std::vector<std::size_t> validMoves = getValidMoves(moveFrom);
         bool found = false;
         for (std::size_t i = 0; i < validMoves.size(); ++i)
         {

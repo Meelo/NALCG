@@ -14,7 +14,7 @@ Queen::Queen(const Colour& colour) : Piece(colour, "Queen",
 }
 
 std::vector<std::size_t> Queen::getValidMoves(std::size_t location,
-    const std::vector<Square>& squares) const
+    const std::vector<Square>& squares, std::size_t protect) const
 {
     std::vector<std::size_t> validMoves;
 
