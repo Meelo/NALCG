@@ -149,6 +149,7 @@ bool BufferedInputHandler::mousePressed(const OIS::MouseEvent& arg, OIS::MouseBu
     {
         return true;
     }
+
     if (CEGUI::WindowManager::getSingleton().getWindow("View/Choose queenButton")->isVisible())
     {
         mView->setChooseButtonsVisibility(false);

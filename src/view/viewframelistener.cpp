@@ -38,10 +38,10 @@ void ViewFrameListener::moveLights(const Real& timeSinceLastFrame)
     double lightX = sin(mTime / 2.0) * 5200;
     double lightZ = cos(mTime / 2.0) * 5200;
     Light* light = mSceneMgr->getLight("Blue");
-    light->setPosition(-lightX, 2500, -lightZ);
+    //light->setPosition(-lightX, 2500, -lightZ);
 
     light = mSceneMgr->getLight("Yellow");
-    light->setPosition(lightX, 2500, lightZ);
+    //light->setPosition(lightX, 2500, lightZ);
 }
 
 void ViewFrameListener::playOpeningAnimation(const Real& timeSinceLastFrame)
@@ -54,7 +54,14 @@ void ViewFrameListener::playOpeningAnimation(const Real& timeSinceLastFrame)
         if (!mCreated && mTime > 2)
         {
             mSceneMgr->getSceneNode("ground")->setVisible(true);
-            CEGUI::MouseCursor::getSingleton().setVisible(true);
+
+#if OGRE_PLATFORM == PLATFORM_WIN32 || OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+            if (mWindow->isFullScreen())
+#endif
+            {
+                CEGUI::MouseCursor::getSingleton().setVisible(true);
+            }
+
             mSceneMgr->setSkyDome(true, "Sky", 10, 4);
             mCreated = true;
         }
