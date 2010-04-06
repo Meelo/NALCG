@@ -70,6 +70,8 @@ public:
 
     // Methods
     static std::vector<Square> createBoard();
+    static bool isUnderAttack(std::size_t location,
+        const std::vector<Square>& squares, std::size_t ignoreAt = BOARD_SIZE);
 
     // Getters
     static bool getCoordinates(std::size_t index, std::size_t& column, std::size_t& row);
@@ -79,8 +81,19 @@ public:
 
 protected:
     // Constants
+    static const int RECTANGLE_DIRECTIONS_X[];
+    static const int RECTANGLE_DIRECTIONS_Y[];
+    static const int DIAGONAL_DIRECTIONS_X[];
+    static const int DIAGONAL_DIRECTIONS_Y[];
+    static const int KNIGHT_DIRECTIONS_X[];
+    static const int KNIGHT_DIRECTIONS_Y[];
 
-    // Members
+    // Methods
+    static bool isBishop(char symbol);
+    static bool isRook(char symbol);
+    static bool isKnight(char symbol);
+    static bool isQueen(char symbol);
+    static bool areOppositeColour(char symbol1, char symbol2);
 
     // Methods
     virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const;

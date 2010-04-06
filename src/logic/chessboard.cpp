@@ -140,6 +140,117 @@ std::vector<Square> ChessBoard::createBoard()
     return squares;
 }
 
+// static
+bool ChessBoard::isUnderAttack(std::size_t location,
+    const std::vector<Square>& squares, std::size_t ignoreAt)
+{
+    if (!squares.at(location).hasPiece())
+    {
+        return false;
+    }
+    char symbol = squares.at(location).getSymbolOfPiece();
+
+    std::size_t x = 0, y = 0;
+    getCoordinates(location, x, y);
+
+    for (std::size_t i = 0;
+        (RECTANGLE_DIRECTIONS_X[i] != 0 || RECTANGLE_DIRECTIONS_Y[i] != 0);
+        ++i)
+    {
+        std::size_t newLocation = getPosition(x + RECTANGLE_DIRECTIONS_X[i],
+            y + RECTANGLE_DIRECTIONS_Y[i]);
+
+        while (newLocation < squares.size() )
+        {
+            char currentPiece = squares.at(newLocation).getSymbolOfPiece();
+            if (newLocation != ignoreAt && currentPiece != EMPTY_SYMBOL)
+            {
+                if (!areOppositeColour(symbol, currentPiece))
+                {
+                    // Found allied
+                    break;
+                }
+                else if (isRook(currentPiece) || isQueen(currentPiece))
+                {
+                    // found opponent rook or queen.
+                    return true;
+                }
+                else
+                {
+                    // found opponent which can't attack rectangly.
+                    break;
+                }
+            }
+
+            std::size_t x1 = x, y1 = y;
+            getCoordinates(newLocation, x1, y1);
+            newLocation = getPosition(x1 + RECTANGLE_DIRECTIONS_X[i],
+                y1 + RECTANGLE_DIRECTIONS_Y[i]);
+        }
+    }
+
+    for (std::size_t i = 0;
+        (DIAGONAL_DIRECTIONS_X[i] != 0 || DIAGONAL_DIRECTIONS_Y[i] != 0);
+        ++i)
+    {
+        std::size_t newLocation = getPosition(x + DIAGONAL_DIRECTIONS_X[i],
+            y + DIAGONAL_DIRECTIONS_Y[i]);
+
+        while (newLocation < squares.size() )
+        {
+            char currentPiece = squares.at(newLocation).getSymbolOfPiece();
+            if (newLocation != ignoreAt && currentPiece != EMPTY_SYMBOL)
+            {
+                if (!areOppositeColour(symbol, currentPiece))
+                {
+                    // Found allied
+                    break;
+                }
+                else if (isBishop(currentPiece) || isQueen(currentPiece))
+                {
+                    // found opponent bishop or queen.
+                    return true;
+                }
+                else
+                {
+                    // found opponent which can't attack diagonally.
+                    break;
+                }
+            }
+
+            std::size_t x1 = x, y1 = y;
+            getCoordinates(newLocation, x1, y1);
+            newLocation = getPosition(x1 + DIAGONAL_DIRECTIONS_X[i],
+                y1 + DIAGONAL_DIRECTIONS_Y[i]);
+        }
+    }
+
+    for (std::size_t i = 0;
+        (KNIGHT_DIRECTIONS_X[i] != 0 || KNIGHT_DIRECTIONS_Y[i] != 0);
+        ++i)
+    {
+        std::size_t newLocation = getPosition(x + KNIGHT_DIRECTIONS_X[i],
+            y + KNIGHT_DIRECTIONS_Y[i]);
+
+        if (newLocation < squares.size() )
+        {
+            char currentPiece = squares.at(newLocation).getSymbolOfPiece();
+            if (newLocation == ignoreAt)
+            {
+                continue;
+            }
+            else if (areOppositeColour(symbol, currentPiece) &&
+                isKnight(currentPiece))
+            {
+                // found enemy knight.
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 bool ChessBoard::getCoordinates(std::size_t index, std::size_t& column,
     std::size_t& row)
 {
@@ -188,3 +299,43 @@ void ChessBoard::promote(std::size_t location, unsigned int promoteTo)
         squares.at(location).addPiece(newPiece);
     }
 }
+
+bool ChessBoard::isBishop(char symbol)
+{
+    // symbol | (1 << 5) lowercases the symbol if it was uppercase.
+    return ((symbol | (1 << 5)) == BLACK_BISHOP_SYMBOL);
+}
+
+bool ChessBoard::isRook(char symbol)
+{
+    // symbol | (1 << 5) lowercases the symbol if it was uppercase.
+    return ((symbol | (1 << 5)) == BLACK_ROOK_SYMBOL);
+}
+
+bool ChessBoard::isKnight(char symbol)
+{
+    // symbol | (1 << 5) lowercases the symbol if it was uppercase.
+    return ((symbol | (1 << 5)) == BLACK_KNIGHT_SYMBOL);
+}
+
+bool ChessBoard::isQueen(char symbol)
+{
+    // symbol | (1 << 5) lowercases the symbol if it was uppercase.
+    return ((symbol | (1 << 5)) == BLACK_QUEEN_SYMBOL);
+}
+
+bool ChessBoard::areOppositeColour(char symbol1, char symbol2)
+{
+    char toUpperCaseBit = 1 << 5;
+    // if toUpperCaseBit is set or unset in both, then they are the same colour
+    // otherwise they are opposite colours.
+    return ((symbol1 & toUpperCaseBit) != (symbol2 & toUpperCaseBit));
+}
+
+// private constants
+const int ChessBoard::RECTANGLE_DIRECTIONS_X[] = { 1, -1, 0,  0, 0 };
+const int ChessBoard::RECTANGLE_DIRECTIONS_Y[] = { 0,  0, 1, -1, 0 };
+const int ChessBoard::DIAGONAL_DIRECTIONS_X[] = {  1, -1, 1, -1, 0 };
+const int ChessBoard::DIAGONAL_DIRECTIONS_Y[] = { -1, -1, 1,  1, 0 };
+const int ChessBoard::KNIGHT_DIRECTIONS_X[] = { -1,  1, -2,  2, -1, 1, -2, 2, 0 };
+const int ChessBoard::KNIGHT_DIRECTIONS_Y[] = { -2, -2, -1, -1,  2, 2,  1, 1, 0 };
