@@ -14,7 +14,7 @@ Knight::Knight(const Colour& colour) : Piece(colour, "Knight",
 }
 
 std::vector<std::size_t> Knight::getValidMoves(std::size_t location,
-    const std::vector<Square>& squares) const
+    const std::vector<Square>& squares, std::size_t protect) const
 {
     std::vector<std::size_t> validMoves;
 

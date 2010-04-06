@@ -26,7 +26,8 @@ public:
     // Methods
 
     // Getters
-    std::vector<std::size_t> getValidMoves(std::size_t location, const std::vector<Square>& squares) const;
+    virtual std::vector<std::size_t> getValidMoves(std::size_t location,
+        const std::vector<Square>& squares, std::size_t protect = ~0) const;
 
     // Setters
 };

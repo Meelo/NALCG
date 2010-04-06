@@ -251,6 +251,20 @@ bool ChessBoard::isUnderAttack(std::size_t location,
     return false;
 }
 
+std::vector<std::size_t> ChessBoard::getValidMoves(std::size_t location) const
+{
+    if (location >= squares.size()) { return std::vector<std::size_t>(); }
+    Piece* piece = squares.at(location).getPiece();
+    if (!piece) { return std::vector<std::size_t>(); }
+
+    Colour colour = piece->getColour();
+    std::size_t kingLocation = findKing(colour);
+    if (kingLocation >= squares.size()) { return std::vector<std::size_t>(); }
+
+    std::cout << "kinglocation " << kingLocation << " squars " << squares.size() << std::endl;
+    return piece->getValidMoves(location, squares, kingLocation);
+}
+
 bool ChessBoard::getCoordinates(std::size_t index, std::size_t& column,
     std::size_t& row)
 {
@@ -298,6 +312,23 @@ void ChessBoard::promote(std::size_t location, unsigned int promoteTo)
         delete squares.at(location).removePiece();
         squares.at(location).addPiece(newPiece);
     }
+}
+
+std::size_t ChessBoard::findKing(Colour colour) const
+{
+    char kingSymbol = (colour == WHITE) ? WHITE_KING_SYMBOL : BLACK_KING_SYMBOL;
+
+    for (std::size_t i = 0; i < squares.size(); ++i)
+    {
+        if (squares.at(i).getSymbolOfPiece() == kingSymbol)
+        {
+            // king found, return its index.
+            return i;
+        }
+    }
+
+    // king not found, return out of bounds value.
+    return squares.size();
 }
 
 bool ChessBoard::isBishop(char symbol)

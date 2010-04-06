@@ -15,7 +15,7 @@ Rook::Rook(const Colour& colour) : Piece(colour, "Rook",
 }
 
 std::vector<std::size_t> Rook::getValidMoves(std::size_t location,
-    const std::vector<Square>& squares) const
+    const std::vector<Square>& squares, std::size_t protect) const
 {
     std::vector<std::size_t> validMoves;
 

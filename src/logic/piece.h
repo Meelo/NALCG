@@ -32,7 +32,7 @@ public:
 
     // Methods
     virtual std::vector<std::size_t> getValidMoves(std::size_t location,
-        const std::vector<Square>& square) const = 0;
+        const std::vector<Square>& squares, std::size_t protect = ~0) const = 0;
     virtual void specialMoveBehaviour(std::size_t from, std::size_t to);
     virtual void resetRoundSpecificState() { }
     virtual bool trySpecialMove(std::size_t& fromX, std::size_t& fromY,
