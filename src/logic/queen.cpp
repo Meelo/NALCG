@@ -13,10 +13,13 @@ Queen::Queen(const Colour& colour) : Piece(colour, "Queen",
 
 }
 
-std::vector<std::size_t> Queen::getValidMoves(std::size_t location,
+std::vector<std::size_t> Queen::getValidMoves(std::size_t ownLocation,
     const std::vector<Square>& squares, std::size_t protect) const
 {
     std::vector<std::size_t> validMoves;
+    std::size_t location = ownLocation;
+    std::size_t limit = squares.size();
+    bool isProtecting = protect < limit && squares.at(protect).hasPiece();
 
     std::size_t x = 0, y = 0;
     ChessBoard::getCoordinates(location, x, y);
@@ -26,9 +29,13 @@ std::vector<std::size_t> Queen::getValidMoves(std::size_t location,
         std::size_t location = ChessBoard::getPosition(x + X_DIRECTIONS[i],
             y + Y_DIRECTIONS[i]);
 
-        while (location < squares.size() && isEmptyOrEdible(location, squares))
+        while (location < limit && isEmptyOrEdible(location, squares))
         {
-            validMoves.push_back(location);
+            if (!isProtecting ||
+                !ChessBoard::isUnderAttack(protect, squares, ownLocation, location))
+            {
+                validMoves.push_back(location);
+            }
 
             // Don't go any further when edible target has been found.
             if (isOppositeColour(squares.at(location).getColourOfPiece())) break;
