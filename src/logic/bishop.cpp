@@ -31,9 +31,6 @@ std::vector<std::size_t> Bishop::getValidMoves(std::size_t ownLocation,
 
         while (location < limit && isEmptyOrEdible(location, squares))
         {
-            std::cout << std::endl << "isUnderAttack(" << protect << ", squares, "
-                << ownLocation << ", " << location << "); " << ChessBoard::isUnderAttack(protect,
-                squares, ownLocation, location) << std::endl << std::endl;
             if (!isProtecting ||
                 !ChessBoard::isUnderAttack(protect, squares, ownLocation, location))
             {
