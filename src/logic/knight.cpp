@@ -13,10 +13,13 @@ Knight::Knight(const Colour& colour) : Piece(colour, "Knight",
 
 }
 
-std::vector<std::size_t> Knight::getValidMoves(std::size_t location,
+std::vector<std::size_t> Knight::getValidMoves(std::size_t ownLocation,
     const std::vector<Square>& squares, std::size_t protect) const
 {
     std::vector<std::size_t> validMoves;
+    std::size_t location = ownLocation;
+    std::size_t limit = squares.size();
+    bool isProtecting = protect < limit && squares.at(protect).hasPiece();
 
     std::size_t x = 0, y = 0;
     ChessBoard::getCoordinates(location, x, y);
@@ -26,9 +29,13 @@ std::vector<std::size_t> Knight::getValidMoves(std::size_t location,
         std::size_t location = ChessBoard::getPosition(x + X_DIRECTIONS[i],
             y + Y_DIRECTIONS[i]);
 
-        if (location < squares.size() && isEmptyOrEdible(location, squares))
+        if (location < limit && isEmptyOrEdible(location, squares))
         {
-            validMoves.push_back(location);
+            if (!isProtecting ||
+                !ChessBoard::isUnderAttack(protect, squares, ownLocation, location))
+            {
+                validMoves.push_back(location);
+            }
         }
     }
 
