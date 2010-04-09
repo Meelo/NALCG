@@ -141,13 +141,34 @@ std::vector<Square> ChessBoard::createBoard()
 }
 
 // static
+
+// Check if piece in 'location' is threatened by enemy pieces.
+// You can emulate a movement by passing moveFrom and moveTo -parameters.
+// If either of them are larger than squares.size(), both of the parameters
+// will be ignored.
+// If both parameters are the same,
+// a piece will be ignored at 'moveFrom'-location.
 bool ChessBoard::isUnderAttack(std::size_t location,
-    const std::vector<Square>& squares, std::size_t ignoreAt)
+    const std::vector<Square>& squares,
+    std::size_t moveFrom, std::size_t moveTo)
 {
-    if (!squares.at(location).hasPiece())
+    std::size_t limit = squares.size();
+    if (location >= limit || !squares.at(location).hasPiece())
     {
         return false;
     }
+    if (moveFrom >= limit || moveTo >= limit)
+    {
+        // No piece shall be ignored or 'moved'.
+        moveFrom = ~0;
+        moveTo = ~0;
+    }
+    else if (moveFrom == moveTo)
+    {
+        // Only moveFrom shall be used.
+        moveTo = ~0;
+    }
+
     char symbol = squares.at(location).getSymbolOfPiece();
 
     std::size_t x = 0, y = 0;
@@ -160,10 +181,11 @@ bool ChessBoard::isUnderAttack(std::size_t location,
         std::size_t newLocation = getPosition(x + RECTANGLE_DIRECTIONS_X[i],
             y + RECTANGLE_DIRECTIONS_Y[i]);
 
-        while (newLocation < squares.size() )
+        while (newLocation < limit )
         {
+            if (newLocation == moveTo) { break; }
             char currentPiece = squares.at(newLocation).getSymbolOfPiece();
-            if (newLocation != ignoreAt && currentPiece != EMPTY_SYMBOL)
+            if (newLocation != moveFrom && currentPiece != EMPTY_SYMBOL)
             {
                 if (!areOppositeColour(symbol, currentPiece))
                 {
@@ -196,10 +218,12 @@ bool ChessBoard::isUnderAttack(std::size_t location,
         std::size_t newLocation = getPosition(x + DIAGONAL_DIRECTIONS_X[i],
             y + DIAGONAL_DIRECTIONS_Y[i]);
 
-        while (newLocation < squares.size() )
+        while (newLocation < limit )
         {
+
+            if (newLocation == moveTo) { break; }
             char currentPiece = squares.at(newLocation).getSymbolOfPiece();
-            if (newLocation != ignoreAt && currentPiece != EMPTY_SYMBOL)
+            if (newLocation != moveFrom && currentPiece != EMPTY_SYMBOL)
             {
                 if (!areOppositeColour(symbol, currentPiece))
                 {
@@ -232,10 +256,10 @@ bool ChessBoard::isUnderAttack(std::size_t location,
         std::size_t newLocation = getPosition(x + KNIGHT_DIRECTIONS_X[i],
             y + KNIGHT_DIRECTIONS_Y[i]);
 
-        if (newLocation < squares.size() )
+        if (newLocation < limit )
         {
             char currentPiece = squares.at(newLocation).getSymbolOfPiece();
-            if (newLocation == ignoreAt)
+            if (newLocation == moveFrom || newLocation == moveTo)
             {
                 continue;
             }
@@ -261,7 +285,7 @@ std::vector<std::size_t> ChessBoard::getValidMoves(std::size_t location) const
     std::size_t kingLocation = findKing(colour);
     if (kingLocation >= squares.size()) { return std::vector<std::size_t>(); }
 
-    std::cout << "kinglocation " << kingLocation << " squars " << squares.size() << std::endl;
+    //~ std::cout << "kinglocation " << kingLocation << " squars " << squares.size() << std::endl;
     return piece->getValidMoves(location, squares, kingLocation);
 }
 
@@ -334,25 +358,25 @@ std::size_t ChessBoard::findKing(Colour colour) const
 bool ChessBoard::isBishop(char symbol)
 {
     // symbol | (1 << 5) lowercases the symbol if it was uppercase.
-    return ((symbol | (1 << 5)) == BLACK_BISHOP_SYMBOL);
+    return ((symbol | (1 << 5)) == WHITE_BISHOP_SYMBOL);
 }
 
 bool ChessBoard::isRook(char symbol)
 {
     // symbol | (1 << 5) lowercases the symbol if it was uppercase.
-    return ((symbol | (1 << 5)) == BLACK_ROOK_SYMBOL);
+    return ((symbol | (1 << 5)) == WHITE_ROOK_SYMBOL);
 }
 
 bool ChessBoard::isKnight(char symbol)
 {
     // symbol | (1 << 5) lowercases the symbol if it was uppercase.
-    return ((symbol | (1 << 5)) == BLACK_KNIGHT_SYMBOL);
+    return ((symbol | (1 << 5)) == WHITE_KNIGHT_SYMBOL);
 }
 
 bool ChessBoard::isQueen(char symbol)
 {
     // symbol | (1 << 5) lowercases the symbol if it was uppercase.
-    return ((symbol | (1 << 5)) == BLACK_QUEEN_SYMBOL);
+    return ((symbol | (1 << 5)) == WHITE_QUEEN_SYMBOL);
 }
 
 bool ChessBoard::areOppositeColour(char symbol1, char symbol2)

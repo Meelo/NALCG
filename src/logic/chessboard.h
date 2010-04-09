@@ -73,7 +73,8 @@ public:
     virtual std::vector<std::size_t> getValidMoves(std::size_t location) const;
 
     static bool isUnderAttack(std::size_t location,
-        const std::vector<Square>& squares, std::size_t ignoreAt = BOARD_SIZE);
+        const std::vector<Square>& squares,
+        std::size_t moveFrom = BOARD_SIZE, std::size_t moveTo = BOARD_SIZE);
 
     // Getters
     static bool getCoordinates(std::size_t index, std::size_t& column, std::size_t& row);
