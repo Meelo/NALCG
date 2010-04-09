@@ -97,14 +97,13 @@ bool KingMovementAnimation::animate(const Real& timeSinceLastFrame)
 
 void KingMovementAnimation::createBlasts()
 {
-    // Create a bloodstorm
     ParticleSystem* pSys = mSceneMgr->createParticleSystem(
         nextName(), "Effects/EnergyBlast");
     mParticleNode = mAnimatedNode->createChildSceneNode();
-    //const Vector3& position = pieceNode->getPosition();
+
     mParticleNode->translate(0, 160, 60);
     mParticleNode->attachObject(pSys);
     ParticleEmitter *emitter = pSys->getEmitter(0);
-    //emitter->setTimeToLive(mAttackDuration + 1);
+
     pSys->setParticleQuota(emitter->getEmissionRate() * mAttackDuration);
 }

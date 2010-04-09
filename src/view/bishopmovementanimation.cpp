@@ -69,6 +69,6 @@ void BishopMovementAnimation::createBlasts()
     mParticleNode->translate(-90, 270, 90);
     mParticleNode->attachObject(pSys);
     ParticleEmitter *emitter = pSys->getEmitter(0);
-    //emitter->setTimeToLive(mAttackDuration + 1);
+
     pSys->setParticleQuota(emitter->getEmissionRate() * mAttackDuration);
 }
