@@ -69,7 +69,7 @@ void TestBishop::whiteValidMoves_data()
                                         PieceHolder(39, new Bishop(BLACK))};
     PieceHolder createUnitsAt08[] = {   PieceHolder(35, new Bishop(WHITE))};
     PieceHolder createUnitsAt09[] = {   PieceHolder(35, new Bishop(WHITE)),
-                                        PieceHolder(53, new Bishop(BLACK))};
+                                        PieceHolder(53, new Rook(BLACK))};
 
     // These are the expected valid move indices.
     std::size_t case01[] = { };
