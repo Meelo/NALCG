@@ -426,12 +426,7 @@ void View::createScene()
     mSceneMgr->setSkyDome(true, "Sky");
     mSceneMgr->setSkyDome(false, "Sky");
 
-    SceneNode* invalidMoveNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("InvalidMove");
-    Entity* ent = mSceneMgr->createEntity("InvalidMove", "invalid_move.mesh");
-    ent->setQueryFlags(0);
-    invalidMoveNode->attachObject(ent);
-    invalidMoveNode->setVisible(false);
-
+    ParticleSystem* pSys = mSceneMgr->createParticleSystem("Selection", "Effects/Selection");
 }
 
 
@@ -514,6 +509,16 @@ void View::createBoard(const Board* board)
             ent->setVisible(false);
         }
     }
+    SceneNode* invalidMoveNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("InvalidMove");
+    Entity* ent = mSceneMgr->createEntity("InvalidMove", "invalid_move.mesh");
+    ent->setQueryFlags(0);
+    invalidMoveNode->attachObject(ent);
+    invalidMoveNode->setVisible(false);
+
+    SceneNode* selectionNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Selection");
+    selectionNode->attachObject(mSceneMgr->getParticleSystem("Selection"));
+    selectionNode->setVisible(false);
+
     mListener->setCanShowSelectablePieces(true);
     mListener->clearSelectedObject();
 }
