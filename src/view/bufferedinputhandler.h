@@ -17,7 +17,7 @@ public:
         : mLMouseDown(false), mRMouseDown(false), mWindow(window), mCamera(camera),
         mSceneMgr(sceneMgr), mRaySceneQuery(sceneMgr->createRayQuery(Ray())),
         mSelectedObject(0), mDirection(Vector3::ZERO), mAnimationManager(animationManager),
-        mView(view), mSafeMode(true), mQueueAnimations(false)
+        mView(view), mSafeMode(true), mQueueAnimations(false), mCanShowSelectablePieces(true)
     {
     }
 
@@ -37,6 +37,19 @@ public:
     virtual void move(int fromX, int fromY, int toX, int toY,
         bool continuous = false, unsigned int promoteTo = 0);
     virtual void animationFinished();
+    virtual bool showSelectablePieces();
+    virtual bool canShowSelectablePieces()
+    {
+        return mCanShowSelectablePieces;
+    }
+    void setCanShowSelectablePieces(bool canShow)
+    {
+        mCanShowSelectablePieces = canShow;
+    }
+    virtual void clearSelectedObject()
+    {
+        mSelectedObject = 0;
+    }
 
 protected:
     bool mLMouseDown, mRMouseDown;     // True if the mouse buttons are down
@@ -52,6 +65,7 @@ protected:
     static const int CAMERA_MOVEMENT_SPEED = 500;
     std::deque<std::vector<int> > mAnimationQueue;
     bool mQueueAnimations;
+    bool mCanShowSelectablePieces;
 
     virtual void onLeftPressed(const OIS::MouseEvent& arg);
     virtual SceneNode* findPieceAbove(Node* squareNode) const;
@@ -59,6 +73,7 @@ protected:
     virtual void onRightPressed(const OIS::MouseEvent& arg);
     virtual void onRightReleased(const OIS::MouseEvent& arg);
     virtual bool toggleMovementPossibilities();
+    virtual bool resetSquareIndicators();
 };
 
 #endif // _NALCG_BUFFERED_INPUT_HANDLER_H_

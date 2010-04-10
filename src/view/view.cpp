@@ -496,6 +496,8 @@ void View::createBoard(const Board* board)
             ent->setVisible(false);
         }
     }
+    mListener->setCanShowSelectablePieces(true);
+    mListener->clearSelectedObject();
 }
 
 std::string View::getMeshName(char symbol) const

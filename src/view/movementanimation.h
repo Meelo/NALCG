@@ -4,7 +4,6 @@
 #include "genericanimation.h"
 #include "animationmanager.h"
 
-class BufferedInputHandler;
 class MovementAnimation : public GenericAnimation
 {
 public:

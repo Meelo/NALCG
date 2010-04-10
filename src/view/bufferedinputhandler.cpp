@@ -231,7 +231,6 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 
             if (mSelectedObject)
             {
-                toggleMovementPossibilities();
                 SceneNode* targetNode = itr->movable->getParentSceneNode();
                 SceneNode* pieceNode = findPieceAbove(mSelectedObject);
                 if (mSelectedObject != targetNode)
@@ -278,6 +277,8 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                 ent->setMaterialName("board/square/move");
                 ent->setVisible(false);
                 mSelectedObject = 0;
+                resetSquareIndicators();
+                mCanShowSelectablePieces = true;
             }
             else
             {
@@ -285,6 +286,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                 SceneNode* pieceNode = findPieceAbove(squareNode);
                 if (pieceNode)
                 {
+                    resetSquareIndicators();
                     mSelectedObject = squareNode;
                     mSelectedObject->showBoundingBox(true);
                     Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + " s");
@@ -365,6 +367,65 @@ void BufferedInputHandler::animationFinished()
         moveOrder.at(4) != 0, moveOrder.at(5));
 }
 
+bool BufferedInputHandler::resetSquareIndicators()
+{
+    Middleman* middleman = mView->getMiddleman();
+    if (!middleman)
+    {
+        return false;
+    }
+    for (int i = 0; i < mView->getBoardWidth(); i++)
+    {
+        for (int j = 0; j < mView->getBoardHeight(); j++)
+        {
+            std::ostringstream name;
+            name << i << " " << j << " s";
+            Entity* ent = mSceneMgr->getEntity(name.str());
+
+            ent->setVisible(false);
+            ent->setMaterialName("board/square/move");
+        }
+    }
+    return true;
+}
+
+bool BufferedInputHandler::showSelectablePieces()
+{
+    Middleman* middleman = mView->getMiddleman();
+    if (!middleman)
+    {
+        return false;
+    }
+    mCanShowSelectablePieces = false;
+
+    for (int i = 0; i < mView->getBoardWidth(); i++)
+    {
+        for (int j = 0; j < mView->getBoardHeight(); j++)
+        {
+            std::ostringstream name;
+            name << i << " " << j << " s";
+            Entity* ent = mSceneMgr->getEntity(name.str());
+
+            if (ent->getParentNode())
+            {
+                SceneNode* pieceNode = findPieceAbove(ent->getParentNode()->getParent());
+                if (pieceNode)
+                {
+                    bool whitePiece = pieceNode->getName().find("white") != std::string::npos;
+                    bool whiteTurn = mView->isWhiteTurn();
+                    if ((whitePiece && whiteTurn || !whitePiece && !whiteTurn)
+                        && middleman->getValidMovesAt(i, j).size() > 0)
+                    {
+                        ent->setVisible(true);
+                        ent->setMaterialName("board/square/selected");
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
 bool BufferedInputHandler::toggleMovementPossibilities()
 {
     Middleman* middleman = mView->getMiddleman();
@@ -388,13 +449,10 @@ bool BufferedInputHandler::toggleMovementPossibilities()
         std::ostringstream name;
         name << column << " " << row << " s";
         Entity* ent = mSceneMgr->getEntity(name.str());
-        ent->setVisible(!ent->isVisible());
-        if (ent->isVisible() && ent->getParentNode())
+        ent->setVisible(true);
+        if (ent->getParentNode() && findPieceAbove(ent->getParentNode()->getParent()))
         {
-            if (findPieceAbove(ent->getParentNode()->getParent()))
-            {
-                ent->setMaterialName("board/square/attack");
-            }
+            ent->setMaterialName("board/square/attack");
         }
 
     }

@@ -17,6 +17,11 @@ bool ViewFrameListener::frameStarted(const FrameEvent& evt)
     playOpeningAnimation(evt.timeSinceLastFrame);
 
     mAnimationManager.executeAnimations(evt.timeSinceLastFrame);
+    if (mHandler.canShowSelectablePieces() && !mAnimationManager.animationsRunning())
+    {
+        mHandler.showSelectablePieces();
+    }
+
     return !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
 }
 
@@ -35,6 +40,10 @@ void ViewFrameListener::flashMovableSquares(const Real& timeSinceLastFrame)
 
     mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/attack");
     mat->setDiffuse(1.0, 1.0, 0, sin(mTime * 3) * 0.25 + 0.5);
+
+    mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/selected");
+    mat->setDiffuse(0, 1.0, 1.0, sin(mTime * 3) * 0.25 + 0.5);
+        //std::vector<std::size_t> getValidMovesAt(std::size_t x, std::size_t y) const;
 }
 
 void ViewFrameListener::moveLights(const Real& timeSinceLastFrame)

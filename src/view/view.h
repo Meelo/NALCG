@@ -93,18 +93,18 @@ public:
     virtual ~View();
 
 protected:
-    Root *mRoot;
-    OIS::Keyboard *mKeyboard;
-    OIS::Mouse *mMouse;
-    OIS::InputManager *mInputManager;
-    CEGUI::OgreCEGUIRenderer *mRenderer;
-    CEGUI::System *mSystem;
-    ViewFrameListener *mListener;
-    SceneManager *mSceneMgr;
-    Camera *mCamera;
-    RenderWindow *mWindow;
-    Frustum *mDecalFrustum;
-    Frustum *mFilterFrustum;
+    Root* mRoot;
+    OIS::Keyboard* mKeyboard;
+    OIS::Mouse* mMouse;
+    OIS::InputManager* mInputManager;
+    CEGUI::OgreCEGUIRenderer* mRenderer;
+    CEGUI::System* mSystem;
+    ViewFrameListener* mListener;
+    SceneManager* mSceneMgr;
+    Camera* mCamera;
+    RenderWindow* mWindow;
+    Frustum* mDecalFrustum;
+    Frustum* mFilterFrustum;
     SceneNode *mProjectorNode;
     std::size_t mBoardWidth;
     std::size_t mBoardHeight;
