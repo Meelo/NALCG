@@ -29,8 +29,12 @@ bool ViewFrameListener::frameEnded(const FrameEvent& evt)
 void ViewFrameListener::flashMovableSquares(const Real& timeSinceLastFrame)
 {
     mTime += timeSinceLastFrame;
+
     MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/move");
     mat->setDiffuse(0, 1.0, 0, sin(mTime * 3) * 0.25 + 0.5);
+
+    mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/attack");
+    mat->setDiffuse(1.0, 1.0, 0, sin(mTime * 3) * 0.25 + 0.5);
 }
 
 void ViewFrameListener::moveLights(const Real& timeSinceLastFrame)
