@@ -43,7 +43,7 @@ void ViewFrameListener::flashMovableSquares(const Real& timeSinceLastFrame)
     mat->setDiffuse(1.0, 1.0, 0, sin(mTime * 3) * 0.25 + 0.5);
 
     mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/selected");
-    mat->setDiffuse(0, 1.0, 1.0, sin(mTime * 3) * 0.25 + 0.5);
+    mat->setDiffuse(0, 1.0, 1.0, sin(mTime * 3) * 0.1 + 0.3);
 
     mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/invalid");
     mat->setDiffuse(1.0, 0, 0, sin(mTime * 3) * 0.25 + 0.5);
