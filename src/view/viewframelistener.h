@@ -40,6 +40,14 @@ public:
     {
         return mAnimationManager;
     }
+    void setCanShowSelectablePieces(bool canShow)
+    {
+        mHandler.setCanShowSelectablePieces(canShow);
+    }
+    virtual void clearSelectedObject()
+    {
+        mHandler.clearSelectedObject();
+    }
 
 protected:
     OIS::Keyboard* mKeyboard;
