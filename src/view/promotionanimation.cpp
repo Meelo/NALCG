@@ -69,7 +69,6 @@ void PromotionAnimation::createBlasts()
 
     mParticleNode->translate(0, 0, 0);
     mParticleNode->attachObject(pSys);
-    ParticleEmitter *emitter = pSys->getEmitter(0);
 
     pSys->fastForward(0.5);
 }

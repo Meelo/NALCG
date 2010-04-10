@@ -66,7 +66,7 @@ void PawnMovementAnimation::createBlasts()
     mParticleNode = mTargetPiece->createChildSceneNode();
     mParticleNode->translate(0, 1000, 0);
 
-    Entity* pacman = mSceneMgr->createEntity(nextName(), "pacman.mesh");
-    pacman->setQueryFlags(0);
-    mParticleNode->attachObject(pacman);
+    Entity* yellowBall = mSceneMgr->createEntity(nextName(), "yellow_ball.mesh");
+    yellowBall->setQueryFlags(0);
+    mParticleNode->attachObject(yellowBall);
 }

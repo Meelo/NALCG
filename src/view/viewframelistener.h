@@ -48,6 +48,10 @@ public:
     {
         mHandler.clearSelectedObject();
     }
+    virtual BufferedInputHandler* getHandler()
+    {
+        return &mHandler;
+    }
 
 protected:
     OIS::Keyboard* mKeyboard;

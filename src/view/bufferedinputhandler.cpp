@@ -219,7 +219,7 @@ void BufferedInputHandler::setMouseRay()
     mRaySceneQuery->setQueryMask(1 << 0);
 }
 
-void BufferedInputHandler::flagInvalidSquare()
+void BufferedInputHandler::highlightHoveredSquare()
 {
     resetSquareIndicators(true);
 
@@ -236,7 +236,7 @@ void BufferedInputHandler::flagInvalidSquare()
                 SceneNode* targetNode = itr->movable->getParentSceneNode();
                 Entity* ent = mSceneMgr->getEntity(targetNode->getName() + " s");
                 const std::string& materialName = ent->getSubEntity(0)->getMaterialName();
-                if (!ent->isVisible())
+                if (!ent->isVisible() && mMoveAssistanceLevel > 2)
                 {
                     ent->setMaterialName("board/square/invalid");
                     ent->setVisible(true);
@@ -330,11 +330,9 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                     resetSquareIndicators();
                     mSelectedObject = squareNode;
                     mSelectedObject->showBoundingBox(true);
-                    Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + " s");
-                    ent->setVisible(true);
-                    ent->setMaterialName("board/square/selected");
                     pieceNode->showBoundingBox(true);
-                    toggleMovementPossibilities();
+                    showMovementPossibilities();
+                    mCanShowSelectablePieces = false;
                 }
             }
             break;
@@ -484,8 +482,12 @@ bool BufferedInputHandler::showSelectablePieces()
     return true;
 }
 
-bool BufferedInputHandler::toggleMovementPossibilities()
+bool BufferedInputHandler::showMovementPossibilities()
 {
+    Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + " s");
+    ent->setVisible(true);
+    ent->setMaterialName("board/square/selected");
+
     Middleman* middleman = mView->getMiddleman();
     if (!middleman)
     {
@@ -548,3 +550,22 @@ void BufferedInputHandler::onRightReleased(const OIS::MouseEvent& arg)
 {
 }
 
+bool BufferedInputHandler::handleMoveAssistanceChanged(const CEGUI::EventArgs& e)
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* window = wmgr.getWindow("View/MoveAssistanceSpinner");
+    CEGUI::Spinner* spinner = static_cast<CEGUI::Spinner*>(window);
+    
+    mMoveAssistanceLevel = spinner->getCurrentValue() + 0.5;
+
+    resetSquareIndicators();
+    if (mSelectedObject)
+    {
+        showMovementPossibilities();
+    }
+    else
+    {
+        mCanShowSelectablePieces = true;
+    }
+    return true;
+}
