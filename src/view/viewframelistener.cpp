@@ -123,7 +123,7 @@ bool ViewFrameListener::handleAnimationSpeedChanged(const CEGUI::EventArgs& e)
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
     CEGUI::Window* text = wmgr.getWindow("View/Animation speed: 1xStaticText");
 
-    CEGUI::Window* window = wmgr.getWindow("View/AnimationSpeedSlider");
+    CEGUI::Window* window = wmgr.getWindow("View/AnimationSpeedHorizontalScrollbar");
     CEGUI::Scrollbar* scrollbar = static_cast<CEGUI::Scrollbar*>(window);
     float position = scrollbar->getScrollPosition();
     float multiplier = position;
