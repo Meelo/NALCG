@@ -207,16 +207,57 @@ void BufferedInputHandler::moveCamera(const Real& timeSinceLastFrame)
     }
 }
 
-void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
+void BufferedInputHandler::setMouseRay()
 {
     CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
 
-    Ray mouseRay = mCamera->getCameraToViewportRay(mousePos.d_x/arg.state.width, mousePos.d_y/arg.state.height);
+    Ray mouseRay = mCamera->getCameraToViewportRay(
+        mousePos.d_x/mWindow->getWidth(), mousePos.d_y/mWindow->getHeight());
 
     mRaySceneQuery->setRay(mouseRay);
     mRaySceneQuery->setSortByDistance(true);
     mRaySceneQuery->setQueryMask(1 << 0);
+}
 
+void BufferedInputHandler::flagInvalidSquare()
+{
+    resetSquareIndicators(true);
+
+    setMouseRay();
+    RaySceneQueryResult& result = mRaySceneQuery->execute();
+    RaySceneQueryResult::iterator itr;
+
+    for (itr = result.begin(); itr != result.end(); itr++)
+    {
+        if (itr->movable)
+        {
+            if (mSelectedObject)
+            {
+                SceneNode* targetNode = itr->movable->getParentSceneNode();
+                Entity* ent = mSceneMgr->getEntity(targetNode->getName() + " s");
+                const std::string& materialName = ent->getSubEntity(0)->getMaterialName();
+                if (!ent->isVisible())
+                {
+                    ent->setMaterialName("board/square/invalid");
+                    ent->setVisible(true);
+                }
+                else if (materialName == "board/square/move")
+                {
+                    ent->setMaterialName("board/square/target/move");
+                }
+                else if (materialName == "board/square/attack")
+                {
+                    ent->setMaterialName("board/square/target/attack");
+                }
+            }
+            break;
+        }
+    }
+}
+
+void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
+{
+    setMouseRay();
     RaySceneQueryResult& result = mRaySceneQuery->execute();
     RaySceneQueryResult::iterator itr;
 
@@ -367,7 +408,7 @@ void BufferedInputHandler::animationFinished()
         moveOrder.at(4) != 0, moveOrder.at(5));
 }
 
-bool BufferedInputHandler::resetSquareIndicators()
+bool BufferedInputHandler::resetSquareIndicators(bool onlyInvalidsAndTargets)
 {
     Middleman* middleman = mView->getMiddleman();
     if (!middleman)
@@ -382,8 +423,25 @@ bool BufferedInputHandler::resetSquareIndicators()
             name << i << " " << j << " s";
             Entity* ent = mSceneMgr->getEntity(name.str());
 
-            ent->setVisible(false);
-            ent->setMaterialName("board/square/move");
+            const std::string materialName = ent->getSubEntity(0)->getMaterialName();
+
+            if (!onlyInvalidsAndTargets)
+            {
+                ent->setVisible(false);
+                ent->setMaterialName("board/square/move");
+            }
+            else if (materialName == "board/square/invalid")
+            {
+                ent->setVisible(false);
+            }
+            else if (materialName == "board/square/target/move")
+            {
+                ent->setMaterialName("board/square/move");
+            }
+            else if (materialName == "board/square/target/attack")
+            {
+                ent->setMaterialName("board/square/attack");
+            }
         }
     }
     return true;

@@ -21,6 +21,7 @@ bool ViewFrameListener::frameStarted(const FrameEvent& evt)
     {
         mHandler.showSelectablePieces();
     }
+    mHandler.flagInvalidSquare();
 
     return !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
 }
@@ -43,7 +44,9 @@ void ViewFrameListener::flashMovableSquares(const Real& timeSinceLastFrame)
 
     mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/selected");
     mat->setDiffuse(0, 1.0, 1.0, sin(mTime * 3) * 0.25 + 0.5);
-        //std::vector<std::size_t> getValidMovesAt(std::size_t x, std::size_t y) const;
+
+    mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/invalid");
+    mat->setDiffuse(1.0, 0, 0, sin(mTime * 3) * 0.25 + 0.5);
 }
 
 void ViewFrameListener::moveLights(const Real& timeSinceLastFrame)

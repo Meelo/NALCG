@@ -38,6 +38,7 @@ public:
         bool continuous = false, unsigned int promoteTo = 0);
     virtual void animationFinished();
     virtual bool showSelectablePieces();
+    virtual void flagInvalidSquare();
     virtual bool canShowSelectablePieces()
     {
         return mCanShowSelectablePieces;
@@ -73,7 +74,8 @@ protected:
     virtual void onRightPressed(const OIS::MouseEvent& arg);
     virtual void onRightReleased(const OIS::MouseEvent& arg);
     virtual bool toggleMovementPossibilities();
-    virtual bool resetSquareIndicators();
+    virtual bool resetSquareIndicators(bool onlyInvalidsAndTargets = false);
+    virtual void setMouseRay();
 };
 
 #endif // _NALCG_BUFFERED_INPUT_HANDLER_H_
