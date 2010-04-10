@@ -97,6 +97,21 @@ protected:
     static bool isKnight(char symbol);
     static bool isQueen(char symbol);
     static bool areOppositeColour(char symbol1, char symbol2);
+    static bool isRectanglyUnsafe(std::size_t location, char symbol,
+        const std::vector<Square>& squares, std::size_t moveFrom,
+        std::size_t moveTo);
+    static bool isDiagonallyUnsafe(std::size_t location, char symbol,
+        const std::vector<Square>& squares, std::size_t moveFrom,
+        std::size_t moveTo);
+    static bool isKinglyUnsafe(std::size_t location, char symbol,
+        const std::vector<Square>& squares, std::size_t moveFrom,
+        std::size_t moveTo);
+    static bool isKnightlyUnsafe(std::size_t location, char symbol,
+        const std::vector<Square>& squares, std::size_t moveFrom,
+        std::size_t moveTo);
+    static bool isPawnlyUnsafe(std::size_t location, char symbol,
+        const std::vector<Square>& squares, std::size_t moveFrom,
+        std::size_t moveTo);
 
     // Methods
     virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const;

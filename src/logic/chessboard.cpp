@@ -190,102 +190,29 @@ bool ChessBoard::isUnderAttack(std::size_t location,
     std::size_t x = 0, y = 0;
     getCoordinates(location, x, y);
 
-    for (std::size_t i = 0;
-        (RECTANGLE_DIRECTIONS_X[i] != 0 || RECTANGLE_DIRECTIONS_Y[i] != 0);
-        ++i)
+    if (isRectanglyUnsafe(location, symbol, squares, moveFrom, moveTo))
     {
-        std::size_t newLocation = getPosition(x + RECTANGLE_DIRECTIONS_X[i],
-            y + RECTANGLE_DIRECTIONS_Y[i]);
-
-        while (newLocation < limit )
-        {
-            if (newLocation == moveTo) { break; }
-            char currentPiece = squares.at(newLocation).getSymbolOfPiece();
-            if (newLocation != moveFrom && currentPiece != EMPTY_SYMBOL)
-            {
-                if (!areOppositeColour(symbol, currentPiece))
-                {
-                    // Found allied
-                    break;
-                }
-                else if (isRook(currentPiece) || isQueen(currentPiece))
-                {
-                    // found opponent rook or queen.
-                    return true;
-                }
-                else
-                {
-                    // found opponent which can't attack rectangly.
-                    break;
-                }
-            }
-
-            std::size_t x1 = x, y1 = y;
-            getCoordinates(newLocation, x1, y1);
-            newLocation = getPosition(x1 + RECTANGLE_DIRECTIONS_X[i],
-                y1 + RECTANGLE_DIRECTIONS_Y[i]);
-        }
+        return true;
     }
 
-    for (std::size_t i = 0;
-        (DIAGONAL_DIRECTIONS_X[i] != 0 || DIAGONAL_DIRECTIONS_Y[i] != 0);
-        ++i)
+    if (isDiagonallyUnsafe(location, symbol, squares, moveFrom, moveTo))
     {
-        std::size_t newLocation = getPosition(x + DIAGONAL_DIRECTIONS_X[i],
-            y + DIAGONAL_DIRECTIONS_Y[i]);
-
-        while (newLocation < limit )
-        {
-
-            if (newLocation == moveTo) { break; }
-            char currentPiece = squares.at(newLocation).getSymbolOfPiece();
-            if (newLocation != moveFrom && currentPiece != EMPTY_SYMBOL)
-            {
-                if (!areOppositeColour(symbol, currentPiece))
-                {
-                    // Found allied
-                    break;
-                }
-                else if (isBishop(currentPiece) || isQueen(currentPiece))
-                {
-                    // found opponent bishop or queen.
-                    return true;
-                }
-                else
-                {
-                    // found opponent which can't attack diagonally.
-                    break;
-                }
-            }
-
-            std::size_t x1 = x, y1 = y;
-            getCoordinates(newLocation, x1, y1);
-            newLocation = getPosition(x1 + DIAGONAL_DIRECTIONS_X[i],
-                y1 + DIAGONAL_DIRECTIONS_Y[i]);
-        }
+        return true;
     }
 
-    for (std::size_t i = 0;
-        (KNIGHT_DIRECTIONS_X[i] != 0 || KNIGHT_DIRECTIONS_Y[i] != 0);
-        ++i)
+    if (isPawnlyUnsafe(location, symbol, squares, moveFrom, moveTo))
     {
-        std::size_t newLocation = getPosition(x + KNIGHT_DIRECTIONS_X[i],
-            y + KNIGHT_DIRECTIONS_Y[i]);
+        return true;
+    }
 
-        if (newLocation < limit )
-        {
-            char currentPiece = squares.at(newLocation).getSymbolOfPiece();
-            if (newLocation == moveFrom || newLocation == moveTo)
-            {
-                continue;
-            }
-            else if (areOppositeColour(symbol, currentPiece) &&
-                isKnight(currentPiece))
-            {
-                // found enemy knight.
-                return true;
-            }
-        }
+    if (isKnightlyUnsafe(location, symbol, squares, moveFrom, moveTo))
+    {
+        return true;
+    }
+
+    if (isKinglyUnsafe(location, symbol, squares, moveFrom, moveTo))
+    {
+        return true;
     }
 
     return false;
@@ -301,7 +228,6 @@ std::vector<std::size_t> ChessBoard::getValidMoves(std::size_t location) const
     std::size_t kingLocation = findKing(colour);
     if (kingLocation >= squares.size()) { return std::vector<std::size_t>(); }
 
-    //~ std::cout << "kinglocation " << kingLocation << " squars " << squares.size() << std::endl;
     return piece->getValidMoves(location, squares, kingLocation);
 }
 
@@ -401,6 +327,161 @@ bool ChessBoard::areOppositeColour(char symbol1, char symbol2)
     // if toUpperCaseBit is set or unset in both, then they are the same colour
     // otherwise they are opposite colours.
     return ((symbol1 & toUpperCaseBit) != (symbol2 & toUpperCaseBit));
+}
+
+bool ChessBoard::isRectanglyUnsafe(std::size_t location, char symbol,
+    const std::vector<Square>& squares, std::size_t moveFrom,
+    std::size_t moveTo)
+{
+    std::size_t x = 0, y = 0;
+    getCoordinates(location, x, y);
+    std::size_t limit = squares.size();
+
+    for (std::size_t i = 0;
+        (RECTANGLE_DIRECTIONS_X[i] != 0 || RECTANGLE_DIRECTIONS_Y[i] != 0);
+        ++i)
+    {
+        std::size_t newLocation = getPosition(x + RECTANGLE_DIRECTIONS_X[i],
+            y + RECTANGLE_DIRECTIONS_Y[i]);
+
+        while (newLocation < limit )
+        {
+            if (newLocation == moveTo) { break; }
+            char currentPiece = squares.at(newLocation).getSymbolOfPiece();
+            if (newLocation != moveFrom && currentPiece != EMPTY_SYMBOL)
+            {
+                if (!areOppositeColour(symbol, currentPiece))
+                {
+                    // Found allied
+                    break;
+                }
+                else if (isRook(currentPiece) || isQueen(currentPiece))
+                {
+                    // found opponent rook or queen.
+                    return true;
+                }
+                else
+                {
+                    // found opponent which can't attack rectangly.
+                    break;
+                }
+            }
+
+            std::size_t x1 = x, y1 = y;
+            getCoordinates(newLocation, x1, y1);
+            newLocation = getPosition(x1 + RECTANGLE_DIRECTIONS_X[i],
+                y1 + RECTANGLE_DIRECTIONS_Y[i]);
+        }
+    }
+
+    return false;
+}
+
+
+bool ChessBoard::isDiagonallyUnsafe(std::size_t location, char symbol,
+    const std::vector<Square>& squares, std::size_t moveFrom,
+    std::size_t moveTo)
+{
+    std::size_t x = 0, y = 0;
+    getCoordinates(location, x, y);
+    std::size_t limit = squares.size();
+
+    for (std::size_t i = 0;
+        (DIAGONAL_DIRECTIONS_X[i] != 0 || DIAGONAL_DIRECTIONS_Y[i] != 0);
+        ++i)
+    {
+        std::size_t newLocation = getPosition(x + DIAGONAL_DIRECTIONS_X[i],
+            y + DIAGONAL_DIRECTIONS_Y[i]);
+
+        while (newLocation < limit )
+        {
+
+            if (newLocation == moveTo) { break; }
+            char currentPiece = squares.at(newLocation).getSymbolOfPiece();
+            if (newLocation != moveFrom && currentPiece != EMPTY_SYMBOL)
+            {
+                if (!areOppositeColour(symbol, currentPiece))
+                {
+                    // Found allied
+                    break;
+                }
+                else if (isBishop(currentPiece) || isQueen(currentPiece))
+                {
+                    // found opponent bishop or queen.
+                    return true;
+                }
+                else
+                {
+                    // found opponent which can't attack diagonally.
+                    break;
+                }
+            }
+
+            std::size_t x1 = x, y1 = y;
+            getCoordinates(newLocation, x1, y1);
+            newLocation = getPosition(x1 + DIAGONAL_DIRECTIONS_X[i],
+                y1 + DIAGONAL_DIRECTIONS_Y[i]);
+        }
+    }
+
+    return false;
+}
+
+
+bool ChessBoard::isKinglyUnsafe(std::size_t location, char symbol,
+    const std::vector<Square>& squares, std::size_t moveFrom,
+    std::size_t moveTo)
+{
+    std::size_t x = 0, y = 0;
+    getCoordinates(location, x, y);
+
+    return false;
+}
+
+
+bool ChessBoard::isKnightlyUnsafe(std::size_t location, char symbol,
+    const std::vector<Square>& squares, std::size_t moveFrom,
+    std::size_t moveTo)
+{
+    std::size_t x = 0, y = 0;
+    getCoordinates(location, x, y);
+    std::size_t limit = squares.size();
+
+    for (std::size_t i = 0;
+        (KNIGHT_DIRECTIONS_X[i] != 0 || KNIGHT_DIRECTIONS_Y[i] != 0);
+        ++i)
+    {
+        std::size_t newLocation = getPosition(x + KNIGHT_DIRECTIONS_X[i],
+            y + KNIGHT_DIRECTIONS_Y[i]);
+
+        if (newLocation < limit )
+        {
+            char currentPiece = squares.at(newLocation).getSymbolOfPiece();
+            if (newLocation == moveFrom || newLocation == moveTo)
+            {
+                continue;
+            }
+            else if (areOppositeColour(symbol, currentPiece) &&
+                isKnight(currentPiece))
+            {
+                // found enemy knight.
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+
+bool ChessBoard::isPawnlyUnsafe(std::size_t location, char symbol,
+    const std::vector<Square>& squares, std::size_t moveFrom,
+    std::size_t moveTo)
+{
+    std::size_t x = 0, y = 0;
+    getCoordinates(location, x, y);
+
+    return false;
 }
 
 // private constants
