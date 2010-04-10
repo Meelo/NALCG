@@ -11,7 +11,7 @@ Pawn::Pawn(const Colour& colour) : Piece(colour, "Pawn",
 
 }
 
-std::vector<std::size_t> Pawn::getValidMoves(std::size_t location,
+std::vector<std::size_t> Pawn::getValidMoves(std::size_t ownLocation,
     const std::vector<Square>& squares, std::size_t protect) const
 {
     std::vector<std::size_t> validMoves;
@@ -21,6 +21,8 @@ std::vector<std::size_t> Pawn::getValidMoves(std::size_t location,
     else if (colour == BLACK) direction = 1;
     else return validMoves;
 
+    std::size_t location = ownLocation;
+
     std::size_t x = 0, y = 0;
     ChessBoard::getCoordinates(location, x, y);
     std::size_t diagL = ChessBoard::getPosition(x - 1, y + direction);
@@ -29,12 +31,14 @@ std::vector<std::size_t> Pawn::getValidMoves(std::size_t location,
     std::size_t left = ChessBoard::getPosition(x - 1, y);
     std::size_t right = ChessBoard::getPosition(x + 1, y);
 
-    if (isEatingAllowed(diagL, left, squares))
+    if (isEatingAllowed(diagL, left, squares) &&
+        !ChessBoard::isUnderAttack(protect, squares, ownLocation, diagL))
     {
         validMoves.push_back(diagL);
     }
 
-    if (isEatingAllowed(diagR, right, squares))
+    if (isEatingAllowed(diagR, right, squares) &&
+        !ChessBoard::isUnderAttack(protect, squares, ownLocation, diagR))
     {
         validMoves.push_back(diagR);
     }
@@ -42,12 +46,16 @@ std::vector<std::size_t> Pawn::getValidMoves(std::size_t location,
     std::size_t possibility = ChessBoard::getPosition(x, y + direction);
     if (isMoveAllowed(possibility, squares))
     {
-        validMoves.push_back(possibility);
+        if (!ChessBoard::isUnderAttack(protect, squares, ownLocation, possibility))
+        {
+            validMoves.push_back(possibility);
+        }
 
         if (isDoubleMoveAllowed(y))
         {
             possibility += (direction * ChessBoard::WIDTH);
-            if (isMoveAllowed(possibility, squares))
+            if (isMoveAllowed(possibility, squares) &&
+                !ChessBoard::isUnderAttack(protect, squares, ownLocation, possibility))
             {
                 validMoves.push_back(possibility);
             }
@@ -97,6 +105,7 @@ bool Pawn::isEnPassantAllowed(std::size_t diag, std::size_t side,
 bool Pawn::isMoveAllowed(std::size_t location,
     const std::vector<Square>& squares) const
 {
+
     return location < squares.size() && !squares.at(location).hasPiece();
 }
 
