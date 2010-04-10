@@ -164,12 +164,12 @@ bool ChessBoard::isUnderAttack(std::size_t location,
     std::size_t moveFrom, std::size_t moveTo)
 {
     std::size_t limit = squares.size();
-    char symbol = 0;
     if (location >= limit || !squares.at(location).hasPiece())
     {
         return false;
     }
-    if (moveFrom >= limit || moveTo >= limit)
+    char symbol = squares.at(location).getSymbolOfPiece();
+    if (moveFrom >= limit)
     {
         // No piece shall be ignored or 'moved'.
         moveFrom = ~0;
@@ -182,13 +182,8 @@ bool ChessBoard::isUnderAttack(std::size_t location,
     }
     else if (location == moveFrom)
     {
-        symbol = squares.at(location).getSymbolOfPiece();
         location = moveTo;
         moveTo = ~0;
-    }
-    else
-    {
-        symbol = squares.at(location).getSymbolOfPiece();
     }
 
     return  isRectanglyUnsafe   (location, symbol, squares, moveFrom, moveTo) ||
