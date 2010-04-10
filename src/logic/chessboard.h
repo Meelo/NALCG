@@ -70,6 +70,7 @@ public:
 
     // Methods
     static std::vector<Square> createBoard();
+
     virtual std::vector<std::size_t> getValidMoves(std::size_t location) const;
 
     static bool isUnderAttack(std::size_t location,
@@ -78,6 +79,7 @@ public:
 
     // Getters
     static bool getCoordinates(std::size_t index, std::size_t& column, std::size_t& row);
+
     static std::size_t getPosition(std::size_t column, std::size_t row);
 
     // Setters
@@ -93,29 +95,40 @@ protected:
 
     // Methods
     static bool isBishop(char symbol);
+
     static bool isRook(char symbol);
+
     static bool isKnight(char symbol);
+
     static bool isQueen(char symbol);
+
     static bool areOppositeColour(char symbol1, char symbol2);
+
     static bool isRectanglyUnsafe(std::size_t location, char symbol,
         const std::vector<Square>& squares, std::size_t moveFrom,
         std::size_t moveTo);
+
     static bool isDiagonallyUnsafe(std::size_t location, char symbol,
         const std::vector<Square>& squares, std::size_t moveFrom,
         std::size_t moveTo);
+
     static bool isKinglyUnsafe(std::size_t location, char symbol,
         const std::vector<Square>& squares, std::size_t moveFrom,
         std::size_t moveTo);
+
     static bool isKnightlyUnsafe(std::size_t location, char symbol,
         const std::vector<Square>& squares, std::size_t moveFrom,
         std::size_t moveTo);
+
     static bool isPawnlyUnsafe(std::size_t location, char symbol,
         const std::vector<Square>& squares, std::size_t moveFrom,
         std::size_t moveTo);
 
     // Methods
     virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const;
+
     virtual void promote(std::size_t location, unsigned int promoteTo);
+
     std::size_t findKing(Colour colour) const;
 };
 

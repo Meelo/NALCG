@@ -53,11 +53,13 @@ const char ChessBoard::WHITE_KING_SYMBOL            = 'k';
 
 const char ChessBoard::EMPTY_SYMBOL                 = 0;
 
+
 ChessBoard::ChessBoard(const std::vector<Square>& squares) :
     Board(squares, WIDTH, HEIGHT)
 {
 
 }
+
 
 // Chess board looks like this
 //
@@ -140,7 +142,9 @@ std::vector<Square> ChessBoard::createBoard()
     return squares;
 }
 
+
 // static
+
 
 //
 // Check if piece in 'location' is threatened by enemy pieces.
@@ -187,36 +191,13 @@ bool ChessBoard::isUnderAttack(std::size_t location,
         symbol = squares.at(location).getSymbolOfPiece();
     }
 
-    std::size_t x = 0, y = 0;
-    getCoordinates(location, x, y);
-
-    if (isRectanglyUnsafe(location, symbol, squares, moveFrom, moveTo))
-    {
-        return true;
-    }
-
-    if (isDiagonallyUnsafe(location, symbol, squares, moveFrom, moveTo))
-    {
-        return true;
-    }
-
-    if (isPawnlyUnsafe(location, symbol, squares, moveFrom, moveTo))
-    {
-        return true;
-    }
-
-    if (isKnightlyUnsafe(location, symbol, squares, moveFrom, moveTo))
-    {
-        return true;
-    }
-
-    if (isKinglyUnsafe(location, symbol, squares, moveFrom, moveTo))
-    {
-        return true;
-    }
-
-    return false;
+    return  isRectanglyUnsafe   (location, symbol, squares, moveFrom, moveTo) ||
+            isDiagonallyUnsafe  (location, symbol, squares, moveFrom, moveTo) ||
+            isPawnlyUnsafe      (location, symbol, squares, moveFrom, moveTo) ||
+            isKnightlyUnsafe    (location, symbol, squares, moveFrom, moveTo) ||
+            isKinglyUnsafe      (location, symbol, squares, moveFrom, moveTo);
 }
+
 
 std::vector<std::size_t> ChessBoard::getValidMoves(std::size_t location) const
 {
@@ -231,18 +212,22 @@ std::vector<std::size_t> ChessBoard::getValidMoves(std::size_t location) const
     return piece->getValidMoves(location, squares, kingLocation);
 }
 
+
 bool ChessBoard::getCoordinates(std::size_t index, std::size_t& column,
     std::size_t& row)
 {
     return Board::getCoordinates(index, column, row, WIDTH, HEIGHT);
 }
 
+
 std::size_t ChessBoard::getPosition(std::size_t column, std::size_t row)
 {
     return Board::getPosition(column, row, WIDTH, HEIGHT);
 }
 
+
 // private
+
 
 bool ChessBoard::isPromotable(std::size_t moveFrom, std::size_t moveTo) const
 {
@@ -252,6 +237,7 @@ bool ChessBoard::isPromotable(std::size_t moveFrom, std::size_t moveTo) const
     return ((pieceSymbol == WHITE_PAWN_SYMBOL && y == WHITE_PROMOTE_ROW) ||
             (pieceSymbol == BLACK_PAWN_SYMBOL && y == BLACK_PROMOTE_ROW));
 }
+
 
 void ChessBoard::promote(std::size_t location, unsigned int promoteTo)
 {
@@ -280,6 +266,7 @@ void ChessBoard::promote(std::size_t location, unsigned int promoteTo)
     }
 }
 
+
 std::size_t ChessBoard::findKing(Colour colour) const
 {
     char kingSymbol = (colour == WHITE) ? WHITE_KING_SYMBOL : BLACK_KING_SYMBOL;
@@ -297,11 +284,13 @@ std::size_t ChessBoard::findKing(Colour colour) const
     return squares.size();
 }
 
+
 bool ChessBoard::isBishop(char symbol)
 {
     // symbol | (1 << 5) lowercases the symbol if it was uppercase.
     return ((symbol | (1 << 5)) == WHITE_BISHOP_SYMBOL);
 }
+
 
 bool ChessBoard::isRook(char symbol)
 {
@@ -309,17 +298,20 @@ bool ChessBoard::isRook(char symbol)
     return ((symbol | (1 << 5)) == WHITE_ROOK_SYMBOL);
 }
 
+
 bool ChessBoard::isKnight(char symbol)
 {
     // symbol | (1 << 5) lowercases the symbol if it was uppercase.
     return ((symbol | (1 << 5)) == WHITE_KNIGHT_SYMBOL);
 }
 
+
 bool ChessBoard::isQueen(char symbol)
 {
     // symbol | (1 << 5) lowercases the symbol if it was uppercase.
     return ((symbol | (1 << 5)) == WHITE_QUEEN_SYMBOL);
 }
+
 
 bool ChessBoard::areOppositeColour(char symbol1, char symbol2)
 {
@@ -328,6 +320,7 @@ bool ChessBoard::areOppositeColour(char symbol1, char symbol2)
     // otherwise they are opposite colours.
     return ((symbol1 & toUpperCaseBit) != (symbol2 & toUpperCaseBit));
 }
+
 
 bool ChessBoard::isRectanglyUnsafe(std::size_t location, char symbol,
     const std::vector<Square>& squares, std::size_t moveFrom,
