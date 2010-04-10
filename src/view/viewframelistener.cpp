@@ -17,15 +17,33 @@ bool ViewFrameListener::frameStarted(const FrameEvent& evt)
     playOpeningAnimation(evt.timeSinceLastFrame);
 
     mAnimationManager.executeAnimations(evt.timeSinceLastFrame);
-    if (mHandler.canShowSelectablePieces()
-        && !mAnimationManager.animationsRunning()
-        && mHandler.getMoveAssistanceLevel() > 2)
+
+    if (!mAnimationManager.animationsRunning())
     {
-        mHandler.showSelectablePieces();
+        if (mHandler.canShowSelectablePieces()
+            && mHandler.getMoveAssistanceLevel() > 2)
+        {
+            mHandler.showSelectablePieces();
+        }
+        if (mHandler.getMoveAssistanceLevel() > 0)
+        {
+            mHandler.highlightHoveredSquare();
+        }
     }
-    if (mHandler.getMoveAssistanceLevel() > 0)
+
+    SceneNode* invalidMoveNode = mSceneMgr->getSceneNode("InvalidMove");
+    Vector3 scale = invalidMoveNode->getScale();
+    scale.y += evt.timeSinceLastFrame * 0.1;
+
+    if (scale.y < 1.1)
     {
-        mHandler.highlightHoveredSquare();
+        scale.x = sin((scale.y - 1.0) * Math::PI / 0.1);
+        scale.z = scale.x;
+        invalidMoveNode->setScale(scale);
+    }
+    else
+    {
+        invalidMoveNode->setVisible(false);
     }
 
     return !mKeyboard->isKeyDown(OIS::KC_ESCAPE);

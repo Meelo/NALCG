@@ -67,7 +67,6 @@ void PromotionAnimation::createBlasts()
         nextName(), "Effects/Aureola");
     mParticleNode = mAnimatedNode->createChildSceneNode();
 
-    mParticleNode->translate(0, 0, 0);
     mParticleNode->attachObject(pSys);
 
     pSys->fastForward(0.5);

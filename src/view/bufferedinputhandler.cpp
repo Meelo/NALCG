@@ -292,13 +292,14 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 
                         if (!(returnValue & Board::MOVE_OK))
                         {
-                            if (returnValue & Board::INVALID_MOVE)
+                            if (returnValue & Board::INVALID_MOVE
+                                || returnValue & Board::INVALID_TURN)
                             {
-                                // TODO: handle
-                            }
-                            if (returnValue & Board::INVALID_TURN)
-                            {
-                                // TODO: handle
+                                SceneNode* node = mSceneMgr->getSceneNode("InvalidMove");
+                                node->setVisible(true);
+                                node->setPosition(targetNode->getPosition());
+                                node->translate(0, 1, 0);
+                                node->setScale(0, 1, 0);
                             }
                             if (returnValue & Board::PROMOTION_REQUEST)
                             {
@@ -312,11 +313,10 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                         move(fromX, fromY, toX, toY);
                     }
                 }
-                mSelectedObject->showBoundingBox(false);
-                pieceNode->showBoundingBox(false);
                 Entity* ent = mSceneMgr->getEntity(mSelectedObject->getName() + " s");
                 ent->setMaterialName("board/square/move");
                 ent->setVisible(false);
+                mSceneMgr->getSceneNode("Selection")->setVisible(false);
                 mSelectedObject = 0;
                 resetSquareIndicators();
                 mCanShowSelectablePieces = true;
@@ -329,9 +329,14 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                 {
                     resetSquareIndicators();
                     mSelectedObject = squareNode;
-                    mSelectedObject->showBoundingBox(true);
-                    pieceNode->showBoundingBox(true);
                     showMovementPossibilities();
+
+                    SceneNode* selection = mSceneMgr->getSceneNode("Selection");
+                    selection->setPosition(mSelectedObject->getPosition());
+                    selection->translate(0, 1, 0);
+                    selection->setVisible(true);
+                    dynamic_cast<ParticleSystem*>(selection->getAttachedObject(0))->fastForward(5);
+
                     mCanShowSelectablePieces = false;
                 }
             }
