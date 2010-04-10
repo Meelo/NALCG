@@ -413,7 +413,7 @@ bool BufferedInputHandler::showSelectablePieces()
                 {
                     bool whitePiece = pieceNode->getName().find("white") != std::string::npos;
                     bool whiteTurn = mView->isWhiteTurn();
-                    if ((whitePiece && whiteTurn || !whitePiece && !whiteTurn)
+                    if (((whitePiece && whiteTurn) || (!whitePiece && !whiteTurn))
                         && middleman->getValidMovesAt(i, j).size() > 0)
                     {
                         ent->setVisible(true);
