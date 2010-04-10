@@ -13,13 +13,14 @@ class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
 {
 public:
     BufferedInputHandler(RenderWindow* window, Camera* camera,
-        SceneManager* sceneMgr, AnimationManager* animationManager, View* view)
+        SceneManager* sceneMgr, AnimationManager* animationManager, View* view,
+        OIS::Mouse* mouse)
         : mLMouseDown(false), mRMouseDown(false), mWindow(window),
         mCamera(camera), mSceneMgr(sceneMgr),
         mRaySceneQuery(sceneMgr->createRayQuery(Ray())), mSelectedObject(0),
         mDirection(Vector3::ZERO), mAnimationManager(animationManager),
         mView(view), mSafeMode(true), mQueueAnimations(false),
-        mCanShowSelectablePieces(true), mMoveAssistanceLevel(3)
+        mCanShowSelectablePieces(true), mMoveAssistanceLevel(3), mMouse(mouse)
     {
     }
 
@@ -75,6 +76,7 @@ protected:
     bool mQueueAnimations;
     bool mCanShowSelectablePieces;
     int mMoveAssistanceLevel;
+    OIS::Mouse* mMouse;
 
     virtual void onLeftPressed(const OIS::MouseEvent& arg);
     virtual SceneNode* findPieceAbove(Node* squareNode) const;

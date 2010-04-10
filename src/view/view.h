@@ -90,6 +90,7 @@ public:
         double sizeX, double sizeY, const std::string& type = "Button", bool setText = true);
     virtual void setPromotionMove(int fromX, int fromY, int toX, int toY);
     void setChooseButtonsVisibility(bool visible);
+    virtual void windowClosed(RenderWindow* rw);
     virtual ~View();
 
 protected:
@@ -121,7 +122,6 @@ protected:
     void setupCEGUI();
     void createFrameListener();
     void startRenderLoop();
-    virtual void windowClosed(RenderWindow* rw);
     virtual void createCamera();
     virtual void createViewports();
     virtual void createInitialExplosion();

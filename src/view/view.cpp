@@ -426,7 +426,7 @@ void View::createScene()
     mSceneMgr->setSkyDome(true, "Sky");
     mSceneMgr->setSkyDome(false, "Sky");
 
-    ParticleSystem* pSys = mSceneMgr->createParticleSystem("Selection", "Effects/Selection");
+    mSceneMgr->createParticleSystem("Selection", "Effects/Selection");
 }
 
 

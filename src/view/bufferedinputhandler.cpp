@@ -211,8 +211,10 @@ void BufferedInputHandler::setMouseRay()
 {
     CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getPosition();
 
+    const OIS::MouseState& ms = mMouse->getMouseState();
+
     Ray mouseRay = mCamera->getCameraToViewportRay(
-        mousePos.d_x/mWindow->getWidth(), mousePos.d_y/mWindow->getHeight());
+        mousePos.d_x/ms.width, mousePos.d_y/ms.height);
 
     mRaySceneQuery->setRay(mouseRay);
     mRaySceneQuery->setSortByDistance(true);
@@ -273,7 +275,6 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
             if (mSelectedObject)
             {
                 SceneNode* targetNode = itr->movable->getParentSceneNode();
-                SceneNode* pieceNode = findPieceAbove(mSelectedObject);
                 if (mSelectedObject != targetNode)
                 {
                     std::stringstream name;
