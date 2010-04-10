@@ -66,13 +66,12 @@ void PromotionAnimation::createBlasts()
     ParticleSystem* pSys = mSceneMgr->createParticleSystem(
         nextName(), "Effects/Aureola");
     mParticleNode = mAnimatedNode->createChildSceneNode();
-    //const Vector3& position = pieceNode->getPosition();
+
     mParticleNode->translate(0, 0, 0);
     mParticleNode->attachObject(pSys);
     ParticleEmitter *emitter = pSys->getEmitter(0);
 
     pSys->fastForward(0.5);
-    //pSys->setParticleQuota(emitter->getEmissionRate() * mPromotionDuration);
 }
 
 
@@ -81,10 +80,7 @@ void PromotionAnimation::createWhiteFlash()
     ParticleSystem* pSys = mSceneMgr->createParticleSystem(
         nextName(), "Effects/WhiteFlash");
     mWhiteFlashNode = mAnimatedNode->createChildSceneNode();
-    //const Vector3& position = pieceNode->getPosition();
+
     mWhiteFlashNode->translate(0, 150, 0);
     mWhiteFlashNode->attachObject(pSys);
-    ParticleEmitter *emitter = pSys->getEmitter(0);
-
-    //pSys->setParticleQuota(emitter->getEmissionRate());
 }
