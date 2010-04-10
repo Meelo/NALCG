@@ -298,6 +298,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                                 SceneNode* node = mSceneMgr->getSceneNode("InvalidMove");
                                 node->setVisible(true);
                                 node->setPosition(targetNode->getPosition());
+                                node->translate(0, 1, 0);
                                 node->setScale(0, 1, 0);
                             }
                             if (returnValue & Board::PROMOTION_REQUEST)
