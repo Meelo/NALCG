@@ -17,10 +17,11 @@ King::King(const Colour& colour) : Piece(colour, "King",
 
 }
 
-std::vector<std::size_t> King::getValidMoves(std::size_t location,
+std::vector<std::size_t> King::getValidMoves(std::size_t ownLocation,
     const std::vector<Square>& squares, std::size_t protect) const
 {
     std::vector<std::size_t> validMoves;
+    std::size_t location = ownLocation;
 
     std::size_t x = 0, y = 0;
     ChessBoard::getCoordinates(location, x, y);
@@ -30,7 +31,8 @@ std::vector<std::size_t> King::getValidMoves(std::size_t location,
         std::size_t location = ChessBoard::getPosition(x + X_DIRECTIONS[i],
             y + Y_DIRECTIONS[i]);
 
-        if (location < squares.size() && isEmptyOrEdible(location, squares))
+        if (location < squares.size() && isEmptyOrEdible(location, squares) &&
+            !ChessBoard::isUnderAttack(ownLocation, squares, ownLocation, location))
         {
             validMoves.push_back(location);
 
@@ -41,16 +43,20 @@ std::vector<std::size_t> King::getValidMoves(std::size_t location,
         }
     }
 
-    if (specialMoveAllowed) {
+    if (specialMoveAllowed &&
+        !ChessBoard::isUnderAttack(ownLocation, squares))
+    {
         ChessBoard::getCoordinates(location, x, y);
 
         // check for the rook on the left side
         std::size_t leftRook = ChessBoard::getPosition(LEFT_ROOK_X, y);
-        if (isCastlingAllowed(leftRook, squares))
+        if (isCastlingAllowed(leftRook, squares) &&
+            !ChessBoard::isUnderAttack(leftRook, squares))
         {
             bool castlingPossible = true;
             for (std::size_t i = leftRook + 1; i < location; ++i) {
-                if (squares.at(i).hasPiece())
+                if (squares.at(i).hasPiece() ||
+                    ChessBoard::isUnderAttack(ownLocation, squares, ownLocation, i))
                 {
                     castlingPossible = false;
                     break;
@@ -64,11 +70,13 @@ std::vector<std::size_t> King::getValidMoves(std::size_t location,
 
         // check for the rook on the right side
         std::size_t rightRook = ChessBoard::getPosition(RIGHT_ROOK_X, y);
-        if (isCastlingAllowed(rightRook, squares))
+        if (isCastlingAllowed(rightRook, squares) &&
+            !ChessBoard::isUnderAttack(rightRook, squares))
         {
             bool castlingPossible = true;
             for (std::size_t i = location + 1; i < rightRook; ++i) {
-                if (squares.at(i).hasPiece())
+                if (squares.at(i).hasPiece() ||
+                    ChessBoard::isUnderAttack(ownLocation, squares, ownLocation, i))
                 {
                     castlingPossible = false;
                     break;

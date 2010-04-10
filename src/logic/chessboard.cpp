@@ -142,17 +142,25 @@ std::vector<Square> ChessBoard::createBoard()
 
 // static
 
+//
 // Check if piece in 'location' is threatened by enemy pieces.
 // You can emulate a movement by passing moveFrom and moveTo -parameters.
-// If either of them are larger than squares.size(), both of the parameters
-// will be ignored.
-// If both parameters are the same,
+//
+// If moveFrom-parameter is larger than squares.size(),
+// both moveFrom and moveTo -parameters will be ignored.
+//
+// If both moveFrom and moveTo -parameters are the same,
 // a piece will be ignored at 'moveFrom'-location.
+//
+// If location and moveFrom parameters are the same,
+// moveTo-parameter will be used for protecting purposes.
+//
 bool ChessBoard::isUnderAttack(std::size_t location,
     const std::vector<Square>& squares,
     std::size_t moveFrom, std::size_t moveTo)
 {
     std::size_t limit = squares.size();
+    char symbol = 0;
     if (location >= limit || !squares.at(location).hasPiece())
     {
         return false;
@@ -168,8 +176,16 @@ bool ChessBoard::isUnderAttack(std::size_t location,
         // Only moveFrom shall be used.
         moveTo = ~0;
     }
-
-    char symbol = squares.at(location).getSymbolOfPiece();
+    else if (location == moveFrom)
+    {
+        symbol = squares.at(location).getSymbolOfPiece();
+        location = moveTo;
+        moveTo = ~0;
+    }
+    else
+    {
+        symbol = squares.at(location).getSymbolOfPiece();
+    }
 
     std::size_t x = 0, y = 0;
     getCoordinates(location, x, y);
