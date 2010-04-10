@@ -425,6 +425,13 @@ void View::createScene()
     // playing the opening animation sequence.
     mSceneMgr->setSkyDome(true, "Sky");
     mSceneMgr->setSkyDome(false, "Sky");
+
+    SceneNode* invalidMoveNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("InvalidMove");
+    Entity* ent = mSceneMgr->createEntity("InvalidMove", "invalid_move.mesh");
+    ent->setQueryFlags(0);
+    invalidMoveNode->attachObject(ent);
+    invalidMoveNode->setVisible(false);
+
 }
 
 

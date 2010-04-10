@@ -1,0 +1,20 @@
+
+material Crossred
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture color_red.png
+			}
+		}
+
+	}
+
+}
+
+

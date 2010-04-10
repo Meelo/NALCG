@@ -292,13 +292,13 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 
                         if (!(returnValue & Board::MOVE_OK))
                         {
-                            if (returnValue & Board::INVALID_MOVE)
+                            if (returnValue & Board::INVALID_MOVE
+                                || returnValue & Board::INVALID_TURN)
                             {
-                                // TODO: handle
-                            }
-                            if (returnValue & Board::INVALID_TURN)
-                            {
-                                // TODO: handle
+                                SceneNode* node = mSceneMgr->getSceneNode("InvalidMove");
+                                node->setVisible(true);
+                                node->setPosition(targetNode->getPosition());
+                                node->setScale(0, 1, 0);
                             }
                             if (returnValue & Board::PROMOTION_REQUEST)
                             {
