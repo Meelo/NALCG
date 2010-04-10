@@ -87,3 +87,57 @@ material board/square/selected
 	}
 
 }
+
+material board/square/invalid
+{
+	technique
+	{
+		pass
+		{
+			depth_write off
+			scene_blend alpha_blend
+
+			ambient 0.0 0.0 0.0 1
+			diffuse 1.0 0.0 0.0 0.6
+			specular 0 0 0 10 0
+		}
+
+	}
+
+}
+
+material board/square/target/move
+{
+	technique
+	{
+		pass
+		{
+			depth_write off
+			scene_blend alpha_blend
+
+			ambient 0.0 0.5 0.0 1
+			diffuse 0.0 1.0 0.0 1.0
+			specular 0 0 0 10 0
+		}
+
+	}
+
+}
+
+material board/square/target/attack
+{
+	technique
+	{
+		pass
+		{
+			depth_write off
+			scene_blend alpha_blend
+
+			ambient 0.5 0.5 0.0 1
+			diffuse 1.0 1.0 0.0 1.0
+			specular 0 0 0 10 0
+		}
+
+	}
+
+}
