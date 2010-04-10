@@ -17,11 +17,16 @@ bool ViewFrameListener::frameStarted(const FrameEvent& evt)
     playOpeningAnimation(evt.timeSinceLastFrame);
 
     mAnimationManager.executeAnimations(evt.timeSinceLastFrame);
-    if (mHandler.canShowSelectablePieces() && !mAnimationManager.animationsRunning())
+    if (mHandler.canShowSelectablePieces()
+        && !mAnimationManager.animationsRunning()
+        && mHandler.getMoveAssistanceLevel() > 2)
     {
         mHandler.showSelectablePieces();
     }
-    mHandler.flagInvalidSquare();
+    if (mHandler.getMoveAssistanceLevel() > 0)
+    {
+        mHandler.highlightHoveredSquare();
+    }
 
     return !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
 }
@@ -36,17 +41,27 @@ void ViewFrameListener::flashMovableSquares(const Real& timeSinceLastFrame)
 {
     mTime += timeSinceLastFrame;
 
-    MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/move");
-    mat->setDiffuse(0, 1.0, 0, sin(mTime * 3) * 0.25 + 0.5);
+    MaterialPtr moveMat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/move");
+    MaterialPtr attackMat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/attack");
+    
+    if (mHandler.getMoveAssistanceLevel() > 1)
+    {
+        moveMat->setDiffuse(0, 1.0, 0, sin(mTime * 3) * 0.25 + 0.5);
+        attackMat->setDiffuse(1.0, 1.0, 0, sin(mTime * 3) * 0.25 + 0.5);
+    }
+    else
+    {
+        moveMat->setDiffuse(0, 1.0, 0, 0);
+        attackMat->setDiffuse(1.0, 1.0, 0, 0);
+    }
 
-    mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/attack");
-    mat->setDiffuse(1.0, 1.0, 0, sin(mTime * 3) * 0.25 + 0.5);
-
-    mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/selected");
-    mat->setDiffuse(0, 1.0, 1.0, sin(mTime * 3) * 0.1 + 0.3);
+    MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/selected");
+    mat->setDiffuse(0, 1.0, 1.0, sin(mTime * 3) * 0.1 + 0.4);
 
     mat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/invalid");
-    mat->setDiffuse(1.0, 0, 0, sin(mTime * 3) * 0.25 + 0.5);
+    mat->setDiffuse(1.0, 0, 0, sin(mTime * 3) * 0.1 + 0.4);
+
+
 }
 
 void ViewFrameListener::moveLights(const Real& timeSinceLastFrame)

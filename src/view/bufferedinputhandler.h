@@ -12,12 +12,14 @@ class AnimationManager;
 class BufferedInputHandler : public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-    BufferedInputHandler(RenderWindow* window, Camera* camera, SceneManager* sceneMgr,
-        AnimationManager* animationManager, View* view)
-        : mLMouseDown(false), mRMouseDown(false), mWindow(window), mCamera(camera),
-        mSceneMgr(sceneMgr), mRaySceneQuery(sceneMgr->createRayQuery(Ray())),
-        mSelectedObject(0), mDirection(Vector3::ZERO), mAnimationManager(animationManager),
-        mView(view), mSafeMode(true), mQueueAnimations(false), mCanShowSelectablePieces(true)
+    BufferedInputHandler(RenderWindow* window, Camera* camera,
+        SceneManager* sceneMgr, AnimationManager* animationManager, View* view)
+        : mLMouseDown(false), mRMouseDown(false), mWindow(window),
+        mCamera(camera), mSceneMgr(sceneMgr),
+        mRaySceneQuery(sceneMgr->createRayQuery(Ray())), mSelectedObject(0),
+        mDirection(Vector3::ZERO), mAnimationManager(animationManager),
+        mView(view), mSafeMode(true), mQueueAnimations(false),
+        mCanShowSelectablePieces(true), mMoveAssistanceLevel(3)
     {
     }
 
@@ -38,7 +40,8 @@ public:
         bool continuous = false, unsigned int promoteTo = 0);
     virtual void animationFinished();
     virtual bool showSelectablePieces();
-    virtual void flagInvalidSquare();
+    virtual void highlightHoveredSquare();
+    bool handleMoveAssistanceChanged(const CEGUI::EventArgs& e);
     virtual bool canShowSelectablePieces()
     {
         return mCanShowSelectablePieces;
@@ -50,6 +53,10 @@ public:
     virtual void clearSelectedObject()
     {
         mSelectedObject = 0;
+    }
+    virtual int getMoveAssistanceLevel()
+    {
+        return mMoveAssistanceLevel;
     }
 
 protected:
@@ -67,13 +74,14 @@ protected:
     std::deque<std::vector<int> > mAnimationQueue;
     bool mQueueAnimations;
     bool mCanShowSelectablePieces;
+    int mMoveAssistanceLevel;
 
     virtual void onLeftPressed(const OIS::MouseEvent& arg);
     virtual SceneNode* findPieceAbove(Node* squareNode) const;
     virtual void onLeftReleased(const OIS::MouseEvent& arg);
     virtual void onRightPressed(const OIS::MouseEvent& arg);
     virtual void onRightReleased(const OIS::MouseEvent& arg);
-    virtual bool toggleMovementPossibilities();
+    virtual bool showMovementPossibilities();
     virtual bool resetSquareIndicators(bool onlyInvalidsAndTargets = false);
     virtual void setMouseRay();
 };

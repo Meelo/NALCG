@@ -87,7 +87,7 @@ public:
     virtual void createPiece(char type, const std::string& modelName, const Vector3& location);
     std::string getMeshName(char symbol) const;
     CEGUI::Window* createGUIComponent(const std::string& text, double x, double y,
-        double sizeX, double sizeY, const std::string& type = "Button");
+        double sizeX, double sizeY, const std::string& type = "Button", bool setText = true);
     virtual void setPromotionMove(int fromX, int fromY, int toX, int toY);
     void setChooseButtonsVisibility(bool visible);
     virtual ~View();

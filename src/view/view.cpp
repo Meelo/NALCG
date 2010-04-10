@@ -286,13 +286,16 @@ void View::createPiece(char type, const std::string& modelName,
 }
 
 CEGUI::Window* View::createGUIComponent(const std::string& text, double x, double y,
-                                        double sizeX, double sizeY, const std::string& type)
+                                        double sizeX, double sizeY, const std::string& type, bool setText)
 {
     CEGUI::WindowManager* win = CEGUI::WindowManager::getSingletonPtr();
     CEGUI::Window* sheet = win->getWindow("View/Sheet");
 
     CEGUI::Window* button = win->createWindow("TaharezLook/" + type, "View/" + text + type);
-    button->setText(text);
+    if (setText)
+    {
+        button->setText(text);
+    }
     button->setPosition(CEGUI::UVector2(CEGUI::UDim(x, 0), CEGUI::UDim(y, 0)));
     button->setSize(CEGUI::UVector2(CEGUI::UDim(sizeX, 0), CEGUI::UDim(sizeY, 0)));
 
@@ -308,14 +311,10 @@ void View::createGUI()
 
     createGUIComponent("Animation speed: 1x", 0, 0, 0.19, 0.05, "StaticText");
 
-    CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(win->
-        createWindow("TaharezLook/HorizontalScrollbar", "View/AnimationSpeedSlider"));
-    animationSpeedSlider->setPosition(CEGUI::UVector2(CEGUI::UDim(0.005, 0), CEGUI::UDim(0.055, 0)));
-    animationSpeedSlider->setSize(CEGUI::UVector2(CEGUI::UDim(0.17, 0), CEGUI::UDim(0.02, 0)));
+    CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(
+        createGUIComponent("AnimationSpeed", 0.005, 0.055, 0.17, 0.02, "HorizontalScrollbar"));
     animationSpeedSlider->setDocumentSize(4);
     animationSpeedSlider->setScrollPosition(1);
-
-    sheet->addChildWindow(animationSpeedSlider);
     animationSpeedSlider->subscribeEvent(
         CEGUI::Scrollbar::EventScrollPositionChanged,
         CEGUI::Event::Subscriber(&ViewFrameListener::handleAnimationSpeedChanged, mListener));
@@ -355,6 +354,18 @@ void View::createGUI()
     chooseButton = createGUIComponent("Choose bishop", 0.4, 0.60, 0.2, 0.1);
     chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseBishop, this));
     chooseButton->setVisible(false);
+
+    createGUIComponent("Move assistance level", 0.2, 0, 0.18, 0.04, "StaticText");
+
+    CEGUI::Spinner* moveAssistanceSpinner = static_cast<CEGUI::Spinner*>(
+        createGUIComponent("MoveAssistance", 0.38, 0.0, 0.05, 0.04, "Spinner", false));
+    moveAssistanceSpinner->setCurrentValue(3.0);
+    moveAssistanceSpinner->setMinimumValue(0.0);
+    moveAssistanceSpinner->setMaximumValue(3.0);
+    moveAssistanceSpinner->subscribeEvent(
+        CEGUI::Spinner::EventValueChanged,
+        CEGUI::Event::Subscriber(&BufferedInputHandler::handleMoveAssistanceChanged,
+        mListener->getHandler()));
 }
 
 void View::recreateLog()
