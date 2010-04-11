@@ -17,7 +17,7 @@ public:
     View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
         mRenderer(0), mSystem(0), mListener(0), mDecalFrustum(0),
         mFilterFrustum(0), mProjectorNode(0), mBoardWidth(0),
-        mBoardHeight(0), mRound(0)
+        mBoardHeight(0), mRound(0), mPast(false)
     {
     }
 
@@ -91,6 +91,7 @@ public:
     virtual void setPromotionMove(int fromX, int fromY, int toX, int toY);
     void setChooseButtonsVisibility(bool visible);
     virtual void windowClosed(RenderWindow* rw);
+    void ensureLatestState();
     virtual ~View();
 
 protected:
@@ -111,6 +112,7 @@ protected:
     std::size_t mBoardHeight;
     unsigned int mRound;
     std::vector<int> promotionMove;
+    bool mPast;
 
     void createRoot();
     void defineResources();
@@ -141,7 +143,7 @@ protected:
     bool undo(const CEGUI::EventArgs& e);
     bool restart(const CEGUI::EventArgs& e);
     bool dev(const CEGUI::EventArgs& e);
-    bool rollbackToSelectedLog(const CEGUI::EventArgs& e);
+    bool visitSelectedLog(const CEGUI::EventArgs& e);
     bool chooseQueen(const CEGUI::EventArgs& e);
     bool chooseRook(const CEGUI::EventArgs& e);
     bool chooseKnight(const CEGUI::EventArgs& e);

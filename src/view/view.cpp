@@ -310,36 +310,36 @@ void View::createGUI()
     CEGUI::Window* sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
     mSystem->setGUISheet(sheet);
 
-    createGUIComponent("Animation speed", 0.6, 0.005, 0.19, 0.04, "StaticText", false, false)
+    createGUIComponent("Animation speed", 0.6, 0.005, 0.19, 0.05, "StaticText", false, false)
         ->setText("Animation speed: 1x");
 
     CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(
-        createGUIComponent("Animation speed", 0.605, 0.05, 0.17, 0.02, "HorizontalScrollbar", false, false));
+        createGUIComponent("Animation speed", 0.605, 0.055, 0.17, 0.02, "HorizontalScrollbar", false, false));
     animationSpeedSlider->setDocumentSize(4);
     animationSpeedSlider->setScrollPosition(1);
     animationSpeedSlider->subscribeEvent(
         CEGUI::Scrollbar::EventScrollPositionChanged,
         CEGUI::Event::Subscriber(&ViewFrameListener::handleAnimationSpeedChanged, mListener));
 
-    createGUIComponent("Undo", 0, 0.10, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Undo", 0.875, 0.45, 0.12, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::undo, this));
 
-    createGUIComponent("Restart", 0, 0.17, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Restart", 0, 0.10, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::restart, this));
 
-    createGUIComponent("Quit", 0, 0.22, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Quit", 0, 0.15, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
 
-    createGUIComponent("FPS info", 0, 0.29, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("FPS info", 0, 0.22, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
 
-    createGUIComponent("Dev", 0, 0.34, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Dev", 0, 0.27, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::dev, this));
 
     createGUIComponent("Game log", 0.875, 0.005, 0.12, 0.05, "StaticText");
-    createGUIComponent("Log", 0.875, 0.06, 0.12, 0.4, "Listbox")->subscribeEvent(
-        CEGUI::Listbox::EventSelectionChanged,
-        CEGUI::Event::Subscriber(&View::rollbackToSelectedLog, this));
+    createGUIComponent("Log", 0.875, 0.05, 0.12, 0.4, "Listbox")
+        ->subscribeEvent(CEGUI::Listbox::EventSelectionChanged,
+        CEGUI::Event::Subscriber(&View::visitSelectedLog, this));
 
     CEGUI::Window* chooseButton = createGUIComponent("Choose queen", 0.4, 0.30, 0.2, 0.1);
     chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseQueen, this));
@@ -357,10 +357,10 @@ void View::createGUI()
     chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseBishop, this));
     chooseButton->setVisible(false);
 
-    createGUIComponent("Move assistance level", 0.25, 0.005, 0.18, 0.04, "StaticText", true, false);
+    createGUIComponent("Move assistance level", 0.25, 0.005, 0.18, 0.05, "StaticText", true, false);
 
     CEGUI::Spinner* moveAssistanceSpinner = static_cast<CEGUI::Spinner*>(
-        createGUIComponent("Move assistance", 0.43, 0.005, 0.05, 0.04, "Spinner", false, false));
+        createGUIComponent("Move assistance", 0.43, 0.005, 0.05, 0.05, "Spinner", false, false));
     moveAssistanceSpinner->setCurrentValue(3.0);
     moveAssistanceSpinner->setMinimumValue(0.0);
     moveAssistanceSpinner->setMaximumValue(3.0);
@@ -579,12 +579,21 @@ Vector3 View::convertPosition(int x, int y) const
 
 bool View::undo(const CEGUI::EventArgs& e)
 {
-    mMiddleman->undo();
+    if (mPast)
+    {
+        mMiddleman->undo(mMiddleman->getGameLog().size() - mRound);
+    }
+    else
+    {
+        mMiddleman->undo();
+    }
+    ensureLatestState();
     return true;
 }
 
 bool View::restart(const CEGUI::EventArgs& e)
 {
+    ensureLatestState();
     mMiddleman->undo(mRound);
     return true;
 }
@@ -595,7 +604,7 @@ bool View::dev(const CEGUI::EventArgs& e)
     return true;
 }
 
-bool View::rollbackToSelectedLog(const CEGUI::EventArgs& e)
+bool View::visitSelectedLog(const CEGUI::EventArgs& e)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
     CEGUI::Window* logWindow = wmgr.getWindow("View/LogListbox");
@@ -605,7 +614,21 @@ bool View::rollbackToSelectedLog(const CEGUI::EventArgs& e)
     if (selected)
     {
         std::size_t selectedIndex = logList->getItemIndex(selected);
-        mMiddleman->undo(logList->getItemCount() - selectedIndex - 1);
+        if (selectedIndex + 1 != mMiddleman->getGameLog().size())
+        {
+            setBoard(mMiddleman->getGameStateAt(selectedIndex + 1), selectedIndex + 1);
+
+            mSceneMgr->setAmbientLight(ColourValue(0.43, 0.25, 0.07));
+            mSceneMgr->getLight("Yellow")->setDiffuseColour(0.86, 0.5, 0.14);
+            mSceneMgr->getLight("Blue")->setDiffuseColour(0.86, 0.5, 0.14);
+
+            wmgr.getWindow("View/UndoButton")->setText("Undo future");
+            mPast = true;
+        }
+        else
+        {
+            ensureLatestState();
+        }
     }
     return true;
 }
@@ -660,4 +683,24 @@ void View::setChooseButtonsVisibility(bool visible)
     wmgr.getWindow("View/Choose rookButton")->setVisible(visible);
     wmgr.getWindow("View/Choose knightButton")->setVisible(visible);
     wmgr.getWindow("View/Choose bishopButton")->setVisible(visible);
+}
+
+void View::ensureLatestState()
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* logWindow = wmgr.getWindow("View/LogListbox");
+    CEGUI::Listbox* logList = static_cast<CEGUI::Listbox*>(logWindow);
+
+    if (mPast)
+    {
+        mPast = false;
+        wmgr.getWindow("View/UndoButton")->setText("Undo");
+
+        std::size_t latestRound = mMiddleman->getGameLog().size();
+        setBoard(mMiddleman->getGameStateAt(latestRound), latestRound);
+
+        mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
+        mSceneMgr->getLight("Yellow")->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
+        mSceneMgr->getLight("Blue")->setDiffuseColour(ViewConstants::BLUE_COLOUR);
+    }
 }

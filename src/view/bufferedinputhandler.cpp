@@ -259,6 +259,8 @@ void BufferedInputHandler::highlightHoveredSquare()
 
 void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 {
+    mView->ensureLatestState();
+
     setMouseRay();
     RaySceneQueryResult& result = mRaySceneQuery->execute();
     RaySceneQueryResult::iterator itr;
