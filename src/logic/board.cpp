@@ -12,6 +12,7 @@ Board::Board(const std::vector<Square>& squares, std::size_t width,
 
 }
 
+
 Board::Board(const Board& orig)
 {
     squares = orig.squares;
@@ -24,13 +25,10 @@ Board::Board(const Board& orig)
     rounds = orig.rounds;
 }
 
+
 Board::~Board()
 {
-    while (!deadPieces.empty())
-    {
-        delete deadPieces.back();
-        deadPieces.pop_back();
-    }
+    deleteAndClear(deadPieces);
 
     while (!squares.empty())
     {
@@ -39,12 +37,21 @@ Board::~Board()
     }
 }
 
+
 // public
+
 
 std::vector<std::size_t> Board::getValidMoves(std::size_t x, std::size_t y)
 {
     return getValidMoves(getPosition(x, y));
 }
+
+
+bool Board::hasValidMoves(std::size_t x, std::size_t y) const
+{
+    return !(getValidMoves(getPosition(x, y))).empty();
+}
+
 
 std::vector<Square> Board::createBoard(std::size_t width, std::size_t height)
 {
@@ -58,6 +65,7 @@ std::vector<Square> Board::createBoard(std::size_t width, std::size_t height)
 
     return squares;
 }
+
 
 bool Board::getCoordinates(std::size_t index, std::size_t& column,
     std::size_t& row, std::size_t boardWidth, std::size_t boardHeight)
@@ -76,6 +84,7 @@ bool Board::getCoordinates(std::size_t index, std::size_t& column,
     return true;
 }
 
+
 std::size_t Board::getPosition(std::size_t column, std::size_t row,
     std::size_t boardWidth, std::size_t boardHeight)
 {
@@ -86,6 +95,7 @@ std::size_t Board::getPosition(std::size_t column, std::size_t row,
 
     return (row * boardWidth + column);
 }
+
 
 unsigned int Board::move(   std::size_t& fromX, std::size_t& fromY,
                             std::size_t& toX,   std::size_t& toY,
@@ -109,8 +119,6 @@ unsigned int Board::move(   std::size_t& fromX, std::size_t& fromY,
                 retValue |= PROMOTION_OK;
             }
 
-
-
             // Try if moved piece has a special move.
             // Special move will set fromX, fromY, toX and toY
             // if special move was made and then return's true
@@ -133,15 +141,18 @@ unsigned int Board::move(   std::size_t& fromX, std::size_t& fromY,
     return retValue;
 }
 
+
 char Board::getSymbolAt(std::size_t column, std::size_t row) const
 {
     return squares.at(getPosition(column, row)).getSymbolOfPiece();
 }
 
+
 std::string Board::getNameAt(std::size_t column, std::size_t row) const
 {
     return squares.at(getPosition(column, row)).getNameOfPiece();
 }
+
 
 void Board::printBoard() const
 {
@@ -158,6 +169,7 @@ void Board::printBoard() const
     std::cout << std::endl;
 }
 
+
 void Board::initRoundSpecificState()
 {
     for (std::size_t i = 0; i < squares.size(); ++i)
@@ -170,7 +182,9 @@ void Board::initRoundSpecificState()
     }
 }
 
+
 // private
+
 
 bool Board::isMoveValid(std::size_t moveFrom, std::size_t moveTo,
     Colour player, unsigned int& mask) const
@@ -209,6 +223,7 @@ bool Board::isMoveValid(std::size_t moveFrom, std::size_t moveTo,
     return mask == 0;
 }
 
+
 // just forward this to the static version of this method.
 bool Board::getCoordinates(std::size_t index, std::size_t& column,
     std::size_t& row) const
@@ -216,11 +231,13 @@ bool Board::getCoordinates(std::size_t index, std::size_t& column,
     return getCoordinates(index, column, row, width, height);
 }
 
+
 // just forward this to the static version of this method.
 std::size_t Board::getPosition(std::size_t column, std::size_t row) const
 {
     return getPosition(column, row, width, height);
 }
+
 
 void Board::move(std::size_t moveFrom, std::size_t moveTo)
 {
@@ -228,4 +245,15 @@ void Board::move(std::size_t moveFrom, std::size_t moveTo)
     squares.at(moveTo).addPiece(piece);
     piece->specialMoveBehaviour(moveFrom, moveTo);
     ++rounds;
+}
+
+
+template <typename T>
+void Board::deleteAndClear(std::vector<T>& vector)
+{
+    while (!vector.empty())
+    {
+        delete vector.back();
+        vector.pop_back();
+    }
 }

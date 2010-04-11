@@ -26,23 +26,36 @@ public:
 
     // Methods
     static std::vector<Square> createBoard(std::size_t width = 8, std::size_t height = 8);
+
     virtual std::vector<std::size_t> getValidMoves(std::size_t location) const = 0;
+
     std::vector<std::size_t> getValidMoves(std::size_t x, std::size_t y);
+
+    bool hasValidMoves(std::size_t x, std::size_t y) const;
+
     static bool getCoordinates(std::size_t index, std::size_t& column,
         std::size_t& row, std::size_t boardWidth, std::size_t boardHeight);
+
     static std::size_t getPosition(std::size_t column, std::size_t row,
         std::size_t boardWidth, std::size_t boardHeight);
+
     unsigned int move(  std::size_t& fromX, std::size_t& fromY,
                         std::size_t& toX,   std::size_t& toY,
                         Colour player, unsigned int promoteTo = 0);
+
     void printBoard() const;
+
     void initRoundSpecificState();
 
     // Getters
     std::size_t getWidth() const { return width; }
+
     std::size_t getHeight() const { return height; }
+
     std::size_t getTotalSize() const { return squares.size(); }
+
     char getSymbolAt(std::size_t column, std::size_t row) const;
+
     std::string getNameAt(std::size_t column, std::size_t row) const;
 
     // Setters
@@ -60,12 +73,20 @@ protected:
     // Methods
     bool isMoveValid(std::size_t moveFrom, std::size_t moveTo,
         Colour player, unsigned int& mask) const;
+
     bool getCoordinates(std::size_t index, std::size_t& column,
         std::size_t& row) const;
+
     std::size_t getPosition(std::size_t column, std::size_t row) const;
+
     void move(std::size_t moveFrom, std::size_t moveTo);
+
     virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const = 0;
+
     virtual void promote(std::size_t location, unsigned int promoteTo) = 0;
+
+    template <typename T>
+    void deleteAndClear(std::vector<T>& vector);
 };
 
 #endif // _NALCG_BOARD_H_

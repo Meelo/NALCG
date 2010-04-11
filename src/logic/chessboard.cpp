@@ -196,6 +196,7 @@ bool ChessBoard::isUnderAttack(std::size_t location,
 
 std::vector<std::size_t> ChessBoard::getValidMoves(std::size_t location) const
 {
+    // TODO: cache these results per each turn.
     if (location >= squares.size()) { return std::vector<std::size_t>(); }
     Piece* piece = squares.at(location).getPiece();
     if (!piece) { return std::vector<std::size_t>(); }
