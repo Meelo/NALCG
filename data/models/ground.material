@@ -1,26 +1,4 @@
 
-material 13-Default
-{
-	technique
-	{
-		pass
-		{
-			ambient 0.588235 0.588235 0.588235 1
-			diffuse 0.588235 0.588235 0.588235 1
-			specular 0 0 0 10 0
-
-			texture_unit
-			{
-				texture desert.jpg
-			}
-		}
-
-	}
-
-}
-
-
-
 material color_247_242_229
 {
 	technique
@@ -34,6 +12,28 @@ material color_247_242_229
 			texture_unit
 			{
 				texture evil.jpg
+			}
+		}
+
+	}
+
+}
+
+
+
+material 13-Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 10 0
+
+			texture_unit
+			{
+				texture desert.jpg
 			}
 		}
 

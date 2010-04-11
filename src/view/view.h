@@ -56,6 +56,7 @@ public:
         createBoard(board);
         mRound = round;
         recreateLog();
+        recreateDeadPieces();
     }
     virtual void move(int fromX, int fromY, int toX, int toY,
         bool continuous = false)
@@ -65,6 +66,7 @@ public:
         {
             mRound++;
             recreateLog();
+            recreateDeadPieces();
         }
     }
     virtual void promoteMove(int fromX, int fromY, int toX, int toY,
@@ -74,6 +76,7 @@ public:
         mListener->move(toX, toY, toX, toY, false, promoteTo);
         mRound++;
         recreateLog();
+        recreateDeadPieces();
     }
     virtual void setControl(bool white, bool black) { }
 
@@ -82,9 +85,9 @@ public:
     virtual bool isWhiteTurn() const { return mRound % 2 == 0; }
 
     virtual void convertPosition(const Vector3& position, int* x, int* y) const;
-    virtual Vector3 convertPosition(int x, int y) const;
+    virtual Vector3 convertPosition(double x, double y) const;
     void createGround(bool visible);
-    virtual void createPiece(char type, const std::string& modelName, const Vector3& location);
+    virtual SceneNode* createPiece(char type, const std::string& modelName, const Vector3& location, SceneNode* parent = 0);
     std::string getMeshName(char symbol) const;
     CEGUI::Window* createGUIComponent(const std::string& text, double x, double y,
         double sizeX, double sizeY, const std::string& type = "Button", bool setText = true, bool visible = true);
@@ -129,6 +132,7 @@ protected:
     virtual void createInitialExplosion();
     virtual Entity* loadEntity(const std::string& entityName, const std::string& modelName);
     virtual void recreateLog();
+    virtual void recreateDeadPieces();
 
     // The function to create our decal projector
     void createProjector();

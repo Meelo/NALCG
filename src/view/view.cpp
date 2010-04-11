@@ -235,7 +235,16 @@ void View::makeMaterialReceiveDecal(const String &matName)
 
 Entity* View::loadEntity(const std::string& entityName, const std::string& modelName)
 {
-    Entity* ent = mSceneMgr->createEntity(entityName, modelName);
+    Entity* ent;
+    if (mSceneMgr->hasEntity(entityName))
+    {
+        ent = mSceneMgr->getEntity(entityName);
+    }
+    else
+    {
+        ent = mSceneMgr->createEntity(entityName, modelName);
+    }
+
     ent->setQueryFlags(0);
 
     AnimationStateSet* animations = ent->getAllAnimationStates();
@@ -247,20 +256,34 @@ Entity* View::loadEntity(const std::string& entityName, const std::string& model
             AnimationState* animationState = it.getNext();
             animationState->setEnabled(true);
             animationState->setLoop(true);
+            animationState->setTimePosition(0);
         }
     }
     return ent;
 }
 
-void View::createPiece(char type, const std::string& modelName,
-                       const Vector3& location)
+SceneNode* View::createPiece(char type, const std::string& modelName,
+                       const Vector3& location, SceneNode* parent)
 {
+    if (!parent)
+    {
+        parent = mSceneMgr->getRootSceneNode();
+    }
+
     std::ostringstream entityName;
-    entityName << type << modelName << location.x << location.y << location.z;
+    entityName << type << modelName << location.x << location.y << location.z << parent->getName();
 
-    SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(entityName.str(), location);
+    SceneNode* node = parent->createChildSceneNode(entityName.str(), location);
 
-    Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName + ".mesh");
+    Entity* ent;
+    if (mSceneMgr->hasEntity(entityName.str()))
+    {
+        ent = mSceneMgr->getEntity(entityName.str());
+    }
+    else
+    {
+        ent = mSceneMgr->createEntity(entityName.str(), modelName + ".mesh");
+    }
     //ent->setCastShadows(true);
     ent->setQueryFlags(0);
     node->attachObject(ent);
@@ -283,6 +306,7 @@ void View::createPiece(char type, const std::string& modelName,
         node->yaw(Degree(180));
     }
     node->setInitialState();
+    return node;
 }
 
 CEGUI::Window* View::createGUIComponent(const std::string& text, double x, double y,
@@ -397,6 +421,39 @@ void View::recreateLog()
     logList->ensureItemIsVisible(logList->getItemCount() - 1);
 }
 
+void View::recreateDeadPieces()
+{
+    const Board* board = mMiddleman->getGameStateAt(mRound);
+    const std::vector<Piece*> deadPieces = board->getDeadPieces();
+    SceneNode* whiteDeads = mSceneMgr->getSceneNode("White dead pieces");
+    SceneNode* blackDeads = mSceneMgr->getSceneNode("Black dead pieces");
+    blackDeads->removeAndDestroyAllChildren();
+    whiteDeads->removeAndDestroyAllChildren();
+
+    for (std::vector<Piece*>::const_iterator it = deadPieces.begin();
+        it != deadPieces.end(); it++)
+    {
+        char symbol = (*it)->getSymbol();
+        char upperCaseSymbol = symbol & (~(1 << 5));
+        SceneNode* parent = (*it)->getColour() == BLACK ? blackDeads : whiteDeads;
+
+        int nChildren = parent->numChildren();
+        int xPosition, yPosition;
+        if (nChildren > 3)
+        {
+            xPosition = (nChildren + 1) % 3;
+            yPosition = (nChildren + 1) / 3;
+        }
+        else
+        {
+            xPosition = nChildren % 2;
+            yPosition = nChildren / 2;
+        }
+        createPiece(upperCaseSymbol, getMeshName(symbol),
+            convertPosition(xPosition, yPosition * 1.5), parent)->pitch(Degree(-90));
+    }
+}
+
 void View::createScene()
 {
     Light *light;
@@ -415,21 +472,6 @@ void View::createScene()
     light->setPosition(Vector3(-1500, 1500, -1500));
     light->setDiffuseColour(ViewConstants::BLUE_COLOUR);
     light->setSpecularColour(1.0, 1.0, 1.0);
-
-
-    /*// Create the decal projector
-    createProjector();
-
-    // Make all of the materials in the head entities receive the decal
-    //for (unsigned int i = 0; i < ent->getNumSubEntities(); i++)
-    //makeMaterialReceiveDecal(ent->getSubEntity(i)->getMaterialName());
-    makeMaterialReceiveDecal("board/square/white");
-    makeMaterialReceiveDecal("board/square/black");
-    makeMaterialReceiveDecal("asdfasf");
-    makeMaterialReceiveDecal("color_247_242_229");
-    makeMaterialReceiveDecal("22-Default");
-    makeMaterialReceiveDecal("18-Default");*/
-    //mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 
     // Loading the sky material so it doesn't have to be loaded while
     // playing the opening animation sequence.
@@ -515,7 +557,9 @@ void View::createBoard(const Board* board)
             ent = mSceneMgr->createEntity(name.str(), "square.mesh");
             ent->setMaterialName("board/square/move");
             ent->setQueryFlags(0);
-            node->createChildSceneNode(Vector3(0, 1, 0))->attachObject(ent);
+            SceneNode* indicatorNode = node->createChildSceneNode(Vector3(0, 1, 0));
+            indicatorNode->attachObject(ent);
+            indicatorNode->scale(1.01, 1.0, 1.01);
             ent->setVisible(false);
         }
     }
@@ -528,6 +572,13 @@ void View::createBoard(const Board* board)
     SceneNode* selectionNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Selection");
     selectionNode->attachObject(mSceneMgr->getParticleSystem("Selection"));
     selectionNode->setVisible(false);
+
+    mSceneMgr->getRootSceneNode()->createChildSceneNode("Black dead pieces",
+        Vector3(ViewConstants::SQUARE_SIDE_LENGTH * 9, -40,
+        ViewConstants::SQUARE_SIDE_LENGTH * 0.5));
+    mSceneMgr->getRootSceneNode()->createChildSceneNode("White dead pieces",
+        Vector3(-ViewConstants::SQUARE_SIDE_LENGTH * 9, -40,
+        ViewConstants::SQUARE_SIDE_LENGTH * 0.5))->yaw(Degree(180));
 
     mListener->setCanShowSelectablePieces(true);
     mListener->clearSelectedObject();
@@ -568,7 +619,7 @@ void View::convertPosition(const Vector3& position, int* x, int* y) const
     *y = (position.z + offsetY + 0.5) / sideLength;
 }
 
-Vector3 View::convertPosition(int x, int y) const
+Vector3 View::convertPosition(double x, double y) const
 {
     int sideLength = ViewConstants::SQUARE_SIDE_LENGTH;
     int offsetX = (getBoardWidth() - 1) * sideLength / 2;
