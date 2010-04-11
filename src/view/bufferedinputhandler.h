@@ -43,6 +43,7 @@ public:
     virtual bool showSelectablePieces();
     virtual void highlightHoveredSquare();
     bool handleMoveAssistanceChanged(const CEGUI::EventArgs& e);
+    bool handleSafeModeChanged(const CEGUI::EventArgs& e);
     virtual bool canShowSelectablePieces()
     {
         return mCanShowSelectablePieces;

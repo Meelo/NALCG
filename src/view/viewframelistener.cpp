@@ -136,12 +136,62 @@ bool ViewFrameListener::toggleDebugInfo(const CEGUI::EventArgs& e)
     return true;
 }
 
+bool ViewFrameListener::hideGUI(const CEGUI::EventArgs& e)
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* hideButton = wmgr.getWindow("View/" + ViewConstants::SHOW_ADDITIONAL + "Button");
+
+    using ViewConstants::SHOW_ADDITIONAL;
+    using ViewConstants::HIDE_GUI;
+    using ViewConstants::SHOW_BASIC;
+
+    if (hideButton->getText() == SHOW_ADDITIONAL)
+    {
+        hideButton->setText(HIDE_GUI);
+        wmgr.getWindow("View/Animation speedStaticText")->setVisible(true);
+        wmgr.getWindow("View/Animation speedHorizontalScrollbar")->setVisible(true);
+        wmgr.getWindow("View/Unsafe modeCheckbox")->setVisible(true);
+        wmgr.getWindow("View/Move assistance levelStaticText")->setVisible(true);
+        wmgr.getWindow("View/Move assistanceSpinner")->setVisible(true);
+    }
+    else if (hideButton->getText() == HIDE_GUI)
+    {
+        hideButton->setText(SHOW_BASIC);
+        wmgr.getWindow("View/Animation speedStaticText")->setVisible(false);
+        wmgr.getWindow("View/Animation speedHorizontalScrollbar")->setVisible(false);
+        wmgr.getWindow("View/Unsafe modeCheckbox")->setVisible(false);
+        wmgr.getWindow("View/Move assistance levelStaticText")->setVisible(false);
+        wmgr.getWindow("View/Move assistanceSpinner")->setVisible(false);
+
+        wmgr.getWindow("View/UndoButton")->setVisible(false);
+        wmgr.getWindow("View/RestartButton")->setVisible(false);
+        wmgr.getWindow("View/QuitButton")->setVisible(false);
+        wmgr.getWindow("View/DevButton")->setVisible(false);
+        wmgr.getWindow("View/FPS infoButton")->setVisible(false);
+        wmgr.getWindow("View/LogListbox")->setVisible(false);
+        wmgr.getWindow("View/Game logStaticText")->setVisible(false);
+    }
+    else if (hideButton->getText() == SHOW_BASIC)
+    {
+        hideButton->setText(SHOW_ADDITIONAL);
+
+        wmgr.getWindow("View/UndoButton")->setVisible(true);
+        wmgr.getWindow("View/RestartButton")->setVisible(true);
+        wmgr.getWindow("View/QuitButton")->setVisible(true);
+        wmgr.getWindow("View/DevButton")->setVisible(true);
+        wmgr.getWindow("View/FPS infoButton")->setVisible(true);
+        wmgr.getWindow("View/LogListbox")->setVisible(true);
+        wmgr.getWindow("View/Game logStaticText")->setVisible(true);
+    }
+    return true;
+}
+
 bool ViewFrameListener::handleAnimationSpeedChanged(const CEGUI::EventArgs& e)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-    CEGUI::Window* text = wmgr.getWindow("View/Animation speed: 1xStaticText");
+    CEGUI::Window* text = wmgr.getWindow("View/Animation speedStaticText");
 
-    CEGUI::Window* window = wmgr.getWindow("View/AnimationSpeedHorizontalScrollbar");
+    CEGUI::Window* window = wmgr.getWindow("View/Animation speedHorizontalScrollbar");
     CEGUI::Scrollbar* scrollbar = static_cast<CEGUI::Scrollbar*>(window);
     float position = scrollbar->getScrollPosition();
     float multiplier = position;
