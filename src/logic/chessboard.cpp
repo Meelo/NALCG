@@ -485,7 +485,7 @@ bool ChessBoard::isPawnlyUnsafe(std::size_t location, char symbol,
     getCoordinates(location, x, y);
     std::size_t limit = squares.size();
 
-    int direction = (symbol & (1 << 5)) ? 1 : -1;
+    int direction = (symbol & (1 << 5)) ? -1 : 1;
     std::size_t diagL = getPosition(x - 1, y + direction);
     std::size_t diagR = getPosition(x + 1, y + direction);
 
