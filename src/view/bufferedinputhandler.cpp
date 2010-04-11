@@ -259,6 +259,8 @@ void BufferedInputHandler::highlightHoveredSquare()
 
 void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 {
+    mView->ensureLatestState();
+
     setMouseRay();
     RaySceneQueryResult& result = mRaySceneQuery->execute();
     RaySceneQueryResult::iterator itr;
@@ -559,9 +561,9 @@ void BufferedInputHandler::onRightReleased(const OIS::MouseEvent& arg)
 bool BufferedInputHandler::handleMoveAssistanceChanged(const CEGUI::EventArgs& e)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-    CEGUI::Window* window = wmgr.getWindow("View/MoveAssistanceSpinner");
+    CEGUI::Window* window = wmgr.getWindow("View/Move assistanceSpinner");
     CEGUI::Spinner* spinner = static_cast<CEGUI::Spinner*>(window);
-    
+
     mMoveAssistanceLevel = spinner->getCurrentValue() + 0.5;
 
     resetSquareIndicators();
@@ -573,5 +575,15 @@ bool BufferedInputHandler::handleMoveAssistanceChanged(const CEGUI::EventArgs& e
     {
         mCanShowSelectablePieces = true;
     }
+    return true;
+}
+
+bool BufferedInputHandler::handleSafeModeChanged(const CEGUI::EventArgs& e)
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* window = wmgr.getWindow("View/Unsafe modeCheckbox");
+    CEGUI::Checkbox* checkbox = static_cast<CEGUI::Checkbox*>(window);
+
+    mSafeMode = !checkbox->isSelected();
     return true;
 }

@@ -44,6 +44,7 @@ public:
     std::size_t getTotalSize() const { return squares.size(); }
     char getSymbolAt(std::size_t column, std::size_t row) const;
     std::string getNameAt(std::size_t column, std::size_t row) const;
+    const std::vector<Piece*>& getDeadPieces() const { return deadPieces; }
 
     // Setters
 

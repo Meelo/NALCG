@@ -15,9 +15,8 @@ class View : public WindowEventListener, public EndUser
 {
 public:
     View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
-        mRenderer(0), mSystem(0), mListener(0), mDecalFrustum(0),
-        mFilterFrustum(0), mProjectorNode(0), mBoardWidth(0),
-        mBoardHeight(0), mRound(0)
+        mRenderer(0), mSystem(0), mListener(0), mBoardWidth(0),
+        mBoardHeight(0), mRound(0), mPast(false)
     {
     }
 
@@ -56,6 +55,7 @@ public:
         createBoard(board);
         mRound = round;
         recreateLog();
+        recreateDeadPieces();
     }
     virtual void move(int fromX, int fromY, int toX, int toY,
         bool continuous = false)
@@ -65,6 +65,7 @@ public:
         {
             mRound++;
             recreateLog();
+            recreateDeadPieces();
         }
     }
     virtual void promoteMove(int fromX, int fromY, int toX, int toY,
@@ -74,6 +75,7 @@ public:
         mListener->move(toX, toY, toX, toY, false, promoteTo);
         mRound++;
         recreateLog();
+        recreateDeadPieces();
     }
     virtual void setControl(bool white, bool black) { }
 
@@ -82,15 +84,16 @@ public:
     virtual bool isWhiteTurn() const { return mRound % 2 == 0; }
 
     virtual void convertPosition(const Vector3& position, int* x, int* y) const;
-    virtual Vector3 convertPosition(int x, int y) const;
+    virtual Vector3 convertPosition(double x, double y) const;
     void createGround(bool visible);
-    virtual void createPiece(char type, const std::string& modelName, const Vector3& location);
+    virtual SceneNode* createPiece(char type, const std::string& modelName, const Vector3& location, SceneNode* parent = 0);
     std::string getMeshName(char symbol) const;
     CEGUI::Window* createGUIComponent(const std::string& text, double x, double y,
-        double sizeX, double sizeY, const std::string& type = "Button", bool setText = true);
+        double sizeX, double sizeY, const std::string& type = "Button", bool setText = true, bool visible = true);
     virtual void setPromotionMove(int fromX, int fromY, int toX, int toY);
     void setChooseButtonsVisibility(bool visible);
     virtual void windowClosed(RenderWindow* rw);
+    void ensureLatestState();
     virtual ~View();
 
 protected:
@@ -104,13 +107,11 @@ protected:
     SceneManager* mSceneMgr;
     Camera* mCamera;
     RenderWindow* mWindow;
-    Frustum* mDecalFrustum;
-    Frustum* mFilterFrustum;
-    SceneNode *mProjectorNode;
     std::size_t mBoardWidth;
     std::size_t mBoardHeight;
     unsigned int mRound;
     std::vector<int> promotionMove;
+    bool mPast;
 
     void createRoot();
     void defineResources();
@@ -127,12 +128,7 @@ protected:
     virtual void createInitialExplosion();
     virtual Entity* loadEntity(const std::string& entityName, const std::string& modelName);
     virtual void recreateLog();
-
-    // The function to create our decal projector
-    void createProjector();
-
-    // A function to take an existing material and make it receive the projected decal
-    void makeMaterialReceiveDecal(const String &matName);
+    virtual void recreateDeadPieces();
 
     void createScene();
     void createGUI();
@@ -141,7 +137,7 @@ protected:
     bool undo(const CEGUI::EventArgs& e);
     bool restart(const CEGUI::EventArgs& e);
     bool dev(const CEGUI::EventArgs& e);
-    bool rollbackToSelectedLog(const CEGUI::EventArgs& e);
+    bool visitSelectedLog(const CEGUI::EventArgs& e);
     bool chooseQueen(const CEGUI::EventArgs& e);
     bool chooseRook(const CEGUI::EventArgs& e);
     bool chooseKnight(const CEGUI::EventArgs& e);

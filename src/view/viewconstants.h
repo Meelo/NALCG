@@ -13,6 +13,10 @@ namespace ViewConstants
     static const int SQUARE_SIDE_LENGTH = 200;
     static const Vector3 WHITE_CAMERA_POSITION(0, 1800, 1900);
     static const Vector3 BLACK_CAMERA_POSITION(0, 1800, -1900);
+
+    static const std::string SHOW_ADDITIONAL("Show additional options");
+    static const std::string HIDE_GUI(       "Hide graphical interface");
+    static const std::string SHOW_BASIC(     "Show basic options");
 };
 
 #endif // _NALCG_VIEW_CONSTANTS_H_

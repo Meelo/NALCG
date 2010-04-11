@@ -181,61 +181,18 @@ void View::createViewports()
     mCamera->setAspectRatio(Real(vp->getActualWidth()) / Real(vp->getActualHeight()));
 }
 
-// The function to create our decal projector
-void View::createProjector()
-{
-    // set up the main decal projection frustum
-    mDecalFrustum = new Frustum();
-    mProjectorNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("DecalProjectorNode");
-    mProjectorNode->attachObject(mDecalFrustum);
-    mProjectorNode->setPosition(0,500,1500);
-    mDecalFrustum->setQueryFlags(0);
-
-    // include these two lines if you don't want perspective projection
-    //mDecalFrustum->setProjectionType(PT_ORTHOGRAPHIC);
-    //mDecalFrustum->setNearClipDistance(25);
-
-    // set up the perpendicular filter texture frustum
-    mFilterFrustum = new Frustum();
-    mFilterFrustum->setProjectionType(PT_ORTHOGRAPHIC);
-    SceneNode *filterNode = mProjectorNode->createChildSceneNode("DecalFilterNode");
-    filterNode->attachObject(mFilterFrustum);
-    filterNode->setOrientation(Quaternion(Degree(90),Vector3::UNIT_Y));
-    mFilterFrustum->setQueryFlags(0);
-}
-
-// A function to take an existing material and make it receive the projected decal
-void View::makeMaterialReceiveDecal(const String &matName)
-{
-    // get the material
-    MaterialPtr mat = (MaterialPtr)MaterialManager::getSingleton().getByName(matName);
-
-    // create a new pass in the material to render the decal
-    Pass *pass = mat->getTechnique(0)->createPass();
-
-    // set our pass to blend the decal over the model's regular texture
-    pass->setSceneBlending(SBT_TRANSPARENT_ALPHA);
-    pass->setDepthBias(1);
-
-    // set the decal to be self illuminated instead of lit by scene lighting
-    pass->setLightingEnabled(false);
-
-    // set up the decal's texture unit
-    TextureUnitState *texState = pass->createTextureUnitState("decal.png");
-    texState->setProjectiveTexturing(true, mDecalFrustum);
-    texState->setTextureAddressingMode(TextureUnitState::TAM_CLAMP);
-    texState->setTextureFiltering(FO_POINT, FO_LINEAR, FO_NONE);
-
-    // set up the filter texture's texture unit
-    texState = pass->createTextureUnitState("decal_filter.png");
-    texState->setProjectiveTexturing(true, mFilterFrustum);
-    texState->setTextureAddressingMode(TextureUnitState::TAM_CLAMP);
-    texState->setTextureFiltering(TFO_NONE);
-}
-
 Entity* View::loadEntity(const std::string& entityName, const std::string& modelName)
 {
-    Entity* ent = mSceneMgr->createEntity(entityName, modelName);
+    Entity* ent;
+    if (mSceneMgr->hasEntity(entityName))
+    {
+        ent = mSceneMgr->getEntity(entityName);
+    }
+    else
+    {
+        ent = mSceneMgr->createEntity(entityName, modelName);
+    }
+
     ent->setQueryFlags(0);
 
     AnimationStateSet* animations = ent->getAllAnimationStates();
@@ -247,20 +204,34 @@ Entity* View::loadEntity(const std::string& entityName, const std::string& model
             AnimationState* animationState = it.getNext();
             animationState->setEnabled(true);
             animationState->setLoop(true);
+            animationState->setTimePosition(0);
         }
     }
     return ent;
 }
 
-void View::createPiece(char type, const std::string& modelName,
-                       const Vector3& location)
+SceneNode* View::createPiece(char type, const std::string& modelName,
+                       const Vector3& location, SceneNode* parent)
 {
+    if (!parent)
+    {
+        parent = mSceneMgr->getRootSceneNode();
+    }
+
     std::ostringstream entityName;
-    entityName << type << modelName << location.x << location.y << location.z;
+    entityName << type << modelName << location.x << location.y << location.z << parent->getName();
 
-    SceneNode *node = mSceneMgr->getRootSceneNode()->createChildSceneNode(entityName.str(), location);
+    SceneNode* node = parent->createChildSceneNode(entityName.str(), location);
 
-    Entity* ent = mSceneMgr->createEntity(entityName.str(), modelName + ".mesh");
+    Entity* ent;
+    if (mSceneMgr->hasEntity(entityName.str()))
+    {
+        ent = mSceneMgr->getEntity(entityName.str());
+    }
+    else
+    {
+        ent = mSceneMgr->createEntity(entityName.str(), modelName + ".mesh");
+    }
     //ent->setCastShadows(true);
     ent->setQueryFlags(0);
     node->attachObject(ent);
@@ -283,10 +254,11 @@ void View::createPiece(char type, const std::string& modelName,
         node->yaw(Degree(180));
     }
     node->setInitialState();
+    return node;
 }
 
 CEGUI::Window* View::createGUIComponent(const std::string& text, double x, double y,
-                                        double sizeX, double sizeY, const std::string& type, bool setText)
+                                        double sizeX, double sizeY, const std::string& type, bool setText, bool visible)
 {
     CEGUI::WindowManager* win = CEGUI::WindowManager::getSingletonPtr();
     CEGUI::Window* sheet = win->getWindow("View/Sheet");
@@ -300,6 +272,7 @@ CEGUI::Window* View::createGUIComponent(const std::string& text, double x, doubl
     button->setSize(CEGUI::UVector2(CEGUI::UDim(sizeX, 0), CEGUI::UDim(sizeY, 0)));
 
     sheet->addChildWindow(button);
+    button->setVisible(visible);
     return button;
 }
 
@@ -309,35 +282,36 @@ void View::createGUI()
     CEGUI::Window* sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
     mSystem->setGUISheet(sheet);
 
-    createGUIComponent("Animation speed: 1x", 0, 0, 0.19, 0.05, "StaticText");
+    createGUIComponent("Animation speed", 0.6, 0.005, 0.19, 0.05, "StaticText", false, false)
+        ->setText("Animation speed: 1x");
 
     CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(
-        createGUIComponent("AnimationSpeed", 0.005, 0.055, 0.17, 0.02, "HorizontalScrollbar"));
+        createGUIComponent("Animation speed", 0.605, 0.055, 0.17, 0.02, "HorizontalScrollbar", false, false));
     animationSpeedSlider->setDocumentSize(4);
     animationSpeedSlider->setScrollPosition(1);
     animationSpeedSlider->subscribeEvent(
         CEGUI::Scrollbar::EventScrollPositionChanged,
         CEGUI::Event::Subscriber(&ViewFrameListener::handleAnimationSpeedChanged, mListener));
 
-    createGUIComponent("Undo", 0, 0.10, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Undo", 0.875, 0.45, 0.12, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::undo, this));
 
-    createGUIComponent("Restart", 0, 0.17, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Restart", 0, 0.10, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::restart, this));
 
-    createGUIComponent("Quit", 0, 0.22, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Quit", 0, 0.15, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
 
-    createGUIComponent("FPS info", 0, 0.29, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("FPS info", 0, 0.22, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
 
-    createGUIComponent("Dev", 0, 0.34, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Dev", 0, 0.27, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::dev, this));
 
     createGUIComponent("Game log", 0.875, 0.005, 0.12, 0.05, "StaticText");
-    createGUIComponent("Log", 0.875, 0.06, 0.12, 0.4, "Listbox")->subscribeEvent(
-        CEGUI::Listbox::EventSelectionChanged,
-        CEGUI::Event::Subscriber(&View::rollbackToSelectedLog, this));
+    createGUIComponent("Log", 0.875, 0.05, 0.12, 0.4, "Listbox")
+        ->subscribeEvent(CEGUI::Listbox::EventSelectionChanged,
+        CEGUI::Event::Subscriber(&View::visitSelectedLog, this));
 
     CEGUI::Window* chooseButton = createGUIComponent("Choose queen", 0.4, 0.30, 0.2, 0.1);
     chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseQueen, this));
@@ -355,10 +329,10 @@ void View::createGUI()
     chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseBishop, this));
     chooseButton->setVisible(false);
 
-    createGUIComponent("Move assistance level", 0.2, 0, 0.18, 0.04, "StaticText");
+    createGUIComponent("Move assistance level", 0.25, 0.005, 0.18, 0.05, "StaticText", true, false);
 
     CEGUI::Spinner* moveAssistanceSpinner = static_cast<CEGUI::Spinner*>(
-        createGUIComponent("MoveAssistance", 0.38, 0.0, 0.05, 0.04, "Spinner", false));
+        createGUIComponent("Move assistance", 0.43, 0.005, 0.05, 0.05, "Spinner", false, false));
     moveAssistanceSpinner->setCurrentValue(3.0);
     moveAssistanceSpinner->setMinimumValue(0.0);
     moveAssistanceSpinner->setMaximumValue(3.0);
@@ -366,6 +340,14 @@ void View::createGUI()
         CEGUI::Spinner::EventValueChanged,
         CEGUI::Event::Subscriber(&BufferedInputHandler::handleMoveAssistanceChanged,
         mListener->getHandler()));
+
+    CEGUI::Window* unsafe = createGUIComponent("Unsafe mode", 0.25, 0.045, 0.3, 0.04, "Checkbox", true, false);
+    unsafe->setText("Allow concurrent animations (UNSAFE!)");
+    unsafe->subscribeEvent(CEGUI::Checkbox::EventCheckStateChanged,
+        CEGUI::Event::Subscriber(&BufferedInputHandler::handleSafeModeChanged, mListener->getHandler()));
+
+    createGUIComponent(ViewConstants::SHOW_ADDITIONAL, 0.005, 0.005, 0.22, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+        CEGUI::Event::Subscriber(&ViewFrameListener::hideGUI, mListener));
 }
 
 void View::recreateLog()
@@ -387,6 +369,39 @@ void View::recreateLog()
     logList->ensureItemIsVisible(logList->getItemCount() - 1);
 }
 
+void View::recreateDeadPieces()
+{
+    const Board* board = mMiddleman->getGameStateAt(mRound);
+    const std::vector<Piece*> deadPieces = board->getDeadPieces();
+    SceneNode* whiteDeads = mSceneMgr->getSceneNode("White dead pieces");
+    SceneNode* blackDeads = mSceneMgr->getSceneNode("Black dead pieces");
+    blackDeads->removeAndDestroyAllChildren();
+    whiteDeads->removeAndDestroyAllChildren();
+
+    for (std::vector<Piece*>::const_iterator it = deadPieces.begin();
+        it != deadPieces.end(); it++)
+    {
+        char symbol = (*it)->getSymbol();
+        char upperCaseSymbol = symbol & (~(1 << 5));
+        SceneNode* parent = (*it)->getColour() == BLACK ? blackDeads : whiteDeads;
+
+        int nChildren = parent->numChildren();
+        int xPosition, yPosition;
+        if (nChildren > 3)
+        {
+            xPosition = (nChildren + 1) % 3;
+            yPosition = (nChildren + 1) / 3;
+        }
+        else
+        {
+            xPosition = nChildren % 2;
+            yPosition = nChildren / 2;
+        }
+        createPiece(upperCaseSymbol, getMeshName(symbol),
+            convertPosition(xPosition, yPosition * 1.5), parent)->pitch(Degree(-90));
+    }
+}
+
 void View::createScene()
 {
     Light *light;
@@ -405,21 +420,6 @@ void View::createScene()
     light->setPosition(Vector3(-1500, 1500, -1500));
     light->setDiffuseColour(ViewConstants::BLUE_COLOUR);
     light->setSpecularColour(1.0, 1.0, 1.0);
-
-
-    /*// Create the decal projector
-    createProjector();
-
-    // Make all of the materials in the head entities receive the decal
-    //for (unsigned int i = 0; i < ent->getNumSubEntities(); i++)
-    //makeMaterialReceiveDecal(ent->getSubEntity(i)->getMaterialName());
-    makeMaterialReceiveDecal("board/square/white");
-    makeMaterialReceiveDecal("board/square/black");
-    makeMaterialReceiveDecal("asdfasf");
-    makeMaterialReceiveDecal("color_247_242_229");
-    makeMaterialReceiveDecal("22-Default");
-    makeMaterialReceiveDecal("18-Default");*/
-    //mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 
     // Loading the sky material so it doesn't have to be loaded while
     // playing the opening animation sequence.
@@ -505,7 +505,9 @@ void View::createBoard(const Board* board)
             ent = mSceneMgr->createEntity(name.str(), "square.mesh");
             ent->setMaterialName("board/square/move");
             ent->setQueryFlags(0);
-            node->createChildSceneNode(Vector3(0, 1, 0))->attachObject(ent);
+            SceneNode* indicatorNode = node->createChildSceneNode(Vector3(0, 1, 0));
+            indicatorNode->attachObject(ent);
+            indicatorNode->scale(1.01, 1.0, 1.01);
             ent->setVisible(false);
         }
     }
@@ -518,6 +520,13 @@ void View::createBoard(const Board* board)
     SceneNode* selectionNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Selection");
     selectionNode->attachObject(mSceneMgr->getParticleSystem("Selection"));
     selectionNode->setVisible(false);
+
+    mSceneMgr->getRootSceneNode()->createChildSceneNode("Black dead pieces",
+        Vector3(ViewConstants::SQUARE_SIDE_LENGTH * 9, -40,
+        ViewConstants::SQUARE_SIDE_LENGTH * 0.5));
+    mSceneMgr->getRootSceneNode()->createChildSceneNode("White dead pieces",
+        Vector3(-ViewConstants::SQUARE_SIDE_LENGTH * 9, -40,
+        ViewConstants::SQUARE_SIDE_LENGTH * 0.5))->yaw(Degree(180));
 
     mListener->setCanShowSelectablePieces(true);
     mListener->clearSelectedObject();
@@ -558,7 +567,7 @@ void View::convertPosition(const Vector3& position, int* x, int* y) const
     *y = (position.z + offsetY + 0.5) / sideLength;
 }
 
-Vector3 View::convertPosition(int x, int y) const
+Vector3 View::convertPosition(double x, double y) const
 {
     int sideLength = ViewConstants::SQUARE_SIDE_LENGTH;
     int offsetX = (getBoardWidth() - 1) * sideLength / 2;
@@ -569,12 +578,21 @@ Vector3 View::convertPosition(int x, int y) const
 
 bool View::undo(const CEGUI::EventArgs& e)
 {
-    mMiddleman->undo();
+    if (mPast)
+    {
+        mMiddleman->undo(mMiddleman->getGameLog().size() - mRound);
+    }
+    else
+    {
+        mMiddleman->undo();
+    }
+    ensureLatestState();
     return true;
 }
 
 bool View::restart(const CEGUI::EventArgs& e)
 {
+    ensureLatestState();
     mMiddleman->undo(mRound);
     return true;
 }
@@ -585,7 +603,7 @@ bool View::dev(const CEGUI::EventArgs& e)
     return true;
 }
 
-bool View::rollbackToSelectedLog(const CEGUI::EventArgs& e)
+bool View::visitSelectedLog(const CEGUI::EventArgs& e)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
     CEGUI::Window* logWindow = wmgr.getWindow("View/LogListbox");
@@ -595,9 +613,20 @@ bool View::rollbackToSelectedLog(const CEGUI::EventArgs& e)
     if (selected)
     {
         std::size_t selectedIndex = logList->getItemIndex(selected);
-        while (logList->getItemCount() - 1 > selectedIndex)
+        if (selectedIndex + 1 != mMiddleman->getGameLog().size())
         {
-            mMiddleman->undo(Middleman::HALF_TURN);
+            setBoard(mMiddleman->getGameStateAt(selectedIndex + 1), selectedIndex + 1);
+
+            mSceneMgr->setAmbientLight(ColourValue(0.43, 0.25, 0.07));
+            mSceneMgr->getLight("Yellow")->setDiffuseColour(0.86, 0.5, 0.14);
+            mSceneMgr->getLight("Blue")->setDiffuseColour(0.86, 0.5, 0.14);
+
+            wmgr.getWindow("View/UndoButton")->setText("Undo future");
+            mPast = true;
+        }
+        else
+        {
+            ensureLatestState();
         }
     }
     return true;
@@ -653,4 +682,24 @@ void View::setChooseButtonsVisibility(bool visible)
     wmgr.getWindow("View/Choose rookButton")->setVisible(visible);
     wmgr.getWindow("View/Choose knightButton")->setVisible(visible);
     wmgr.getWindow("View/Choose bishopButton")->setVisible(visible);
+}
+
+void View::ensureLatestState()
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* logWindow = wmgr.getWindow("View/LogListbox");
+    CEGUI::Listbox* logList = static_cast<CEGUI::Listbox*>(logWindow);
+
+    if (mPast)
+    {
+        mPast = false;
+        wmgr.getWindow("View/UndoButton")->setText("Undo");
+
+        std::size_t latestRound = mMiddleman->getGameLog().size();
+        setBoard(mMiddleman->getGameStateAt(latestRound), latestRound);
+
+        mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
+        mSceneMgr->getLight("Yellow")->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
+        mSceneMgr->getLight("Blue")->setDiffuseColour(ViewConstants::BLUE_COLOUR);
+    }
 }
