@@ -15,8 +15,7 @@ class View : public WindowEventListener, public EndUser
 {
 public:
     View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
-        mRenderer(0), mSystem(0), mListener(0), mDecalFrustum(0),
-        mFilterFrustum(0), mProjectorNode(0), mBoardWidth(0),
+        mRenderer(0), mSystem(0), mListener(0), mBoardWidth(0),
         mBoardHeight(0), mRound(0), mPast(false)
     {
     }
@@ -108,9 +107,6 @@ protected:
     SceneManager* mSceneMgr;
     Camera* mCamera;
     RenderWindow* mWindow;
-    Frustum* mDecalFrustum;
-    Frustum* mFilterFrustum;
-    SceneNode *mProjectorNode;
     std::size_t mBoardWidth;
     std::size_t mBoardHeight;
     unsigned int mRound;
@@ -133,12 +129,6 @@ protected:
     virtual Entity* loadEntity(const std::string& entityName, const std::string& modelName);
     virtual void recreateLog();
     virtual void recreateDeadPieces();
-
-    // The function to create our decal projector
-    void createProjector();
-
-    // A function to take an existing material and make it receive the projected decal
-    void makeMaterialReceiveDecal(const String &matName);
 
     void createScene();
     void createGUI();
