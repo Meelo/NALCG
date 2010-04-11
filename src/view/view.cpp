@@ -286,7 +286,7 @@ void View::createPiece(char type, const std::string& modelName,
 }
 
 CEGUI::Window* View::createGUIComponent(const std::string& text, double x, double y,
-                                        double sizeX, double sizeY, const std::string& type, bool setText)
+                                        double sizeX, double sizeY, const std::string& type, bool setText, bool visible)
 {
     CEGUI::WindowManager* win = CEGUI::WindowManager::getSingletonPtr();
     CEGUI::Window* sheet = win->getWindow("View/Sheet");
@@ -300,6 +300,7 @@ CEGUI::Window* View::createGUIComponent(const std::string& text, double x, doubl
     button->setSize(CEGUI::UVector2(CEGUI::UDim(sizeX, 0), CEGUI::UDim(sizeY, 0)));
 
     sheet->addChildWindow(button);
+    button->setVisible(visible);
     return button;
 }
 
@@ -309,10 +310,11 @@ void View::createGUI()
     CEGUI::Window* sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
     mSystem->setGUISheet(sheet);
 
-    createGUIComponent("Animation speed: 1x", 0, 0, 0.19, 0.05, "StaticText");
+    createGUIComponent("Animation speed", 0.6, 0.005, 0.19, 0.04, "StaticText", false, false)
+        ->setText("Animation speed: 1x");
 
     CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(
-        createGUIComponent("AnimationSpeed", 0.005, 0.055, 0.17, 0.02, "HorizontalScrollbar"));
+        createGUIComponent("Animation speed", 0.605, 0.05, 0.17, 0.02, "HorizontalScrollbar", false, false));
     animationSpeedSlider->setDocumentSize(4);
     animationSpeedSlider->setScrollPosition(1);
     animationSpeedSlider->subscribeEvent(
@@ -355,10 +357,10 @@ void View::createGUI()
     chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseBishop, this));
     chooseButton->setVisible(false);
 
-    createGUIComponent("Move assistance level", 0.2, 0, 0.18, 0.04, "StaticText");
+    createGUIComponent("Move assistance level", 0.25, 0.005, 0.18, 0.04, "StaticText", true, false);
 
     CEGUI::Spinner* moveAssistanceSpinner = static_cast<CEGUI::Spinner*>(
-        createGUIComponent("MoveAssistance", 0.38, 0.0, 0.05, 0.04, "Spinner", false));
+        createGUIComponent("Move assistance", 0.43, 0.005, 0.05, 0.04, "Spinner", false, false));
     moveAssistanceSpinner->setCurrentValue(3.0);
     moveAssistanceSpinner->setMinimumValue(0.0);
     moveAssistanceSpinner->setMaximumValue(3.0);
@@ -366,6 +368,14 @@ void View::createGUI()
         CEGUI::Spinner::EventValueChanged,
         CEGUI::Event::Subscriber(&BufferedInputHandler::handleMoveAssistanceChanged,
         mListener->getHandler()));
+
+    CEGUI::Window* unsafe = createGUIComponent("Unsafe mode", 0.25, 0.045, 0.3, 0.04, "Checkbox", true, false);
+    unsafe->setText("Allow concurrent animations (UNSAFE!)");
+    unsafe->subscribeEvent(CEGUI::Checkbox::EventCheckStateChanged,
+        CEGUI::Event::Subscriber(&BufferedInputHandler::handleSafeModeChanged, mListener->getHandler()));
+
+    createGUIComponent(ViewConstants::SHOW_ADDITIONAL, 0.005, 0.005, 0.22, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+        CEGUI::Event::Subscriber(&ViewFrameListener::hideGUI, mListener));
 }
 
 void View::recreateLog()
@@ -595,10 +605,7 @@ bool View::rollbackToSelectedLog(const CEGUI::EventArgs& e)
     if (selected)
     {
         std::size_t selectedIndex = logList->getItemIndex(selected);
-        while (logList->getItemCount() - 1 > selectedIndex)
-        {
-            mMiddleman->undo(Middleman::HALF_TURN);
-        }
+        mMiddleman->undo(logList->getItemCount() - selectedIndex - 1);
     }
     return true;
 }
