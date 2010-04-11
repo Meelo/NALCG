@@ -281,6 +281,20 @@ std::size_t ChessBoard::findKing(Colour colour) const
 }
 
 
+bool ChessBoard::isPawn(char symbol)
+{
+    // symbol | (1 << 5) lowercases the symbol if it was uppercase.
+    return ((symbol | (1 << 5)) == WHITE_PAWN_SYMBOL);
+}
+
+
+bool ChessBoard::isKing(char symbol)
+{
+    // symbol | (1 << 5) lowercases the symbol if it was uppercase.
+    return ((symbol | (1 << 5)) == WHITE_KING_SYMBOL);
+}
+
+
 bool ChessBoard::isBishop(char symbol)
 {
     // symbol | (1 << 5) lowercases the symbol if it was uppercase.
@@ -469,6 +483,33 @@ bool ChessBoard::isPawnlyUnsafe(std::size_t location, char symbol,
 {
     std::size_t x = 0, y = 0;
     getCoordinates(location, x, y);
+    std::size_t limit = squares.size();
+
+    int direction = (symbol & (1 << 5)) ? 1 : -1;
+    std::size_t diagL = getPosition(x - 1, y + direction);
+    std::size_t diagR = getPosition(x + 1, y + direction);
+
+    if (diagL < limit)
+    {
+        char currentPiece = squares.at(diagL).getSymbolOfPiece();
+        if (squares.at(diagL).hasPiece() &&
+                areOppositeColour(symbol, currentPiece) &&
+                isPawn(currentPiece))
+        {
+            return true;
+        }
+    }
+
+    if (diagR < limit)
+    {
+        char currentPiece = squares.at(diagR).getSymbolOfPiece();
+        if (squares.at(diagR).hasPiece() &&
+                areOppositeColour(symbol, currentPiece) &&
+                isPawn(currentPiece))
+        {
+            return true;
+        }
+    }
 
     return false;
 }

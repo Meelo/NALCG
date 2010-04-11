@@ -94,6 +94,10 @@ protected:
     static const int KNIGHT_DIRECTIONS_Y[];
 
     // Methods
+    static bool isPawn(char symbol);
+
+    static bool isKing(char symbol);
+
     static bool isBishop(char symbol);
 
     static bool isRook(char symbol);
