@@ -22,8 +22,7 @@ if [[ ! -f ../bin/NALCG || "$1" == "--update" || "$1" == "-u" ]]; then
     make -sj5
     if [[ $? != 0 ]]; then
         echo "make failed, NALCG can't be launched"
-        echo "cleaning..."
-        make clean
+        echo "You might want to clean before re-compiling, clean by running ./NALCG -c"
         echo "exiting..."
         exit
     fi
