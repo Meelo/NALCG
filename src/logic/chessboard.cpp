@@ -483,32 +483,37 @@ bool ChessBoard::isPawnlyUnsafe(std::size_t location, char symbol,
 {
     std::size_t x = 0, y = 0;
     getCoordinates(location, x, y);
-    std::size_t limit = squares.size();
 
     int direction = (symbol & (1 << 5)) ? -1 : 1;
     std::size_t diagL = getPosition(x - 1, y + direction);
     std::size_t diagR = getPosition(x + 1, y + direction);
 
-    if (diagL < limit)
+    if (isEnemyPawn(diagL, symbol, squares, moveFrom, moveTo))
     {
-        char currentPiece = squares.at(diagL).getSymbolOfPiece();
-        if (squares.at(diagL).hasPiece() &&
-                areOppositeColour(symbol, currentPiece) &&
-                isPawn(currentPiece))
-        {
-            return true;
-        }
+        return true;
     }
 
-    if (diagR < limit)
+    if (isEnemyPawn(diagR, symbol, squares, moveFrom, moveTo))
     {
-        char currentPiece = squares.at(diagR).getSymbolOfPiece();
-        if (squares.at(diagR).hasPiece() &&
-                areOppositeColour(symbol, currentPiece) &&
-                isPawn(currentPiece))
-        {
-            return true;
-        }
+        return true;
+    }
+
+    return false;
+}
+
+
+bool ChessBoard::isEnemyPawn(std::size_t location, char ownPieceSymbol,
+    const std::vector<Square>& squares, std::size_t moveFrom, std::size_t moveTo)
+{
+    if (location < squares.size())
+    {
+        if (location == moveFrom || location == moveTo) { return false; }
+
+        char currentPiece = squares.at(location).getSymbolOfPiece();
+
+        return  squares.at(location).hasPiece() &&
+                areOppositeColour(ownPieceSymbol, currentPiece) &&
+                isPawn(currentPiece);
     }
 
     return false;
