@@ -80,15 +80,21 @@ MovementAnimation::~MovementAnimation()
         sourceName << column << " " << row;
         SceneNode* pieceNode = BufferedInputHandler::findPieceAbove(
             mSceneMgr->getSceneNode(sourceName.str()), mSceneMgr);
-        mAnimationManager->addAnimation(
-            AnimationFactory::createCheckAnimation(
-            pieceNode, mSceneMgr));
 
-        if (middleman->getGameConditionMask() & ChessBoard::CHECKMATE)
+        if (pieceNode && pieceNode != mAnimatedNode)
         {
-            mAnimationManager->addAnimation(AnimationFactory::createMovementAnimation(
-                *mAnimatedNode->getName().begin(), pieceNode->getPosition(),
-                mAnimatedNode, pieceNode, mSceneMgr, mAnimationManager));
+            if (middleman->getGameConditionMask() & ChessBoard::CHECKMATE)
+            {
+                mAnimationManager->addAnimation(AnimationFactory::createMovementAnimation(
+                    *mAnimatedNode->getName().begin(), pieceNode->getPosition(),
+                    mAnimatedNode, pieceNode, mSceneMgr, mAnimationManager));
+            }
+            else
+            {
+                mAnimationManager->addAnimation(
+                    AnimationFactory::createCheckAnimation(
+                    pieceNode, mSceneMgr));
+            }
         }
     }
 
