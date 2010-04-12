@@ -68,7 +68,7 @@ public:
     // 2^16..2^32 are reserved for these.
     static const unsigned int CHECK             = 1 << 16;
     static const unsigned int CHECKMATE         = 1 << 17;
-    static const unsigned int STALEMATE         = 1 << 18;
+    static const unsigned int DRAW              = 1 << 18;
     static const unsigned int EN_PASSANT        = 1 << 19;
     static const unsigned int CASTLING          = 1 << 20;
 
@@ -165,7 +165,7 @@ protected:
 
     void markCheckmate(Colour currentPlayer, unsigned int& conditionsMask) const;
 
-    void markStalemate(Colour currentPlayer, unsigned int& conditionsMask) const;
+    void markDraw(Colour currentPlayer, unsigned int& conditionsMask) const;
 };
 
 #endif // _NALCG_CHESS_BOARD_H_
