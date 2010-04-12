@@ -34,7 +34,7 @@ public:
         unsigned int promoteTo, SceneNode *movingNode, SceneManager *sceneMgr, View* view);
 
     static CheckAnimation* createCheckAnimation(
-        SceneNode *checkedNode, SceneManager *sceneMgr, double delay);
+        SceneNode *checkedNode, SceneManager *sceneMgr);
 };
 
 #endif // _NALCG_ANIMATION_FACTORY_H_

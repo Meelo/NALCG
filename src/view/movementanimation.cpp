@@ -50,6 +50,8 @@ void MovementAnimation::playAnimation(const std::string& animationName, double t
 
 MovementAnimation::~MovementAnimation()
 {
+    View* view = mAnimationManager->getView();
+
     // Make sure another shorter animation hasn't already destroyed the piece.
     // Using target piece name since target piece pointer might already be freed
     // and isn't safe to call.
@@ -58,29 +60,28 @@ MovementAnimation::~MovementAnimation()
         mAnimationManager->stopAllAnimationsBelongingTo(mTargetPiece);
         mSceneMgr->getRootSceneNode()->removeAndDestroyChild(mTargetPieceName);
 
-        View* view = mAnimationManager->getView();
         view->recreateDeadPieces();
+    }
 
-        Middleman* middleman = view->getMiddleman();
+    Middleman* middleman = view->getMiddleman();
 
-        if (middleman->getGameConditionMask() & ChessBoard::CHECK)
-        {
-            const ChessBoard* board = dynamic_cast<const ChessBoard*>(
-                middleman->getGameStateAt(middleman->getGameLog().size()));
+    if (middleman->getGameConditionMask() & ChessBoard::CHECK)
+    {
+        const ChessBoard* board = dynamic_cast<const ChessBoard*>(
+            middleman->getGameStateAt(middleman->getGameLog().size()));
 
-            std::size_t location = board->findKing(view->isWhiteTurn() ? WHITE : BLACK);
+        std::size_t location = board->findKing(view->isWhiteTurn() ? WHITE : BLACK);
 
-            std::size_t column;
-            std::size_t row;
-            ChessBoard::getCoordinates(location, column, row);
+        std::size_t column;
+        std::size_t row;
+        ChessBoard::getCoordinates(location, column, row);
 
-            std::ostringstream sourceName;
-            sourceName << column << " " << row;
-            SceneNode* pieceNode = BufferedInputHandler::findPieceAbove(
-                mSceneMgr->getSceneNode(sourceName.str()), mSceneMgr);
-            mAnimationManager->addAnimation(
-                AnimationFactory::createCheckAnimation(
-                pieceNode, mSceneMgr, 1.0));
-        }
+        std::ostringstream sourceName;
+        sourceName << column << " " << row;
+        SceneNode* pieceNode = BufferedInputHandler::findPieceAbove(
+            mSceneMgr->getSceneNode(sourceName.str()), mSceneMgr);
+        mAnimationManager->addAnimation(
+            AnimationFactory::createCheckAnimation(
+            pieceNode, mSceneMgr));
     }
 }

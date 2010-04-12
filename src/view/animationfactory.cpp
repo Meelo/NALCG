@@ -74,7 +74,7 @@ PromotionAnimation* AnimationFactory::createPromotionAnimation(
 }
 
 CheckAnimation* AnimationFactory::createCheckAnimation(
-    SceneNode *checkedNode, SceneManager *sceneMgr, double delay)
+    SceneNode *checkedNode, SceneManager *sceneMgr)
 {
-    return new CheckAnimation(checkedNode, sceneMgr, delay);
+    return new CheckAnimation(checkedNode, sceneMgr);
 }
