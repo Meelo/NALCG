@@ -132,6 +132,10 @@ protected:
         const std::vector<Square>& squares,
         std::size_t moveFrom, std::size_t moveTo);
 
+    static bool isEnemyKing(std::size_t location, char ownPieceSymbol,
+        const std::vector<Square>& squares,
+        std::size_t moveFrom, std::size_t moveTo);
+
     // Methods
     virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const;
 

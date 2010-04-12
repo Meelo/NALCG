@@ -438,6 +438,23 @@ bool ChessBoard::isKinglyUnsafe(std::size_t location, char symbol,
     std::size_t x = 0, y = 0;
     getCoordinates(location, x, y);
 
+    for (std::size_t i = 0;
+        (DIAGONAL_DIRECTIONS_X[i]  != 0 || DIAGONAL_DIRECTIONS_Y[i]  != 0) ||
+        (RECTANGLE_DIRECTIONS_X[i] != 0 || RECTANGLE_DIRECTIONS_Y[i] != 0);
+        ++i)
+    {
+        std::size_t diag = getPosition(x + DIAGONAL_DIRECTIONS_X[i],
+            y + DIAGONAL_DIRECTIONS_Y[i]);
+        std::size_t rect = getPosition(x + RECTANGLE_DIRECTIONS_X[i],
+            y + RECTANGLE_DIRECTIONS_Y[i]);
+
+        if (isEnemyKing(diag, symbol, squares, moveFrom, moveTo) ||
+            isEnemyKing(rect, symbol, squares, moveFrom, moveTo))
+        {
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -488,17 +505,8 @@ bool ChessBoard::isPawnlyUnsafe(std::size_t location, char symbol,
     std::size_t diagL = getPosition(x - 1, y + direction);
     std::size_t diagR = getPosition(x + 1, y + direction);
 
-    if (isEnemyPawn(diagL, symbol, squares, moveFrom, moveTo))
-    {
-        return true;
-    }
-
-    if (isEnemyPawn(diagR, symbol, squares, moveFrom, moveTo))
-    {
-        return true;
-    }
-
-    return false;
+    return  isEnemyPawn(diagL, symbol, squares, moveFrom, moveTo) ||
+            isEnemyPawn(diagR, symbol, squares, moveFrom, moveTo);
 }
 
 
@@ -514,6 +522,24 @@ bool ChessBoard::isEnemyPawn(std::size_t location, char ownPieceSymbol,
         return  squares.at(location).hasPiece() &&
                 areOppositeColour(ownPieceSymbol, currentPiece) &&
                 isPawn(currentPiece);
+    }
+
+    return false;
+}
+
+
+bool ChessBoard::isEnemyKing(std::size_t location, char ownPieceSymbol,
+    const std::vector<Square>& squares, std::size_t moveFrom, std::size_t moveTo)
+{
+    if (location < squares.size())
+    {
+        if (location == moveFrom || location == moveTo) { return false; }
+
+        char currentPiece = squares.at(location).getSymbolOfPiece();
+
+        return  squares.at(location).hasPiece() &&
+                areOppositeColour(ownPieceSymbol, currentPiece) &&
+                isKing(currentPiece);
     }
 
     return false;
