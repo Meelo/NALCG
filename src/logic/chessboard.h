@@ -162,7 +162,9 @@ protected:
     // other private methods
 
     void markCheck(Colour currentPlayer, unsigned int& conditionsMask) const;
+
     void markCheckmate(Colour currentPlayer, unsigned int& conditionsMask) const;
+
     void markStalemate(Colour currentPlayer, unsigned int& conditionsMask) const;
 };
 

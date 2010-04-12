@@ -327,7 +327,26 @@ void ChessBoard::markCheckmate(Colour currentPlayer,
 void ChessBoard::markStalemate(Colour currentPlayer,
     unsigned int& conditionsMask) const
 {
+    int whiteFound = 0;
+    int blackFound = 0;
+    bool validMovesFound = false;
 
+    for (std::size_t i = 0; i < squares.size(); ++i)
+    {
+        Colour currentPieceColour = squares.at(i).getColourOfPiece();
+        if (currentPieceColour == WHITE) ++whiteFound;
+        else if (currentPieceColour == BLACK) ++blackFound;
+        if (currentPlayer == currentPieceColour && hasValidMoves(i))
+        {
+            validMovesFound = true;
+        }
+    }
+
+    if ((whiteFound == 1 && blackFound == 1) || !validMovesFound)
+    {
+        std::cout << "STALEMATE!" << std::endl;
+        conditionsMask |= ChessBoard::STALEMATE;
+    }
 }
 
 
