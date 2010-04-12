@@ -61,7 +61,7 @@ void ViewFrameListener::flashMovableSquares(const Real& timeSinceLastFrame)
 
     MaterialPtr moveMat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/move");
     MaterialPtr attackMat = (MaterialPtr)MaterialManager::getSingleton().getByName("board/square/attack");
-    
+
     if (mHandler.getMoveAssistanceLevel() > 1)
     {
         moveMat->setDiffuse(0, 1.0, 0, sin(mTime * 3) * 0.25 + 0.5);
@@ -150,7 +150,7 @@ bool ViewFrameListener::hideGUI(const CEGUI::EventArgs& e)
         hideButton->setText(HIDE_GUI);
         wmgr.getWindow("View/Animation speedStaticText")->setVisible(true);
         wmgr.getWindow("View/Animation speedHorizontalScrollbar")->setVisible(true);
-        wmgr.getWindow("View/Unsafe modeCheckbox")->setVisible(true);
+        wmgr.getWindow("View/Unsafe modeCheckbox")->setVisible(false); // not in demo
         wmgr.getWindow("View/Move assistance levelStaticText")->setVisible(true);
         wmgr.getWindow("View/Move assistanceSpinner")->setVisible(true);
         wmgr.getWindow("View/FPS infoButton")->setVisible(true);
@@ -167,7 +167,7 @@ bool ViewFrameListener::hideGUI(const CEGUI::EventArgs& e)
         wmgr.getWindow("View/UndoButton")->setVisible(false);
         wmgr.getWindow("View/RestartButton")->setVisible(false);
         wmgr.getWindow("View/QuitButton")->setVisible(false);
-        wmgr.getWindow("View/FPS infoButton")->setVisible(false);
+        wmgr.getWindow("View/FPS infoButton")->setVisible(false); // remove from final product
         wmgr.getWindow("View/LogListbox")->setVisible(false);
         wmgr.getWindow("View/Game logStaticText")->setVisible(false);
     }
@@ -178,6 +178,7 @@ bool ViewFrameListener::hideGUI(const CEGUI::EventArgs& e)
         wmgr.getWindow("View/UndoButton")->setVisible(true);
         wmgr.getWindow("View/RestartButton")->setVisible(true);
         wmgr.getWindow("View/QuitButton")->setVisible(true);
+        wmgr.getWindow("View/FPS infoButton")->setVisible(false); // remove from final product
         wmgr.getWindow("View/LogListbox")->setVisible(true);
         wmgr.getWindow("View/Game logStaticText")->setVisible(true);
     }

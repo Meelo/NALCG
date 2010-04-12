@@ -302,8 +302,8 @@ void View::createGUI()
     createGUIComponent("Quit", 0, 0.15, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
 
-    createGUIComponent("FPS info", 0, 0.22, 0.1, 0.04, "Button", true, false)
-        ->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("FPS info", 0, 0.22, 0.1, 0.04, "Button", true,
+        false)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
 
     createGUIComponent("Game log", 0.875, 0.005, 0.12, 0.05, "StaticText");
@@ -604,6 +604,7 @@ bool View::visitSelectedLog(const CEGUI::EventArgs& e)
     CEGUI::ListboxItem* selected = logList->getFirstSelectedItem();
     if (selected)
     {
+
         std::size_t selectedIndex = logList->getItemIndex(selected);
         if (selectedIndex + 1 != mMiddleman->getGameLog().size())
         {
