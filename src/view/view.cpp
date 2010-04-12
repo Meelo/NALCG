@@ -686,13 +686,10 @@ void View::setChooseButtonsVisibility(bool visible)
 
 void View::ensureLatestState()
 {
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-    CEGUI::Window* logWindow = wmgr.getWindow("View/LogListbox");
-    CEGUI::Listbox* logList = static_cast<CEGUI::Listbox*>(logWindow);
-
     if (mPast)
     {
         mPast = false;
+        CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
         wmgr.getWindow("View/UndoButton")->setText("Undo");
 
         std::size_t latestRound = mMiddleman->getGameLog().size();

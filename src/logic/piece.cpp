@@ -36,3 +36,11 @@ bool Piece::trySpecialMove( std::size_t&,   std::size_t&,
 {
     return false;
 }
+
+
+Colour Piece::getOppositeColour(Colour colour)
+{
+    if (colour == WHITE) return BLACK;
+    if (colour == BLACK) return WHITE;
+    return UNDEFINED;
+}

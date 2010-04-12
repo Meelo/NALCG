@@ -39,6 +39,8 @@ public:
                                 std::size_t& toX,   std::size_t& toY,
                                 std::vector<Square>& squares) const;
 
+    static Colour getOppositeColour(Colour colour);
+
     // Getters
     const Colour& getColour() const { return colour; }
     const std::string& getName() const { return name; };

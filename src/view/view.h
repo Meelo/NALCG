@@ -65,7 +65,6 @@ public:
         {
             mRound++;
             recreateLog();
-            recreateDeadPieces();
         }
     }
     virtual void promoteMove(int fromX, int fromY, int toX, int toY,
@@ -94,6 +93,7 @@ public:
     void setChooseButtonsVisibility(bool visible);
     virtual void windowClosed(RenderWindow* rw);
     void ensureLatestState();
+    virtual void recreateDeadPieces();
     virtual ~View();
 
 protected:
@@ -128,7 +128,6 @@ protected:
     virtual void createInitialExplosion();
     virtual Entity* loadEntity(const std::string& entityName, const std::string& modelName);
     virtual void recreateLog();
-    virtual void recreateDeadPieces();
 
     void createScene();
     void createGUI();

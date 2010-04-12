@@ -7,6 +7,8 @@
 #include "../middleman.h"
 #include "view.h"
 #include "viewconstants.h"
+#include "../logic/chessboard.h"
+#include "checkanimation.h"
 
 bool BufferedInputHandler::keyPressed(const OIS::KeyEvent& arg)
 {
@@ -290,25 +292,22 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                     Middleman* middleman = mView->getMiddleman();
                     if (middleman)
                     {
-                        unsigned int returnValue = mView->getMiddleman()->move(
+                        unsigned int returnValue = middleman->move(
                             fromX, fromY, toX, toY);
 
-                        if (!(returnValue & Board::MOVE_OK))
+                        if (returnValue & Board::INVALID_MOVE
+                            || returnValue & Board::INVALID_TURN)
                         {
-                            if (returnValue & Board::INVALID_MOVE
-                                || returnValue & Board::INVALID_TURN)
-                            {
-                                SceneNode* node = mSceneMgr->getSceneNode("InvalidMove");
-                                node->setVisible(true);
-                                node->setPosition(targetNode->getPosition());
-                                node->translate(0, 1, 0);
-                                node->setScale(0, 1, 0);
-                            }
-                            if (returnValue & Board::PROMOTION_REQUEST)
-                            {
-                                mView->setPromotionMove(fromX, fromY, toX, toY);
-                                mView->setChooseButtonsVisibility(true);
-                            }
+                            SceneNode* node = mSceneMgr->getSceneNode("InvalidMove");
+                            node->setVisible(true);
+                            node->setPosition(targetNode->getPosition());
+                            node->translate(0, 1, 0);
+                            node->setScale(0, 1, 0);
+                        }
+                        if (returnValue & Board::PROMOTION_REQUEST)
+                        {
+                            mView->setPromotionMove(fromX, fromY, toX, toY);
+                            mView->setChooseButtonsVisibility(true);
                         }
                     }
                     else
@@ -530,11 +529,16 @@ bool BufferedInputHandler::showMovementPossibilities()
 
 SceneNode* BufferedInputHandler::findPieceAbove(Node* squareNode) const
 {
+    return findPieceAbove(squareNode, mSceneMgr);
+}
+
+SceneNode* BufferedInputHandler::findPieceAbove(Node* squareNode, SceneManager* sceneMgr)
+{
     // TODO: When everything is done, we should do a null check here
     // for the squareNode in case query mask for some env is not correctly set
 
     const Vector3& squarePosition = squareNode->getPosition();
-    Node::ChildNodeIterator it = mSceneMgr->getRootSceneNode()->getChildIterator();
+    Node::ChildNodeIterator it = sceneMgr->getRootSceneNode()->getChildIterator();
     while (it.hasMoreElements())
     {
         Node* next = it.getNext();

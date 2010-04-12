@@ -5,11 +5,12 @@
 
 using namespace Ogre;
 
+class View;
 class GenericAnimation;
 class AnimationManager
 {
 public:
-    AnimationManager() : mAnimationSpeedMultiplier(1.0)
+    AnimationManager(View* view) : mAnimationSpeedMultiplier(1.0), mView(view)
     {
     }
 
@@ -26,6 +27,7 @@ public:
     virtual void executeAnimations(double timeSinceLastFrame, bool instant = false);
     virtual void finishAnimations();
     virtual void stopAllAnimationsBelongingTo(SceneNode *targetNode);
+    virtual View* getView() const { return mView; }
     virtual bool animationsRunning() const
     {
         return !mGenericAnimations.empty();
@@ -33,6 +35,8 @@ public:
 
 protected:
     std::vector<GenericAnimation*> mGenericAnimations;
+    View* mView;
+
     float mAnimationSpeedMultiplier;
     virtual void endAnimation(std::size_t index);
 };

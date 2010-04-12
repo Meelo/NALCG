@@ -36,6 +36,9 @@ public:
     virtual bool mouseMoved(const OIS::MouseEvent& arg);
     virtual bool mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id);
     virtual bool mouseReleased(const OIS::MouseEvent& arg, OIS::MouseButtonID id);
+
+    static SceneNode* findPieceAbove(Node* squareNode, SceneManager* sceneMgr);
+
     virtual void moveCamera(const Real& timeSinceLastFrame);
     virtual void move(int fromX, int fromY, int toX, int toY,
         bool continuous = false, unsigned int promoteTo = 0);

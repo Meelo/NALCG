@@ -2,8 +2,8 @@
 #define _NALCG_MOVEMENT_ANIMATION_H_
 
 #include "genericanimation.h"
-#include "animationmanager.h"
 
+class AnimationManager;
 class MovementAnimation : public GenericAnimation
 {
 public:
@@ -15,17 +15,7 @@ public:
     {
     }
 
-    virtual ~MovementAnimation()
-    {
-        // Make sure another shorter animation hasn't already destroyed the piece.
-        // Using target piece name since target piece pointer might already be freed
-        // and isn't safe to call.
-        if (mSceneMgr->hasSceneNode(mTargetPieceName))
-        {
-            mAnimationManager->stopAllAnimationsBelongingTo(mTargetPiece);
-            mSceneMgr->getRootSceneNode()->removeAndDestroyChild(mTargetPieceName);
-        }
-    }
+    virtual ~MovementAnimation();
     virtual void dimLights();
     virtual void restoreLights();
 

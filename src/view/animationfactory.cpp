@@ -10,6 +10,7 @@
 #include "rookmovementanimation.h"
 #include "bleedinganimation.h"
 #include "promotionanimation.h"
+#include "checkanimation.h"
 
 MovementAnimation* AnimationFactory::createMovementAnimation(
     const char type, const Vector3& destination, SceneNode *movingNode,
@@ -70,4 +71,10 @@ PromotionAnimation* AnimationFactory::createPromotionAnimation(
     unsigned int promoteTo, SceneNode *movingNode, SceneManager *sceneMgr, View* view)
 {
     return new PromotionAnimation(promoteTo, movingNode, sceneMgr, view);
+}
+
+CheckAnimation* AnimationFactory::createCheckAnimation(
+    SceneNode *checkedNode, SceneManager *sceneMgr, double delay)
+{
+    return new CheckAnimation(checkedNode, sceneMgr, delay);
 }

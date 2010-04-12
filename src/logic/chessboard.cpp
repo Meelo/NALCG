@@ -263,6 +263,17 @@ void ChessBoard::promote(std::size_t location, unsigned int promoteTo)
 }
 
 
+void ChessBoard::markWinCondition(Colour currentPlayer, unsigned int& mask)
+{
+    Colour enemyColour = Piece::getOppositeColour(currentPlayer);
+    std::size_t kingLocation = findKing(enemyColour);
+    if (isUnderAttack(kingLocation, squares))
+    {
+        mask |= CHECK;
+    }
+}
+
+
 std::size_t ChessBoard::findKing(Colour colour) const
 {
     char kingSymbol = (colour == WHITE) ? WHITE_KING_SYMBOL : BLACK_KING_SYMBOL;

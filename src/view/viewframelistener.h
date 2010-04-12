@@ -16,7 +16,7 @@ public:
     ViewFrameListener(OIS::Keyboard* keyboard, OIS::Mouse* mouse,
         RenderWindow* window, Camera* camera, SceneManager* sceneManager,
         View* view)
-        : mKeyboard(keyboard), mMouse(mouse), mAnimationManager(),
+        : mKeyboard(keyboard), mMouse(mouse), mAnimationManager(view),
         mHandler(window, camera, sceneManager, &mAnimationManager, view, mouse),
         mContinue(true), mWindow(window), mTime(0), mSceneMgr(sceneManager),
         mCamera(camera), mCreated(false)

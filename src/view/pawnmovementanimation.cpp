@@ -3,6 +3,7 @@
 #include "animationfactory.h"
 #include "dyinganimation.h"
 #include "bleedinganimation.h"
+#include "animationmanager.h"
 
 bool PawnMovementAnimation::animate(const Real& timeSinceLastFrame)
 {
