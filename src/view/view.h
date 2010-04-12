@@ -135,7 +135,6 @@ protected:
 
     bool undo(const CEGUI::EventArgs& e);
     bool restart(const CEGUI::EventArgs& e);
-    bool dev(const CEGUI::EventArgs& e);
     bool visitSelectedLog(const CEGUI::EventArgs& e);
     bool chooseQueen(const CEGUI::EventArgs& e);
     bool chooseRook(const CEGUI::EventArgs& e);

@@ -302,11 +302,9 @@ void View::createGUI()
     createGUIComponent("Quit", 0, 0.15, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
 
-    createGUIComponent("FPS info", 0, 0.22, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("FPS info", 0, 0.22, 0.1, 0.04, "Button", true, false)
+        ->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
-
-    createGUIComponent("Dev", 0, 0.27, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
-        CEGUI::Event::Subscriber(&View::dev, this));
 
     createGUIComponent("Game log", 0.875, 0.005, 0.12, 0.05, "StaticText");
     createGUIComponent("Log", 0.875, 0.05, 0.12, 0.4, "Listbox")
@@ -346,7 +344,7 @@ void View::createGUI()
     unsafe->subscribeEvent(CEGUI::Checkbox::EventCheckStateChanged,
         CEGUI::Event::Subscriber(&BufferedInputHandler::handleSafeModeChanged, mListener->getHandler()));
 
-    createGUIComponent(ViewConstants::SHOW_ADDITIONAL, 0.005, 0.005, 0.22, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent(ViewConstants::SHOW_ADDITIONAL, 0.005, 0.005, 0.22, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::hideGUI, mListener));
 }
 
@@ -597,12 +595,6 @@ bool View::restart(const CEGUI::EventArgs& e)
     return true;
 }
 
-bool View::dev(const CEGUI::EventArgs& e)
-{
-    mMiddleman->undo(Middleman::HALF_TURN);
-    return true;
-}
-
 bool View::visitSelectedLog(const CEGUI::EventArgs& e)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
@@ -628,6 +620,8 @@ bool View::visitSelectedLog(const CEGUI::EventArgs& e)
         {
             ensureLatestState();
         }
+        CEGUI::ListboxItem* newSelected = logList->getListboxItemFromIndex(selectedIndex);
+        newSelected->setText(newSelected->getText() + " <");
     }
     return true;
 }
