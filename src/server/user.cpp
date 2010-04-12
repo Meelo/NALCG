@@ -2,34 +2,63 @@
 #include "serversocket.h"
 #include <string>
 
-using namespace std;
+User::User ( ) { }
 
-User::User ( ServerSocket *socket, string name ) { 
-    this->mName = name; 
-    this->mSocket = socket; 
+User::User ( ServerSocket *socket, std::string name ) : mName(name), mSocket(socket) 
+{ 
+    mPlaying = false;
 }
 
-User::~User(){ 
+User::~User()
+{ 
     delete mSocket; 
 }
   
-string User::getName ( ) { 
-    return this->mName; 
+std::string& User::getName() 
+{ 
+    return mName; 
 }
   
-void User::setName(string name) { 
-    this->mName = name; 
+void User::setName(std::string& name)
+{ 
+    mName = name; 
 }
 
-ServerSocket* User::getSocket ( ) { 
-    return this->mSocket; 
+ServerSocket* User::getSocket()
+{ 
+    return mSocket; 
 }
 
-pthread_t User::getSid() { 
-    return this->mSid; 
+pthread_t User::getSid() 
+{ 
+    return mSid; 
 }
   
 void User::setSid(pthread_t sid) { 
-    this->mSid = sid; 
+    mSid = sid; 
 }
 
+bool User::testConnection()
+{
+    return mSocket->testConnection();
+}
+
+bool User::isPlaying() 
+{
+    return mPlaying;
+}
+
+void User::setPlaying(bool value)
+{
+    mPlaying = value;
+}
+
+void User::setOpponent(User* opponent)
+{
+    mOpponent = opponent;
+}
+
+User* User::getOpponent()
+{
+    return mOpponent;
+}

@@ -9,10 +9,8 @@ class ServerSocket : private Socket
         ServerSocket ( int port );
         ServerSocket (){};
         virtual ~ServerSocket();
-
         const ServerSocket& operator << ( const std::string& ) const;
         const ServerSocket& operator >> ( std::string& ) const;
-
         void accept ( ServerSocket& );
         void listen ( );
         bool testConnection ( );

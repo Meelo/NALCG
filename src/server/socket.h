@@ -1,5 +1,5 @@
-#ifndef Socket_class
-#define Socket_class
+#ifndef _NACLG_SOCKET_H
+#define _NACLG_SOCKET_H
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -8,7 +8,6 @@
 #include <unistd.h>
 #include <string>
 #include <arpa/inet.h>
-
 
 const int MAXHOSTNAME = 200;
 const int MAXCONNECTIONS = 30;
