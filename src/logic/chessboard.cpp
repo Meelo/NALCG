@@ -200,7 +200,7 @@ unsigned int ChessBoard::getGameConditionMask(Colour currentPlayer) const
 
     markCheck(currentPlayer, conditions);
     markCheckmate(currentPlayer, conditions);
-    markStalemate(currentPlayer, conditions);
+    markDraw(currentPlayer, conditions);
 
     return conditions;
 }
@@ -324,15 +324,15 @@ void ChessBoard::markCheckmate(Colour currentPlayer,
 }
 
 
-void ChessBoard::markStalemate(Colour currentPlayer,
+void ChessBoard::markDraw(Colour currentPlayer,
     unsigned int& conditionsMask) const
 {
-    // don't mark as stalemate when checkmate has already been marked.
+    // don't mark as draw when checkmate has already been marked.
     if (conditionsMask & CHECKMATE) return;
 
     int whiteFound = 0;
     int blackFound = 0;
-    bool validMovesFound = false;
+    bool stalemate = true;
 
     for (std::size_t i = 0; i < squares.size(); ++i)
     {
@@ -341,14 +341,14 @@ void ChessBoard::markStalemate(Colour currentPlayer,
         else if (currentPieceColour == BLACK) ++blackFound;
         if (currentPlayer == currentPieceColour && hasValidMoves(i))
         {
-            validMovesFound = true;
+            stalemate = false;
         }
     }
 
-    if ((whiteFound == 1 && blackFound == 1) || !validMovesFound)
+    if ((whiteFound == 1 && blackFound == 1) || stalemate)
     {
-        std::cout << "STALEMATE!" << std::endl;
-        conditionsMask |= ChessBoard::STALEMATE;
+        std::cout << "DRAW!" << std::endl;
+        conditionsMask |= ChessBoard::DRAW;
     }
 }
 
