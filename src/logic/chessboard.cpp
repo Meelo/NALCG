@@ -307,7 +307,20 @@ void ChessBoard::markCheck(Colour currentPlayer,
 void ChessBoard::markCheckmate(Colour currentPlayer,
     unsigned int& conditionsMask) const
 {
+    if (conditionsMask & CHECK)
+    {
+        for (std::size_t i = 0; i < squares.size(); ++i)
+        {
+            if (squares.at(i).getColourOfPiece() == currentPlayer &&
+                hasValidMoves(i))
+            {
+                return;
+            }
+        }
 
+        std::cout << "CHECKMATE!" << std::endl;
+        conditionsMask |= ChessBoard::CHECKMATE;
+    }
 }
 
 

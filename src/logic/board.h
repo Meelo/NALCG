@@ -80,6 +80,8 @@ protected:
     bool isMoveValid(std::size_t moveFrom, std::size_t moveTo,
         Colour player, unsigned int& mask) const;
 
+    bool hasValidMoves(std::size_t location) const;
+
     bool getCoordinates(std::size_t index, std::size_t& column,
         std::size_t& row) const;
 

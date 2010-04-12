@@ -49,7 +49,7 @@ std::vector<std::size_t> Board::getValidMoves(std::size_t x, std::size_t y)
 
 bool Board::hasValidMoves(std::size_t x, std::size_t y) const
 {
-    return !(getValidMoves(getPosition(x, y))).empty();
+    return hasValidMoves(getPosition(x, y));
 }
 
 
@@ -221,6 +221,12 @@ bool Board::isMoveValid(std::size_t moveFrom, std::size_t moveTo,
     }
 
     return mask == 0;
+}
+
+
+bool Board::hasValidMoves(std::size_t location) const
+{
+    return !(getValidMoves(location).empty());
 }
 
 
