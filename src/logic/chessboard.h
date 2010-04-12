@@ -77,6 +77,8 @@ public:
         const std::vector<Square>& squares,
         std::size_t moveFrom = BOARD_SIZE, std::size_t moveTo = BOARD_SIZE);
 
+    std::size_t findKing(Colour colour) const;
+
     // Getters
     static bool getCoordinates(std::size_t index, std::size_t& column, std::size_t& row);
 
@@ -140,8 +142,6 @@ protected:
     virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const;
 
     virtual void promote(std::size_t location, unsigned int promoteTo);
-
-    std::size_t findKing(Colour colour) const;
 };
 
 #endif // _NALCG_CHESS_BOARD_H_
