@@ -1,6 +1,6 @@
-#include <iostream>
 #include "socket.h"
-#include "string.h"
+#include <iostream>
+#include <string>
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -92,6 +92,7 @@ bool Socket::accept ( Socket& new_socket ) const
 bool Socket::send ( const std::string s ) const
 {
     int status = ::send ( mSock, s.c_str(), s.size(), MSG_NOSIGNAL );
+
     if ( status == -1 )
     { 
         return false;
