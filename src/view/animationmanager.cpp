@@ -1,6 +1,7 @@
 #include "animationmanager.h"
 
 #include "genericanimation.h"
+#include "view.h"
 
 void AnimationManager::executeAnimations(double timeSinceLastFrame, bool instant)
 {

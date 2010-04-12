@@ -4,6 +4,7 @@
 #include "dyinganimation.h"
 #include "camerashakeanimation.h"
 #include "bleedinganimation.h"
+#include "animationmanager.h"
 
 const Real KnightMovementAnimation::END_DELAY = 0.7;
 

@@ -12,6 +12,7 @@ class CameraShakeAnimation;
 class BleedingAnimation;
 class PromotionAnimation;
 class View;
+class CheckAnimation;
 class AnimationFactory
 {
 public:
@@ -31,6 +32,9 @@ public:
 
     static PromotionAnimation* createPromotionAnimation(
         unsigned int promoteTo, SceneNode *movingNode, SceneManager *sceneMgr, View* view);
+
+    static CheckAnimation* createCheckAnimation(
+        SceneNode *checkedNode, SceneManager *sceneMgr, double delay);
 };
 
 #endif // _NALCG_ANIMATION_FACTORY_H_

@@ -91,6 +91,8 @@ public:
         const std::vector<Square>& squares,
         std::size_t moveFrom = BOARD_SIZE, std::size_t moveTo = BOARD_SIZE);
 
+    std::size_t findKing(Colour colour) const;
+
     // Getters
     static bool getCoordinates(std::size_t index, std::size_t& column, std::size_t& row);
 
@@ -159,7 +161,6 @@ protected:
 
     // other private methods
 
-    std::size_t findKing(Colour colour) const;
     void markCheck(Colour currentPlayer, unsigned int& conditionsMask) const;
     void markCheckmate(Colour currentPlayer, unsigned int& conditionsMask) const;
     void markStalemate(Colour currentPlayer, unsigned int& conditionsMask) const;
