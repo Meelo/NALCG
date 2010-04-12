@@ -194,6 +194,18 @@ bool ChessBoard::isUnderAttack(std::size_t location,
 }
 
 
+unsigned int ChessBoard::getGameConditionMask(Colour currentPlayer) const
+{
+    unsigned int conditions = 0;
+
+    markCheck(currentPlayer, conditions);
+    markCheckmate(currentPlayer, conditions);
+    markStalemate(currentPlayer, conditions);
+
+    return conditions;
+}
+
+
 std::vector<std::size_t> ChessBoard::getValidMoves(std::size_t location) const
 {
     // TODO: cache these results per each turn.
@@ -263,17 +275,6 @@ void ChessBoard::promote(std::size_t location, unsigned int promoteTo)
 }
 
 
-void ChessBoard::markWinCondition(Colour currentPlayer, unsigned int& mask)
-{
-    Colour enemyColour = Piece::getOppositeColour(currentPlayer);
-    std::size_t kingLocation = findKing(enemyColour);
-    if (isUnderAttack(kingLocation, squares))
-    {
-        mask |= CHECK;
-    }
-}
-
-
 std::size_t ChessBoard::findKing(Colour colour) const
 {
     char kingSymbol = (colour == WHITE) ? WHITE_KING_SYMBOL : BLACK_KING_SYMBOL;
@@ -289,6 +290,31 @@ std::size_t ChessBoard::findKing(Colour colour) const
 
     // king not found, return out of bounds value.
     return squares.size();
+}
+
+void ChessBoard::markCheck(Colour currentPlayer,
+    unsigned int& conditionsMask) const
+{
+    unsigned int kingLocation = findKing(currentPlayer);
+    if (isUnderAttack(kingLocation, squares))
+    {
+        std::cout << "CHECK!" << std::endl;
+        conditionsMask |= ChessBoard::CHECK;
+    }
+}
+
+
+void ChessBoard::markCheckmate(Colour currentPlayer,
+    unsigned int& conditionsMask) const
+{
+
+}
+
+
+void ChessBoard::markStalemate(Colour currentPlayer,
+    unsigned int& conditionsMask) const
+{
+
 }
 
 
