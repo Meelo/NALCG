@@ -153,6 +153,7 @@ bool ViewFrameListener::hideGUI(const CEGUI::EventArgs& e)
         wmgr.getWindow("View/Unsafe modeCheckbox")->setVisible(false); // not in demo
         wmgr.getWindow("View/Move assistance levelStaticText")->setVisible(true);
         wmgr.getWindow("View/Move assistanceSpinner")->setVisible(true);
+        wmgr.getWindow("View/FPS infoButton")->setVisible(true);
     }
     else if (hideButton->getText() == HIDE_GUI)
     {

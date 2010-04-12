@@ -344,7 +344,7 @@ void View::createGUI()
     unsafe->subscribeEvent(CEGUI::Checkbox::EventCheckStateChanged,
         CEGUI::Event::Subscriber(&BufferedInputHandler::handleSafeModeChanged, mListener->getHandler()));
 
-    createGUIComponent(ViewConstants::SHOW_ADDITIONAL, 0.005, 0.005, 0.22, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent(ViewConstants::SHOW_ADDITIONAL, 0.005, 0.005, 0.22, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::hideGUI, mListener));
 }
 
@@ -595,7 +595,6 @@ bool View::restart(const CEGUI::EventArgs& e)
     return true;
 }
 
-
 bool View::visitSelectedLog(const CEGUI::EventArgs& e)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
@@ -622,6 +621,8 @@ bool View::visitSelectedLog(const CEGUI::EventArgs& e)
         {
             ensureLatestState();
         }
+        CEGUI::ListboxItem* newSelected = logList->getListboxItemFromIndex(selectedIndex);
+        newSelected->setText(newSelected->getText() + " <");
     }
     return true;
 }
