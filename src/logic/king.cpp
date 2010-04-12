@@ -32,7 +32,7 @@ std::vector<std::size_t> King::getValidMoves(std::size_t ownLocation,
             y + Y_DIRECTIONS[i]);
 
         if (location < squares.size() && isEmptyOrEdible(location, squares) &&
-            !ChessBoard::isUnderAttack(ownLocation, squares, ownLocation, location))
+            !ChessBoard::isUnderAttack(protect, squares, ownLocation, location))
         {
             validMoves.push_back(location);
 
