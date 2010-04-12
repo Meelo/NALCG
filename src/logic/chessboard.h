@@ -77,10 +77,15 @@ public:
     virtual ChessBoard* clone() const { return new ChessBoard(*this); }
     virtual ~ChessBoard() { };
 
-    // Methods
-    static std::vector<Square> createBoard();
+    // Inherited public methods
 
     virtual std::vector<std::size_t> getValidMoves(std::size_t location) const;
+
+    virtual unsigned int getGameConditionMask(Colour currentPlayer) const;
+
+    // public static methods
+
+    static std::vector<Square> createBoard();
 
     static bool isUnderAttack(std::size_t location,
         const std::vector<Square>& squares,
@@ -109,8 +114,6 @@ protected:
     virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const;
 
     virtual void promote(std::size_t location, unsigned int promoteTo);
-
-    virtual void markWinCondition(Colour currentPlayer, unsigned int& mask);
 
     // Static methods
 
@@ -156,6 +159,11 @@ protected:
         const std::vector<Square>& squares,
         std::size_t moveFrom, std::size_t moveTo);
 
+    // other private methods
+
+    void markCheck(Colour currentPlayer, unsigned int& conditionsMask) const;
+    void markCheckmate(Colour currentPlayer, unsigned int& conditionsMask) const;
+    void markStalemate(Colour currentPlayer, unsigned int& conditionsMask) const;
 };
 
 #endif // _NALCG_CHESS_BOARD_H_

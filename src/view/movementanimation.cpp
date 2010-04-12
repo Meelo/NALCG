@@ -5,7 +5,7 @@
 #include "../logic/chessboard.h"
 #include "../middleman.h"
 #include "animationfactory.h"
-
+#include "checkanimation.h"
 
 void MovementAnimation::dimLights()
 {
@@ -63,7 +63,7 @@ MovementAnimation::~MovementAnimation()
 
         Middleman* middleman = view->getMiddleman();
 
-        if (middleman->getGameConditionMask & ChessBoard::CHECK)
+        if (middleman->getGameConditionMask() & ChessBoard::CHECK)
         {
             const ChessBoard* board = dynamic_cast<const ChessBoard*>(
                 middleman->getGameStateAt(middleman->getGameLog().size()));
@@ -82,6 +82,5 @@ MovementAnimation::~MovementAnimation()
                 AnimationFactory::createCheckAnimation(
                 pieceNode, mSceneMgr, 1.0));
         }
-        //}
     }
 }

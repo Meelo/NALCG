@@ -119,6 +119,12 @@ void Middleman::undo(unsigned int steps)
     }
 }
 
+
+unsigned int Middleman::getGameConditionMask() const
+{
+    return board->getGameConditionMask(currentTurn);
+}
+
 // private methods
 void Middleman::playRound()
 {
