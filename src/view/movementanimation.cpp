@@ -83,5 +83,13 @@ MovementAnimation::~MovementAnimation()
         mAnimationManager->addAnimation(
             AnimationFactory::createCheckAnimation(
             pieceNode, mSceneMgr));
+
+        if (middleman->getGameConditionMask() & ChessBoard::CHECKMATE)
+        {
+            mAnimationManager->addAnimation(AnimationFactory::createMovementAnimation(
+                *mAnimatedNode->getName().begin(), pieceNode->getPosition(),
+                mAnimatedNode, pieceNode, mSceneMgr, mAnimationManager));
+        }
     }
+
 }

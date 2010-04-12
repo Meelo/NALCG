@@ -35,9 +35,9 @@ public:
 
 protected:
     std::vector<GenericAnimation*> mGenericAnimations;
+    float mAnimationSpeedMultiplier;
     View* mView;
 
-    float mAnimationSpeedMultiplier;
     virtual void endAnimation(std::size_t index);
 };
 
