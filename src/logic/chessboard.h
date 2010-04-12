@@ -64,6 +64,15 @@ public:
 
     static const char EMPTY_SYMBOL;
 
+    // Chess-specific move-conditions, check, stalemate, checkmate, etc.
+    // 2^16..2^32 are reserved for these.
+    static const unsigned int CHECK             = 1 << 16;
+    static const unsigned int CHECKMATE         = 1 << 17;
+    static const unsigned int STALEMATE         = 1 << 18;
+    static const unsigned int EN_PASSANT        = 1 << 19;
+    static const unsigned int CASTLING          = 1 << 20;
+
+
     ChessBoard(const std::vector<Square>& squares);
     virtual ChessBoard* clone() const { return new ChessBoard(*this); }
     virtual ~ChessBoard() { };
@@ -93,7 +102,16 @@ protected:
     static const int KNIGHT_DIRECTIONS_X[];
     static const int KNIGHT_DIRECTIONS_Y[];
 
-    // Methods
+    // Inherited methods
+
+    virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const;
+
+    virtual void promote(std::size_t location, unsigned int promoteTo);
+
+    virtual void markWinCondition(Colour currentPlayer, unsigned int& mask);
+
+    // Static methods
+
     static bool isPawn(char symbol);
 
     static bool isKing(char symbol);
@@ -136,10 +154,7 @@ protected:
         const std::vector<Square>& squares,
         std::size_t moveFrom, std::size_t moveTo);
 
-    // Methods
-    virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const;
-
-    virtual void promote(std::size_t location, unsigned int promoteTo);
+    // other private methods
 
     std::size_t findKing(Colour colour) const;
 };

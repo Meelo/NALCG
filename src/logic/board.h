@@ -18,6 +18,8 @@ public:
     static const unsigned int INVALID_MOVE      = 1 << 2;
     static const unsigned int PROMOTION_REQUEST = 1 << 3;
     static const unsigned int PROMOTION_OK      = 1 << 4;
+    // 2^16..2^32 reserved for game specific states.
+    // They should be defined separately in each implementing board.
 
     Board(const std::vector<Square>& squares, std::size_t width = 8, std::size_t height = 8);
     Board(const Board& orig);
@@ -85,6 +87,8 @@ protected:
     virtual bool isPromotable(std::size_t moveFrom, std::size_t moveTo) const = 0;
 
     virtual void promote(std::size_t location, unsigned int promoteTo) = 0;
+
+    virtual void markWinCondition(Colour currentPlayer, unsigned int& mask) = 0;
 
     template <typename T>
     void deleteAndClear(std::vector<T>& vector);
