@@ -327,6 +327,9 @@ void ChessBoard::markCheckmate(Colour currentPlayer,
 void ChessBoard::markStalemate(Colour currentPlayer,
     unsigned int& conditionsMask) const
 {
+    // don't mark as stalemate when checkmate has already been marked.
+    if (conditionsMask & CHECKMATE) return;
+
     int whiteFound = 0;
     int blackFound = 0;
     bool validMovesFound = false;
