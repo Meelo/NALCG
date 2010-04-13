@@ -369,7 +369,8 @@ void View::recreateLog()
 
 void View::recreateDeadPieces()
 {
-    const Board* board = mMiddleman->getGameStateAt(mRound);
+    // TODO: Check why this crashes on undo during an animation.
+    const Board* board = mMiddleman->getGameStateAt(mMiddleman->getGameLog().size());
     const std::vector<Piece*> deadPieces = board->getDeadPieces();
     SceneNode* whiteDeads = mSceneMgr->getSceneNode("White dead pieces");
     SceneNode* blackDeads = mSceneMgr->getSceneNode("Black dead pieces");

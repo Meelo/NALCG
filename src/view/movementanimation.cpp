@@ -65,7 +65,7 @@ MovementAnimation::~MovementAnimation()
 
     Middleman* middleman = view->getMiddleman();
 
-    if (middleman->getGameConditionMask() & ChessBoard::CHECK)
+    if (middleman && middleman->getGameConditionMask() & ChessBoard::CHECK)
     {
         const ChessBoard* board = dynamic_cast<const ChessBoard*>(
             middleman->getGameStateAt(middleman->getGameLog().size()));
