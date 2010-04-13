@@ -32,11 +32,11 @@ const ServerSocket& ServerSocket::operator << ( const std::string& s ) const
 
 const ServerSocket& ServerSocket::operator >> ( std::string& s ) const
 {
-  if ( ! Socket::recv ( s ) )
+    if ( ! Socket::recv ( s ) )
     {
-      throw SocketException ( "Could not read from socket." );
+        throw SocketException ( "Could not read from socket." );
     }
-   return *this;
+    return *this;
 }
 
 void ServerSocket::accept ( ServerSocket& sock )
