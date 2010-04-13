@@ -51,16 +51,22 @@ void TestKing::whiteValidMoves_data()
     // These will be handled as instructions for creating new units
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
-    PieceHolder createUnitsAt02[] = { PieceHolder(61, 0) };
-    PieceHolder createUnitsAt03[] = { PieceHolder(59, 0) };
-    PieceHolder createUnitsAt04[] = { PieceHolder(52, 0) };
-    PieceHolder createUnitsAt05[] = { PieceHolder(51, 0) };
-    PieceHolder createUnitsAt06[] = { PieceHolder(53, 0) };
-    PieceHolder createUnitsAt07[] = {   PieceHolder(14, new King(WHITE)),
-                                        PieceHolder(21, new Pawn(BLACK)),
-                                        PieceHolder(22, new Pawn(BLACK)),
-                                        PieceHolder(23, new Pawn(BLACK)) };
-    PieceHolder createUnitsAt08[] = {   PieceHolder(26, new King(WHITE)) };
+    PieceHolder createUnitsAt02[] = {   PieceHolder(61, 0) };
+    PieceHolder createUnitsAt03[] = {   PieceHolder(59, 0) };
+    PieceHolder createUnitsAt04[] = {   PieceHolder(52, 0) };
+    PieceHolder createUnitsAt05[] = {   PieceHolder(51, 0) };
+    PieceHolder createUnitsAt06[] = {   PieceHolder(53, 0) };
+    PieceHolder createUnitsAt07[] = {   PieceHolder(9,  new King(WHITE)),
+                                        PieceHolder(1,  new Bishop(BLACK)),
+                                        PieceHolder(2,  new Rook(BLACK)),
+                                        PieceHolder(8,  new Bishop(BLACK)),
+                                        PieceHolder(10, new Bishop(BLACK)),
+                                        PieceHolder(16, new Pawn(BLACK)),
+                                        PieceHolder(17, new Pawn(BLACK)),
+                                        PieceHolder(18, new Pawn(BLACK)),
+                                        PieceHolder(3, 0),
+                                        PieceHolder(11, 0) };
+    PieceHolder createUnitsAt08[] = {   PieceHolder(34, new King(WHITE)) };
     PieceHolder createUnitsAt09[] = {   PieceHolder(57, 0),
                                         PieceHolder(58, 0),
                                         PieceHolder(59, 0) };
@@ -73,8 +79,8 @@ void TestKing::whiteValidMoves_data()
     std::size_t case04[] = { 52 };
     std::size_t case05[] = { 51 };
     std::size_t case06[] = { 53 };
-    std::size_t case07[] = {  5,  6,  7, 13, 15, 21, 22, 23 };
-    std::size_t case08[] = { 17, 18, 19, 25, 27, 33, 34, 35 };
+    std::size_t case07[] = { 0, 2, 16, 18 };
+    std::size_t case08[] = { 25, 26, 27, 33, 35, 41, 42, 43 };
     std::size_t case09[] = { 58, 59 };
     std::size_t case10[] = { 61, 62 };
 
@@ -108,12 +114,12 @@ void TestKing::whiteValidMoves_data()
             (createUnitsAt06, createUnitsAt06 + sizeof(createUnitsAt06) / sizeph)
         << std::vector<std::size_t>(case06, case06 + sizeof(case06) / sizet);
 
-    QTest::newRow("surrounded by food") << std::size_t(14)
+    QTest::newRow("surrounded by food") << std::size_t(9)
         << std::vector<PieceHolder>
             (createUnitsAt07, createUnitsAt07 + sizeof(createUnitsAt07) / sizeph)
         << std::vector<std::size_t>(case07, case07 + sizeof(case07) / sizet);
 
-    QTest::newRow("all movements possible") << std::size_t(26)
+    QTest::newRow("all movements possible") << std::size_t(34)
         << std::vector<PieceHolder>
             (createUnitsAt08, createUnitsAt08 + sizeof(createUnitsAt08) / sizeph)
         << std::vector<std::size_t>(case08, case08 + sizeof(case08) / sizet);
