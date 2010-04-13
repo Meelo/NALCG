@@ -186,7 +186,8 @@ void TestQueen::blackValidMoves_data()
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
     PieceHolder createUnitsAt02[] = {   PieceHolder(2, 0) };
-    PieceHolder createUnitsAt03[] = {   PieceHolder(4, 0) };
+    PieceHolder createUnitsAt03[] = {   PieceHolder(4, 0),
+                                        PieceHolder(5, new King(BLACK)) };
     PieceHolder createUnitsAt04[] = {   PieceHolder(10, 0) };
     PieceHolder createUnitsAt05[] = {   PieceHolder(12, 0) };
     PieceHolder createUnitsAt06[] = {   PieceHolder(11, new Queen(BLACK)),
