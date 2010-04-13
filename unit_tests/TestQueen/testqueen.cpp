@@ -52,19 +52,19 @@ void TestQueen::whiteValidMoves_data()
     // These will be handled as instructions for creating new units
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
-    PieceHolder createUnitsAt02[] = { PieceHolder(50, 0) };
-    PieceHolder createUnitsAt03[] = { PieceHolder(52, 0) };
+    PieceHolder createUnitsAt02[] = {   PieceHolder(50, 0) };
+    PieceHolder createUnitsAt03[] = {   PieceHolder(52, 0) };
     PieceHolder createUnitsAt04[] = {   PieceHolder(51, new Queen(WHITE)),
                                         PieceHolder(33, new Pawn(WHITE)),
                                         PieceHolder(37, new Pawn(WHITE)),
                                         PieceHolder(27, new Pawn(WHITE)) };
-    PieceHolder createUnitsAt05[] = { PieceHolder(50, new Pawn(BLACK)) };
-    PieceHolder createUnitsAt06[] = { PieceHolder(51, new Pawn(BLACK)) };
-    PieceHolder createUnitsAt07[] = { PieceHolder(52, new Pawn(BLACK)) };
+    PieceHolder createUnitsAt05[] = {   PieceHolder(50, new Pawn(BLACK)) };
+    PieceHolder createUnitsAt06[] = {   PieceHolder(51, new Pawn(BLACK)) };
+    PieceHolder createUnitsAt07[] = {   PieceHolder(52, new Pawn(BLACK)) };
     PieceHolder createUnitsAt08[] = {   PieceHolder(10, new Queen(WHITE)),
                                         PieceHolder(18, new Pawn(BLACK)) };
-    PieceHolder createUnitsAt09[] = { PieceHolder(10, new Queen(WHITE)) };
-    PieceHolder createUnitsAt10[] = { PieceHolder(36, new Queen(WHITE)) };
+    PieceHolder createUnitsAt09[] = {   PieceHolder(10, new Queen(WHITE)) };
+    PieceHolder createUnitsAt10[] = {   PieceHolder(36, new Queen(WHITE)) };
 
     // These are the expected valid move indices.
     std::size_t case01[] = { };

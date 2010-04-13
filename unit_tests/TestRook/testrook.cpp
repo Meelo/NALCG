@@ -169,8 +169,8 @@ void TestRook::blackValidMoves_data()
     // These will be handled as instructions for creating new units
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
-    PieceHolder createUnitsAt02[] = { PieceHolder(15, 0) };
-    PieceHolder createUnitsAt03[] = { PieceHolder(6, 0) };
+    PieceHolder createUnitsAt02[] = {   PieceHolder(15, 0) };
+    PieceHolder createUnitsAt03[] = {   PieceHolder(6, 0) };
     PieceHolder createUnitsAt04[] = {   PieceHolder(8, 0),
                                         PieceHolder(24, new Pawn(BLACK)) };
     PieceHolder createUnitsAt05[] = {   PieceHolder(51, new Rook(BLACK)),

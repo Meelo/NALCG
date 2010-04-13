@@ -190,11 +190,11 @@ void TestKing::blackValidMoves_data()
     // These will be handled as instructions for creating new units
     // before running the actual tests.
     PieceHolder createUnitsAt01[] = { };
-    PieceHolder createUnitsAt02[] = { PieceHolder(5, 0) };
-    PieceHolder createUnitsAt03[] = { PieceHolder(3, 0) };
-    PieceHolder createUnitsAt04[] = { PieceHolder(12, 0) };
-    PieceHolder createUnitsAt05[] = { PieceHolder(11, 0) };
-    PieceHolder createUnitsAt06[] = { PieceHolder(13, 0) };
+    PieceHolder createUnitsAt02[] = {   PieceHolder(5, 0) };
+    PieceHolder createUnitsAt03[] = {   PieceHolder(3, 0) };
+    PieceHolder createUnitsAt04[] = {   PieceHolder(12, 0) };
+    PieceHolder createUnitsAt05[] = {   PieceHolder(11, 0) };
+    PieceHolder createUnitsAt06[] = {   PieceHolder(13, 0) };
     PieceHolder createUnitsAt07[] = {   PieceHolder(51, new King(BLACK)),
                                         PieceHolder(42, new Pawn(WHITE)),
                                         PieceHolder(43, new Pawn(WHITE)),
