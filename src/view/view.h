@@ -74,7 +74,6 @@ public:
         mListener->move(toX, toY, toX, toY, false, promoteTo);
         mRound++;
         recreateLog();
-        recreateDeadPieces();
     }
     virtual void setControl(bool white, bool black) { }
 

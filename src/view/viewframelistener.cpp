@@ -21,7 +21,8 @@ bool ViewFrameListener::frameStarted(const FrameEvent& evt)
     if (!mAnimationManager.animationsRunning())
     {
         if (mHandler.canShowSelectablePieces()
-            && mHandler.getMoveAssistanceLevel() > 2)
+            && mHandler.getMoveAssistanceLevel() > 2
+            && !CEGUI::WindowManager::getSingleton().getWindow("View/Choose queenButton")->isVisible())
         {
             mHandler.showSelectablePieces();
         }
