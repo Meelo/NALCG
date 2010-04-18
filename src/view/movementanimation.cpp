@@ -83,6 +83,11 @@ MovementAnimation::~MovementAnimation()
 
         if (pieceNode && pieceNode != mAnimatedNode)
         {
+            if (mCallback)
+            {
+                mCallback->animationFinished();
+                mCallback = 0;
+            }
             if (middleman->getGameConditionMask() & ChessBoard::CHECKMATE)
             {
                 mAnimationManager->addAnimation(AnimationFactory::createMovementAnimation(
@@ -91,11 +96,6 @@ MovementAnimation::~MovementAnimation()
             }
             else
             {
-                if (mCallback)
-                {
-                    mCallback->animationFinished();
-                    mCallback = 0;
-                }
                 mAnimationManager->addAnimation(
                     AnimationFactory::createCheckAnimation(
                     pieceNode, mSceneMgr));
