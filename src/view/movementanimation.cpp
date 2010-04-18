@@ -91,6 +91,11 @@ MovementAnimation::~MovementAnimation()
             }
             else
             {
+                if (mCallback)
+                {
+                    mCallback->animationFinished();
+                    mCallback = 0;
+                }
                 mAnimationManager->addAnimation(
                     AnimationFactory::createCheckAnimation(
                     pieceNode, mSceneMgr));
