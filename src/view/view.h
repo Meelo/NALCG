@@ -60,7 +60,8 @@ public:
     virtual void move(int fromX, int fromY, int toX, int toY,
         bool continuous = false)
     {
-        mListener->move(fromX, fromY, toX, toY, continuous);
+        // All moves are assumed to be continuous and will be queued.
+        mListener->move(fromX, fromY, toX, toY, true);
         if (!continuous)
         {
             mRound++;

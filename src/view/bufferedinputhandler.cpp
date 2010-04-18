@@ -367,6 +367,11 @@ void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY,
         std::ostringstream sourceName;
         sourceName << fromX << " " << fromY;
         SceneNode* pieceNode = findPieceAbove(mSceneMgr->getSceneNode(sourceName.str()));
+        if (!pieceNode)
+        {
+            // There probably was a move in the queue which is no longer possible to make.
+            return;
+        }
 
         std::ostringstream targetName;
         targetName << toX << " " << toY;
