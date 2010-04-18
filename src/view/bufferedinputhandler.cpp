@@ -389,9 +389,9 @@ void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY,
 
         mAnimationManager->addAnimation(animation);
 
+        animation->enableCallback(this);
         if (continuous)
         {
-            animation->enableCallback(this);
             mQueueAnimations = true;
         }
         else
@@ -403,14 +403,17 @@ void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY,
 
 void BufferedInputHandler::animationFinished()
 {
-    std::vector<int> moveOrder = mAnimationQueue.back();
-    mAnimationQueue.pop_back();
+    if (!mAnimationQueue.empty())
+    {
+        std::vector<int> moveOrder = mAnimationQueue.back();
+        mAnimationQueue.pop_back();
 
-    // fromX, fromY, toX, toY, continuous, promote
-    // TODO: a struct or class for this so it won't seem so magical
-    move(moveOrder.at(0), moveOrder.at(1),
-        moveOrder.at(2), moveOrder.at(3),
-        moveOrder.at(4) != 0, moveOrder.at(5));
+        // fromX, fromY, toX, toY, continuous, promote
+        // TODO: a struct or class for this so it won't seem so magical
+        move(moveOrder.at(0), moveOrder.at(1),
+            moveOrder.at(2), moveOrder.at(3),
+            moveOrder.at(4) != 0, moveOrder.at(5));
+    }
 }
 
 bool BufferedInputHandler::resetSquareIndicators(bool onlyInvalidsAndTargets)

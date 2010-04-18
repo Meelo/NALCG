@@ -63,6 +63,10 @@ public:
     {
         return mMoveAssistanceLevel;
     }
+    virtual View* getView()
+    {
+        return mView;
+    }
 
 protected:
     bool mLMouseDown, mRMouseDown;     // True if the mouse buttons are down

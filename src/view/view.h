@@ -71,7 +71,7 @@ public:
         unsigned int promoteTo)
     {
         mListener->move(fromX, fromY, toX, toY, true, 0);
-        mListener->move(toX, toY, toX, toY, false, promoteTo);
+        mListener->move(toX, toY, toX, toY, true, promoteTo);
         mRound++;
         recreateLog();
     }
