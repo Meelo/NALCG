@@ -623,7 +623,10 @@ bool View::visitSelectedLog(const CEGUI::EventArgs& e)
             ensureLatestState();
         }
         CEGUI::ListboxItem* newSelected = logList->getListboxItemFromIndex(selectedIndex);
-        newSelected->setText(newSelected->getText() + " <");
+        if (*newSelected->getText().rbegin() != '<')
+        {
+            newSelected->setText(newSelected->getText() + " <");
+        }
     }
     return true;
 }
