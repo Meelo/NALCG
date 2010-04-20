@@ -469,6 +469,7 @@ bool BufferedInputHandler::showSelectablePieces()
     }
     mCanShowSelectablePieces = false;
 
+    const Board* gameState = middleman->getGameStateAt(mView->getRound());
     for (int i = 0; i < mView->getBoardWidth(); i++)
     {
         for (int j = 0; j < mView->getBoardHeight(); j++)
@@ -485,7 +486,7 @@ bool BufferedInputHandler::showSelectablePieces()
                     bool whitePiece = pieceNode->getName().find("white") != std::string::npos;
                     bool whiteTurn = mView->isWhiteTurn();
                     if (((whitePiece && whiteTurn) || (!whitePiece && !whiteTurn))
-                        && middleman->getValidMovesAt(i, j).size() > 0)
+                        && gameState->hasValidMoves(i, j))
                     {
                         ent->setVisible(true);
                         ent->setMaterialName("board/square/selected");

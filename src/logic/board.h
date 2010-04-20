@@ -31,7 +31,7 @@ public:
 
     virtual std::vector<std::size_t> getValidMoves(std::size_t location) const = 0;
 
-    std::vector<std::size_t> getValidMoves(std::size_t x, std::size_t y);
+    std::vector<std::size_t> getValidMoves(std::size_t x, std::size_t y) const;
 
     bool hasValidMoves(std::size_t x, std::size_t y) const;
 

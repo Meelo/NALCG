@@ -41,7 +41,7 @@ Board::~Board()
 // public
 
 
-std::vector<std::size_t> Board::getValidMoves(std::size_t x, std::size_t y)
+std::vector<std::size_t> Board::getValidMoves(std::size_t x, std::size_t y) const
 {
     return getValidMoves(getPosition(x, y));
 }
