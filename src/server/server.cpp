@@ -6,7 +6,7 @@
 #include <pthread.h>
 #include <string>
 #include <iostream>
-
+ 
 Server::Server()
 {
     mSocket = new ServerSocket( 30000 );
@@ -211,7 +211,7 @@ void Server::doCtrl(std::string& msg, User* user)
         {
             user->setPlaying(true);
             opponent->setPlaying(true);
-            *(opponent->getSocket()) << "Accept invitation? (y/n)";
+            *(opponent->getSocket()) << "MSG_E";
             user->setOpponent(opponent);
             opponent->setOpponent(user);
         }
@@ -223,14 +223,14 @@ void Server::doCtrl(std::string& msg, User* user)
     // Accept invitation: MSG_C
     else if(ctrl.compare("C") == 0)
     {
-        *(user->getOpponent()->getSocket()) << "Connection created!";
-        *(user->getSocket()) << "Connection created!";
+        *(user->getOpponent()->getSocket()) << "MSG_C";
+        *(user->getSocket()) << "MSG_C";
     }
     // Decline invitation or close connection: MSG_D
     else if(ctrl.compare("D") == 0)
     {
-        *(user->getOpponent()->getSocket()) << "Connection closed!";
-        *(user->getSocket()) << "Connection closed!";
+        *(user->getOpponent()->getSocket()) << "MSG_D";
+        *(user->getSocket()) << "MSG_D";
         user->setPlaying(false);
         user->getOpponent()->setPlaying(false);
         user->getOpponent()->setOpponent(NULL);
@@ -250,7 +250,7 @@ void Server::sendMsgPlaying(std::string& msg, User* user)
     // Message type 2: TPE_2 -> next move's data to opponent
     else if(type.compare("2") == 0)
     {
-        *(user->getOpponent()->getSocket()) << msg.substr(5);
+        *(user->getOpponent()->getSocket()) << msg;
     }
     // Message type 3: TPE_3 -> message to all users
     else if(type.compare("3") == 0)
