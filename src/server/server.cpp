@@ -29,48 +29,56 @@ User* Server::addUser()
     ServerSocket *new_sock = new ServerSocket();
     mSocket->accept ( *new_sock );
     std::string name;
-    if( MAX > mClients.size() )
+    try
     {
-        bool isValid = true;
-        do
+        if( MAX > mClients.size() )
         {
-            if(!isValid)
+            bool isValid = true;
+            do
             {
-                *new_sock << "The nickname you have chosen is already taken. Please choose another one.";
+                if(!isValid)
+                {
+                    *new_sock << "The nickname you have chosen is already taken. Please choose another one.";
+                }
+                *new_sock << "Nickname:";
+                name = "";
+                *new_sock >> name;
+                isValid = checkName(name);
+            } while(!isValid);
+            if(name.compare("MSG_Q") == 0)
+            {
+                delete new_sock;
+                return NULL;
             }
-            *new_sock << "Nickname:";
-            name = "";
-            *new_sock >> name;
-            isValid = checkName(name);
-        } while(!isValid);
-        if(name.compare("MSG_Q") == 0)
+
+            std::string users = "\nOther users:";
+            pthread_rwlock_rdlock(&mLock);
+            std::list<User*>::iterator i;
+            for ( i = mClients.begin(); i != mClients.end(); ++i)
+            {
+                *((*i)->getSocket()) << getTime(1) + " New user " + name + " logged in.";
+                users += "\n" + (*i)->getName();
+            }
+            pthread_rwlock_unlock(&mLock);
+            User *user = new User(new_sock, name);
+
+            pthread_rwlock_wrlock(&mLock);
+            mClients.push_front(user);
+            pthread_rwlock_unlock(&mLock);
+            *(user->getSocket()) << "Welcome to NALCG!" + users;
+            sleep(1);
+            userList();
+            return user;
+        }
+        else
         {
+            *new_sock << "The server is full. Please try again later.";
             delete new_sock;
             return NULL;
         }
-	 
-        std::string users = "\nOther users:";
-        pthread_rwlock_rdlock(&mLock);
-        std::list<User*>::iterator i;
-        for ( i = mClients.begin(); i != mClients.end(); ++i)
-        {
-            *((*i)->getSocket()) << getTime(1) + " New user " + name + " logged in.";
-            users += "\n" + (*i)->getName();
-        }
-        pthread_rwlock_unlock(&mLock);
-        User *user = new User(new_sock, name);
-
-        pthread_rwlock_wrlock(&mLock);
-        mClients.push_front(user);
-        pthread_rwlock_unlock(&mLock);
-        *(user->getSocket()) << "Welcome to NALCG!" + users;
-        sleep(1);
-        userList();
-        return user;
     }
-    else
+    catch(SocketException&)
     {
-        *new_sock << "The server is full. Please try again later.";
         delete new_sock;
         return NULL;
     }
