@@ -6,23 +6,21 @@
 
 // system includes
 
-class AI : public EndUser
+class AI
 {
-    // Constants
-
-    // Members
-
-    // Methods
-
 public:
-    AI();
+    AI() : mMiddleman(0) { }
     virtual ~AI() { }
 
-    // Methods
+    // Note: Do not use board as a member variable as it can change and be deleted.
+    // It's not safe to use it after these function calls have returned.
+    virtual void init(const Board* board, Middleman* middleman) { mMiddleman = middleman; }
+    virtual void setBoard(const Board* const board, unsigned int round) = 0;
 
-    // Getters
+    virtual void setControl(bool white, bool black) = 0;
 
-    // Setters
+protected:
+    Middleman* mMiddleman;
 };
 
 #endif // _NALCG_A_I_H_

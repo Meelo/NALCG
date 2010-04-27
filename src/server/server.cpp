@@ -29,47 +29,56 @@ User* Server::addUser()
     ServerSocket *new_sock = new ServerSocket();
     mSocket->accept ( *new_sock );
     std::string name;
-    if( MAX > mClients.size() )
+    try
     {
-        bool isValid = true;
-        do
+        if( MAX > mClients.size() )
         {
-            if(!isValid)
+            bool isValid = true;
+            do
             {
-                *new_sock << "The nickname you have chosen is already taken. Please choose another one.";
+                if(!isValid)
+                {
+                    *new_sock << "The nickname you have chosen is already taken. Please choose another one.";
+                }
+                *new_sock << "Nickname:";
+                name = "";
+                *new_sock >> name;
+                isValid = checkName(name);
+            } while(!isValid);
+            if(name.compare("MSG_Q") == 0)
+            {
+                delete new_sock;
+                return NULL;
             }
-            *new_sock << "Nickname:";
-            name = "";
-            *new_sock >> name;
-            isValid = checkName(name);
-        } while(!isValid);
-        if(name.compare("MSG_Q") == 0)
+
+            std::string users = "\nOther users:";
+            pthread_rwlock_rdlock(&mLock);
+            std::list<User*>::iterator i;
+            for ( i = mClients.begin(); i != mClients.end(); ++i)
+            {
+                *((*i)->getSocket()) << getTime(1) + " New user " + name + " logged in.";
+                users += "\n" + (*i)->getName();
+            }
+            pthread_rwlock_unlock(&mLock);
+            User *user = new User(new_sock, name);
+
+            pthread_rwlock_wrlock(&mLock);
+            mClients.push_front(user);
+            pthread_rwlock_unlock(&mLock);
+            *(user->getSocket()) << "Welcome to NALCG!" + users;
+            sleep(1);
+            userList();
+            return user;
+        }
+        else
         {
+            *new_sock << "The server is full. Please try again later.";
             delete new_sock;
             return NULL;
         }
-	 
-        std::string users = "\nOther users:";
-        pthread_rwlock_rdlock(&mLock);
-        std::list<User*>::iterator i;
-        for ( i = mClients.begin(); i != mClients.end(); ++i)
-        {
-            *((*i)->getSocket()) << getTime(1) + " New user " + name + " logged in.";
-            users += "\n" + (*i)->getName();
-        }
-        pthread_rwlock_unlock(&mLock);
-        User *user = new User(new_sock, name);
-
-        pthread_rwlock_wrlock(&mLock);
-        mClients.push_front(user);
-        pthread_rwlock_unlock(&mLock);
-        userList();
-        *(user->getSocket()) << "Welcome to NALCG!" + users;
-        return user;
     }
-    else
+    catch(SocketException&)
     {
-        *new_sock << "The server is full. Please try again later.";
         delete new_sock;
         return NULL;
     }
@@ -100,6 +109,13 @@ void Server::quittedUsers()
             mClients.remove(temp);
             k = pthread_cancel(temp->getSid());
 	    
+            if(temp->isPlaying())
+            {
+                *(temp->getOpponent()->getSocket()) << "MSG_D";
+                temp->getOpponent()->setPlaying(false);
+                temp->getOpponent()->setOpponent(NULL);
+            }
+
             for ( i = mClients.begin(); i != mClients.end(); ++i)
             {
                 if((*i)->testConnection())
@@ -211,7 +227,8 @@ void Server::doCtrl(std::string& msg, User* user)
         {
             user->setPlaying(true);
             opponent->setPlaying(true);
-            *(opponent->getSocket()) << "MSG_E";
+            std::string msg = "MSG_E" + user->getName();
+            *(opponent->getSocket()) << msg;
             user->setOpponent(opponent);
             opponent->setOpponent(user);
         }
@@ -224,13 +241,11 @@ void Server::doCtrl(std::string& msg, User* user)
     else if(ctrl.compare("C") == 0)
     {
         *(user->getOpponent()->getSocket()) << "MSG_C";
-        *(user->getSocket()) << "MSG_C";
     }
     // Decline invitation or close connection: MSG_D
     else if(ctrl.compare("D") == 0)
     {
         *(user->getOpponent()->getSocket()) << "MSG_D";
-        *(user->getSocket()) << "MSG_D";
         user->setPlaying(false);
         user->getOpponent()->setPlaying(false);
         user->getOpponent()->setOpponent(NULL);
@@ -246,17 +261,18 @@ void Server::sendMsgPlaying(std::string& msg, User* user)
     {
         std::string send = getTime(1) + " " + user->getName() + ": " + msg.substr(5);
         *(user->getOpponent()->getSocket()) << send;
+        *(user->getSocket()) << send;
     }
-    // Message type 2: TPE_2 -> next move's data to opponent
+    // Message type 2: TPE_2 -> message to all users
     else if(type.compare("2") == 0)
-    {
-        *(user->getOpponent()->getSocket()) << msg;
-    }
-    // Message type 3: TPE_3 -> message to all users
-    else if(type.compare("3") == 0)
     {
         std::string send = getTime(1) + " " + user->getName() + ": " + msg.substr(5);
         sendMsg(send);
+    }
+    // Message type 3: TPE_3 -> next move's data to opponent
+    else if(type.compare("3") == 0)
+    {
+        *(user->getOpponent()->getSocket()) << msg;
     }
 }
 

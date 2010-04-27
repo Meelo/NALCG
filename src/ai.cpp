@@ -2,9 +2,3 @@
 #include "ai.h"
 
 // system includes
-
-AI::AI()
-{
-
-}
-
