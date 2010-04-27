@@ -65,6 +65,26 @@ std::vector<std::size_t> Pawn::getValidMoves(std::size_t ownLocation,
     return validMoves;
 }
 
+
+char Pawn::getSymbol(bool markSpecialSymbols) const
+{
+    if (markSpecialSymbols && specialMoveAllowed)
+    {
+        // is white symbol? (white is lowercase, black is uppercase)
+        if (symbol & (1 << 5))
+        {
+            return ChessBoard::WHITE_PAWN_SYMBOL_SPECIAL;
+        }
+        else
+        {
+            return ChessBoard::BLACK_PAWN_SYMBOL_SPECIAL;
+        }
+    }
+
+    return symbol;
+}
+
+
 void Pawn::specialMoveBehaviour(std::size_t from, std::size_t to)
 {
     std::size_t backwards = from + (2 * ChessBoard::WIDTH);
@@ -72,6 +92,7 @@ void Pawn::specialMoveBehaviour(std::size_t from, std::size_t to)
     specialMoveAllowed = backwards == to || forwards == to;
     resetOnNextTurn = false;
 }
+
 
 void Pawn::resetRoundSpecificState()
 {
@@ -92,6 +113,7 @@ bool Pawn::isEatingAllowed(std::size_t target, std::size_t side,
         isEnPassantAllowed(target, side, squares)));
 }
 
+
 bool Pawn::isEnPassantAllowed(std::size_t diag, std::size_t side,
     const std::vector<Square>& squares) const
 {
@@ -102,6 +124,7 @@ bool Pawn::isEnPassantAllowed(std::size_t diag, std::size_t side,
         && !squares.at(diag).hasPiece());
 }
 
+
 bool Pawn::isMoveAllowed(std::size_t location,
     const std::vector<Square>& squares) const
 {
@@ -109,11 +132,13 @@ bool Pawn::isMoveAllowed(std::size_t location,
     return location < squares.size() && !squares.at(location).hasPiece();
 }
 
+
 bool Pawn::isDoubleMoveAllowed(std::size_t row) const
 {
     return  (colour == WHITE && row == ChessBoard::WHITE_PAWN_ROW) ||
             (colour == BLACK && row == ChessBoard::BLACK_PAWN_ROW);
 }
+
 
 bool Pawn::trySpecialMove(  std::size_t& fromX, std::size_t& fromY,
                             std::size_t& toX,   std::size_t& toY,

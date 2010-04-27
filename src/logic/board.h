@@ -47,6 +47,21 @@ public:
 
     void printBoard() const;
 
+    //
+    // Usage example:
+    //
+    // char b[8][8];
+    // // &b[0][0] points to beginning of the block
+    // board->createCharBoard(&b[0][0], 8, 8);
+    // for (int i = 0; i < 8; ++i) {
+    //    for (int j= 0 ; j < 8; ++j) {
+    //        std::cout << b[i][j];
+    //    }
+    //    std::cout << std::endl;
+    // }
+    virtual bool createCharBoard(char *board,
+        std::size_t height, std::size_t width) const = 0;
+
     void initRoundSpecificState();
 
     virtual unsigned int getGameConditionMask(Colour currentPlayer) const = 0;

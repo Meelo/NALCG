@@ -41,6 +41,7 @@ public:
     // Getters
     virtual std::vector<std::size_t> getValidMoves(std::size_t location,
         const std::vector<Square>& squares, std::size_t protect = ~0) const;
+    virtual char getSymbol(bool markSpecialSymbols = false) const;
     virtual bool isSpecialMoveAllowed() const { return specialMoveAllowed; }
 
     // Setters

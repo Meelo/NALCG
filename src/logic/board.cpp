@@ -162,7 +162,7 @@ void Board::printBoard() const
         {
             std::cout << std::endl;
         }
-        char c = squares.at(i).getSymbolOfPiece();
+        char c = squares.at(i).getSymbolOfPiece(true);
         if (!c) c = '-';
         std::cout << c;
     }

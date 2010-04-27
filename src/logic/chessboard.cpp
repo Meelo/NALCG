@@ -38,18 +38,24 @@ const std::size_t ChessBoard::WHITE_KNIGHT_RIGHT    = 62;
 const std::size_t ChessBoard::WHITE_ROOK_RIGHT      = 63;
 // piece symbols - black
 const char ChessBoard::BLACK_PAWN_SYMBOL            = 'P';
+const char ChessBoard::BLACK_PAWN_SYMBOL_SPECIAL    = 'E';
 const char ChessBoard::BLACK_ROOK_SYMBOL            = 'R';
+const char ChessBoard::BLACK_ROOK_SYMBOL_SPECIAL    = 'T';
 const char ChessBoard::BLACK_KNIGHT_SYMBOL          = 'N';
 const char ChessBoard::BLACK_BISHOP_SYMBOL          = 'B';
 const char ChessBoard::BLACK_QUEEN_SYMBOL           = 'Q';
 const char ChessBoard::BLACK_KING_SYMBOL            = 'K';
+const char ChessBoard::BLACK_KING_SYMBOL_SPECIAL    = 'X';
 // piece symbols - white
 const char ChessBoard::WHITE_PAWN_SYMBOL            = 'p';
+const char ChessBoard::WHITE_PAWN_SYMBOL_SPECIAL    = 'e';
 const char ChessBoard::WHITE_ROOK_SYMBOL            = 'r';
+const char ChessBoard::WHITE_ROOK_SYMBOL_SPECIAL    = 't';
 const char ChessBoard::WHITE_KNIGHT_SYMBOL          = 'n';
 const char ChessBoard::WHITE_BISHOP_SYMBOL          = 'b';
 const char ChessBoard::WHITE_QUEEN_SYMBOL           = 'q';
 const char ChessBoard::WHITE_KING_SYMBOL            = 'k';
+const char ChessBoard::WHITE_KING_SYMBOL_SPECIAL    = 'x';
 
 const char ChessBoard::EMPTY_SYMBOL                 = 0;
 
@@ -193,6 +199,21 @@ bool ChessBoard::isUnderAttack(std::size_t location,
             isKinglyUnsafe      (location, symbol, squares, moveFrom, moveTo);
 }
 
+
+bool ChessBoard::createCharBoard(char *board,
+    std::size_t height, std::size_t width) const
+{
+    if (height != HEIGHT || width != WIDTH) return false;
+
+    for (std::size_t i = 0; i < squares.size(); ++i)
+    {
+        char c = squares.at(i).getSymbolOfPiece(true);
+        if (!c) c = ' ';
+        board[i] = c;
+    }
+
+    return true;
+}
 
 unsigned int ChessBoard::getGameConditionMask(Colour currentPlayer) const
 {

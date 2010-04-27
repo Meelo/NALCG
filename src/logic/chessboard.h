@@ -49,18 +49,24 @@ public:
     static const std::size_t WHITE_ROOK_RIGHT;
     // piece symbols - black
     static const char BLACK_PAWN_SYMBOL;
+    static const char BLACK_PAWN_SYMBOL_SPECIAL;
     static const char BLACK_ROOK_SYMBOL;
+    static const char BLACK_ROOK_SYMBOL_SPECIAL;
     static const char BLACK_KNIGHT_SYMBOL;
     static const char BLACK_BISHOP_SYMBOL;
     static const char BLACK_QUEEN_SYMBOL;
     static const char BLACK_KING_SYMBOL;
+    static const char BLACK_KING_SYMBOL_SPECIAL;
     // piece symbols - white
     static const char WHITE_PAWN_SYMBOL;
+    static const char WHITE_PAWN_SYMBOL_SPECIAL;
     static const char WHITE_ROOK_SYMBOL;
+    static const char WHITE_ROOK_SYMBOL_SPECIAL;
     static const char WHITE_KNIGHT_SYMBOL;
     static const char WHITE_BISHOP_SYMBOL;
     static const char WHITE_QUEEN_SYMBOL;
     static const char WHITE_KING_SYMBOL;
+    static const char WHITE_KING_SYMBOL_SPECIAL;
 
     static const char EMPTY_SYMBOL;
 
@@ -90,6 +96,9 @@ public:
     static bool isUnderAttack(std::size_t location,
         const std::vector<Square>& squares,
         std::size_t moveFrom = BOARD_SIZE, std::size_t moveTo = BOARD_SIZE);
+
+    virtual bool createCharBoard(char *board,
+        std::size_t height, std::size_t width) const;
 
     std::size_t findKing(Colour colour) const;
 

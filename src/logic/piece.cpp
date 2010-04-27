@@ -26,6 +26,12 @@ bool Piece::isEmptyOrEdible(std::size_t index, const std::vector<Square>& square
     return !squares.at(index).hasPiece() || isOppositeColour(squares.at(index).getColourOfPiece());
 }
 
+
+char Piece::getSymbol(bool) const
+{
+    return symbol;
+}
+
 // By default this function doesn't do anything and that's why we declare
 // implement it here, without naming our function's parameters.
 void Piece::specialMoveBehaviour(std::size_t, std::size_t) {}

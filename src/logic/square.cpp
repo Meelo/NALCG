@@ -34,11 +34,11 @@ Colour Square::getColourOfPiece() const
     return UNDEFINED;
 }
 
-char Square::getSymbolOfPiece() const
+char Square::getSymbolOfPiece(bool markSpecialSymbols) const
 {
     if (piece)
     {
-        return piece->getSymbol();
+        return piece->getSymbol(markSpecialSymbols);
     }
 
     return 0;

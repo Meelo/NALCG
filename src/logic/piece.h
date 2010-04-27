@@ -44,7 +44,7 @@ public:
     // Getters
     const Colour& getColour() const { return colour; }
     const std::string& getName() const { return name; };
-    char getSymbol() const { return symbol; }
+    virtual char getSymbol(bool markSpecialSymbols = false) const;
     virtual bool isSpecialMoveAllowed() const { return false; }
 
     // Setters
