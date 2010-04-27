@@ -60,7 +60,8 @@ public:
     virtual void move(int fromX, int fromY, int toX, int toY,
         bool continuous = false)
     {
-        mListener->move(fromX, fromY, toX, toY, continuous);
+        // All moves are assumed to be continuous and will be queued.
+        mListener->move(fromX, fromY, toX, toY, true);
         if (!continuous)
         {
             mRound++;
@@ -71,7 +72,7 @@ public:
         unsigned int promoteTo)
     {
         mListener->move(fromX, fromY, toX, toY, true, 0);
-        mListener->move(toX, toY, toX, toY, false, promoteTo);
+        mListener->move(toX, toY, toX, toY, true, promoteTo);
         mRound++;
         recreateLog();
     }
@@ -80,6 +81,7 @@ public:
     virtual int getBoardWidth() const { return mBoardWidth; }
     virtual int getBoardHeight() const { return mBoardHeight; }
     virtual bool isWhiteTurn() const { return mRound % 2 == 0; }
+    virtual int getRound() const { return mRound; }
 
     virtual void convertPosition(const Vector3& position, int* x, int* y) const;
     virtual Vector3 convertPosition(double x, double y) const;

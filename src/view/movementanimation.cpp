@@ -83,11 +83,22 @@ MovementAnimation::~MovementAnimation()
 
         if (pieceNode && pieceNode != mAnimatedNode)
         {
+            if (mCallback)
+            {
+                mCallback->animationFinished();
+            }
             if (middleman->getGameConditionMask() & ChessBoard::CHECKMATE)
             {
-                mAnimationManager->addAnimation(AnimationFactory::createMovementAnimation(
+                int x0 = -1;
+                int y0 = -1;
+                mCallback->getView()->convertPosition(mAnimatedNode->getPosition(), &x0, &y0);
+                int x1 = -1;
+                int y1 = -1;
+                mCallback->getView()->convertPosition(pieceNode->getPosition(), &x1, &y1);
+                mCallback->move(x0, y0, x1, y1, true);
+                /*mAnimationManager->addAnimation(AnimationFactory::createMovementAnimation(
                     *mAnimatedNode->getName().begin(), pieceNode->getPosition(),
-                    mAnimatedNode, pieceNode, mSceneMgr, mAnimationManager));
+                    mAnimatedNode, pieceNode, mSceneMgr, mAnimationManager));*/
             }
             else
             {
@@ -95,6 +106,7 @@ MovementAnimation::~MovementAnimation()
                     AnimationFactory::createCheckAnimation(
                     pieceNode, mSceneMgr));
             }
+            mCallback = 0;
         }
     }
 

@@ -31,18 +31,17 @@ int main ( int argc, char **argv )
         pthread_create( &sid1, NULL, scanUsers, NULL ) ;
 
         while ( true )
-	{ 
-	    user = mServer.addUser();
-	    if(user != NULL)
-	    {  
-	        pthread_t sid;
-	        pthread_create( &sid, NULL, client, (void *)user ) ;
+        {
+            user = mServer.addUser();
+            if(user != NULL)
+            {
+                pthread_t sid;
+                pthread_create( &sid, NULL, client, (void *)user ) ;
             }
-	}
+        }
     }
     catch ( SocketException& e )
     {
-
     }
     return 0;
 }

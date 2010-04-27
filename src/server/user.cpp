@@ -11,31 +11,31 @@ User::User ( ServerSocket *socket, std::string name ) : mName(name), mSocket(soc
 
 User::~User()
 { 
-    delete mSocket; 
+    delete mSocket;
 }
   
 std::string& User::getName() 
 { 
-    return mName; 
+    return mName;
 }
   
 void User::setName(std::string& name)
 { 
-    mName = name; 
+    mName = name;
 }
 
 ServerSocket* User::getSocket()
 { 
-    return mSocket; 
+    return mSocket;
 }
 
 pthread_t User::getSid() 
 { 
-    return mSid; 
+    return mSid;
 }
   
 void User::setSid(pthread_t sid) { 
-    mSid = sid; 
+    mSid = sid;
 }
 
 bool User::testConnection()

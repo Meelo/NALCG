@@ -28,10 +28,12 @@ std::vector<std::size_t> Bishop::getValidMoves(std::size_t ownLocation,
         std::size_t location = ChessBoard::getPosition(x + X_DIRECTIONS[i],
             y + Y_DIRECTIONS[i]);
 
-        while (location < limit && isEmptyOrEdible(location, squares) &&
-            !ChessBoard::isUnderAttack(protect, squares, ownLocation, location))
+        while (location < limit && isEmptyOrEdible(location, squares))
         {
-            validMoves.push_back(location);
+            if (!ChessBoard::isUnderAttack(protect, squares, ownLocation, location))
+            {
+                validMoves.push_back(location);
+            }
 
             if (isOppositeColour(squares.at(location).getColourOfPiece())) break;
 

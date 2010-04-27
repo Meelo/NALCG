@@ -69,7 +69,7 @@ bool Socket::listen() const
         return false;
     }
 
-  return true;
+    return true;
 }
 
 
@@ -78,10 +78,10 @@ bool Socket::accept ( Socket& new_socket ) const
     int addr_length = sizeof ( mAddr );
     new_socket.mSock = ::accept ( mSock, ( sockaddr * ) &mAddr, ( socklen_t * ) &addr_length );
 
-    if ( new_socket.mSock <= 0 ) 
+    if ( new_socket.mSock <= 0 )
     {
         return false;
-    } 
+    }
     else
     {
         return true;
@@ -94,7 +94,7 @@ bool Socket::send ( const std::string s ) const
     int status = ::send ( mSock, s.c_str(), s.size(), MSG_NOSIGNAL );
 
     if ( status == -1 )
-    { 
+    {
         return false;
     }
     else

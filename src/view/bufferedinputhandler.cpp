@@ -367,6 +367,11 @@ void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY,
         std::ostringstream sourceName;
         sourceName << fromX << " " << fromY;
         SceneNode* pieceNode = findPieceAbove(mSceneMgr->getSceneNode(sourceName.str()));
+        if (!pieceNode)
+        {
+            // There probably was a move in the queue which is no longer possible to make.
+            return;
+        }
 
         std::ostringstream targetName;
         targetName << toX << " " << toY;
@@ -389,9 +394,9 @@ void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY,
 
         mAnimationManager->addAnimation(animation);
 
+        animation->enableCallback(this);
         if (continuous)
         {
-            animation->enableCallback(this);
             mQueueAnimations = true;
         }
         else
@@ -403,14 +408,17 @@ void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY,
 
 void BufferedInputHandler::animationFinished()
 {
-    std::vector<int> moveOrder = mAnimationQueue.back();
-    mAnimationQueue.pop_back();
+    if (!mAnimationQueue.empty())
+    {
+        std::vector<int> moveOrder = mAnimationQueue.back();
+        mAnimationQueue.pop_back();
 
-    // fromX, fromY, toX, toY, continuous, promote
-    // TODO: a struct or class for this so it won't seem so magical
-    move(moveOrder.at(0), moveOrder.at(1),
-        moveOrder.at(2), moveOrder.at(3),
-        moveOrder.at(4) != 0, moveOrder.at(5));
+        // fromX, fromY, toX, toY, continuous, promote
+        // TODO: a struct or class for this so it won't seem so magical
+        move(moveOrder.at(0), moveOrder.at(1),
+            moveOrder.at(2), moveOrder.at(3),
+            moveOrder.at(4) != 0, moveOrder.at(5));
+    }
 }
 
 bool BufferedInputHandler::resetSquareIndicators(bool onlyInvalidsAndTargets)
@@ -461,6 +469,7 @@ bool BufferedInputHandler::showSelectablePieces()
     }
     mCanShowSelectablePieces = false;
 
+    const Board* gameState = middleman->getGameStateAt(mView->getRound());
     for (int i = 0; i < mView->getBoardWidth(); i++)
     {
         for (int j = 0; j < mView->getBoardHeight(); j++)
@@ -477,7 +486,7 @@ bool BufferedInputHandler::showSelectablePieces()
                     bool whitePiece = pieceNode->getName().find("white") != std::string::npos;
                     bool whiteTurn = mView->isWhiteTurn();
                     if (((whitePiece && whiteTurn) || (!whitePiece && !whiteTurn))
-                        && middleman->getValidMovesAt(i, j).size() > 0)
+                        && gameState->hasValidMoves(i, j))
                     {
                         ent->setVisible(true);
                         ent->setMaterialName("board/square/selected");
