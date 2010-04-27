@@ -63,8 +63,9 @@ User* Server::addUser()
         pthread_rwlock_wrlock(&mLock);
         mClients.push_front(user);
         pthread_rwlock_unlock(&mLock);
-        userList();
         *(user->getSocket()) << "Welcome to NALCG!" + users;
+        sleep(1);
+        userList();
         return user;
     }
     else
@@ -100,6 +101,13 @@ void Server::quittedUsers()
             mClients.remove(temp);
             k = pthread_cancel(temp->getSid());
 	    
+            if(temp->isPlaying())
+            {
+                *(temp->getOpponent()->getSocket()) << "MSG_D";
+                temp->getOpponent()->setPlaying(false);
+                temp->getOpponent()->setOpponent(NULL);
+            }
+
             for ( i = mClients.begin(); i != mClients.end(); ++i)
             {
                 if((*i)->testConnection())
@@ -211,7 +219,8 @@ void Server::doCtrl(std::string& msg, User* user)
         {
             user->setPlaying(true);
             opponent->setPlaying(true);
-            *(opponent->getSocket()) << "MSG_E";
+            std::string msg = "MSG_E" + user->getName();
+            *(opponent->getSocket()) << msg;
             user->setOpponent(opponent);
             opponent->setOpponent(user);
         }
@@ -224,13 +233,11 @@ void Server::doCtrl(std::string& msg, User* user)
     else if(ctrl.compare("C") == 0)
     {
         *(user->getOpponent()->getSocket()) << "MSG_C";
-        *(user->getSocket()) << "MSG_C";
     }
     // Decline invitation or close connection: MSG_D
     else if(ctrl.compare("D") == 0)
     {
         *(user->getOpponent()->getSocket()) << "MSG_D";
-        *(user->getSocket()) << "MSG_D";
         user->setPlaying(false);
         user->getOpponent()->setPlaying(false);
         user->getOpponent()->setOpponent(NULL);
@@ -246,17 +253,18 @@ void Server::sendMsgPlaying(std::string& msg, User* user)
     {
         std::string send = getTime(1) + " " + user->getName() + ": " + msg.substr(5);
         *(user->getOpponent()->getSocket()) << send;
+        *(user->getSocket()) << send;
     }
-    // Message type 2: TPE_2 -> next move's data to opponent
+    // Message type 2: TPE_2 -> message to all users
     else if(type.compare("2") == 0)
-    {
-        *(user->getOpponent()->getSocket()) << msg;
-    }
-    // Message type 3: TPE_3 -> message to all users
-    else if(type.compare("3") == 0)
     {
         std::string send = getTime(1) + " " + user->getName() + ": " + msg.substr(5);
         sendMsg(send);
+    }
+    // Message type 3: TPE_3 -> next move's data to opponent
+    else if(type.compare("3") == 0)
+    {
+        *(user->getOpponent()->getSocket()) << msg;
     }
 }
 
