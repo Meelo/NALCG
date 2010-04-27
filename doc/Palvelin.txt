@@ -1,0 +1,35 @@
+Kontrolliviestit
+
+Server -> Client
+- MSG_-alkuisia
+ * MSG_A - palvelin lähettää clienteille säännöllisesti yhteyden tarkastamista varten. 
+  - Viestejä ei näytetä käyttäjälle.
+  - Muutoin clientin ei pidä reagoida millään tavalla, ei tarvitse vastata.
+ * MSG_U - Lista palvelimelle kirjautuneista käyttäjistä
+  - Palvelin lähettää clienteille listan palvelimelle kirjautuneista käyttäjistä joka kerta, kun uusi käyttäjä kirjautuu palvelimelle tai käyttäjä lopettaa.
+  - Clienteille lähetettävä lista on muotoa MSG_U\nuser1\nuser2\nuser3
+ * MSG_Ename - haastetulle pelaajalle lähetetty viesti, jossa name on haasteen lähettäjän nimimerkki
+  - Palvelin lähettää haastetulle pelaajalle MSG_E-viestin, jonka perusteella client-osaa pyytää pelaajalta vastausta haasteeseen
+ * MSG_C - pelaajille lähetettävä haasteen hyväksymisestä kertova viesti
+  - Haasteen vastaanottanut pelaaja hyväksyy haasteen ja voidaan siirtyä kaksinpeliin
+ * MSG_D - pelaajille lähetettävä pelin keskeyttämisestä tai haasteen hylkäämisestä kertova viesti
+  - Haasteen vastaanottanut pelaaja hylkää haasteen
+  - Kun toinen pelaajista lopettaa pelin lähettää palvelin vastapelurille MSG_D-viestin, jonka perusteella client tietää pelin päättymisestä
+ * TPE_3
+  - Pelin ollessa käynnissä pelitilanteeseen liittyvä tieto lähetetään pelikaverille TPE_3-etuliitteellä esim. TPE_3datadatadatadata.
+
+Client -> Server
+ * MSG_Bname - haaste, jossa name on haastettavan pelaajan nimimerkki
+  - Pelaaja valitsee peliin kirjautuneena olevien käyttäjän listalta haluamansa pelaajan, jonka jälkeen client lähettää palvelimelle viestin MSG_Bname, jossa name on haastettavan pelaajan nimimerkki
+ * MSG_C - myöntävä vastaus haasteeseen
+  - Vastaanotettuaan haasteen pelaaja joko hylkää tai hyväksyy haasteen. Client lähettää palvelimelle MSG_C-viestin haasteen hyväksymisen merkiksi.
+ * MSG_D - haasteen hylkääminen tai käynnissä olevan pelin keskeyttäminen
+  - Vastaanotettuaan haasteen pelaaja joko hylkää tai hyväksyy haasteen. Client lähettää palvelimelle MSG_D-viestin haasteen hylkäämisen merkiksi.
+  - Mikäli pelaaja haluaa keskeyttää käynnissä olevan pelin, tulee clientin lähettää MSG_D-viesti palvelimelle, jonka seurauksena kaksinpeli lopetetaan.
+  - MSG_D-viestiä voidaan käyttää myös pelin loppuessa normaalisti
+ * MSG_Q - mikäli käyttäjä keskeyttää kirjautumisen ennen nimimerkin antamista, tulee clientin lähettää palvelimelle MSG_Q-viesti
+  - Viestin perusteella palvelin tietää vapauttaa käyttäjää varten varaamansa muistin ja siirtyä odottamaan uutta käyttäjää
+ * Pelin ollessa käynnissä kaikkien muiden kuin MSG_-alkuisten clientien lähettämien viestien ON OLTAVA TPE_-alkuisia. Clientin on alettava lähettämään TPE_-alkuisia viestejä heti haasteen lähettämisen/vastaanottamisen jälkeen.
+  - TPE_1 - yksityinen tekstimuotoinen viesti pelikaverille. Viestiin liitetään palvelimella lähettäjän nimimerkki ja lähetysaika. Etuliite TPE_1 poistetaan ennen viestin eteenpäin lähetystä palvelimella.
+  - TPE_2 - tekstimuotoinen viesti kaikille käyttäjille. Viestiin liitetään lähettäjän nimimerkki ja viestin lähetyaika. Etuliite TPE_2 poistetaan ennen viestin eteenpäin lähetystä palvelimella.
+  - TPE_3 - yksityinen "data" viesti pelikaverille. TPE_3-etuliitteen perusteella viestin vastaanottava client tietää, että on kyse pelinkulkuun liittyvästä datasta. Esim. siirrot lähetetään tätä viestiä käyttäen. Vastaanottavan clientin tehtäväksi jää pyyntöjen tunnistaminen ja niiden edellyttämien toimenpiteiden suorittaminen.
