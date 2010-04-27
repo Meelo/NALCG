@@ -1,20 +1,20 @@
 /*
 
-#ifndef _NALCG_A_I_A_DAPTER_H_
-#define _NALCG_A_I_A_DAPTER_H_
+#ifndef _NALCG_A_I_ADAPTER_H_
+#define _NALCG_A_I_ADAPTER_H_
 
 // system includes
 
 // class includes
 
-class AIADapter : public AI
+class AIAdapter : public AI
 {
 public:
-    AIADapter() : ai(0), controlWhite(false), controlBlack(false)
+    AIAdapter() : ai(0), controlWhite(false), controlBlack(false)
     {
     }
 
-    virtual ~AIADapter()
+    virtual ~AIAdapter()
     {
         delete ai;
     }
@@ -65,4 +65,4 @@ protected:
     bool controlBlack;
 };
 
-#endif // _NALCG_A_I_A_DAPTER_H_ */
+#endif // _NALCG_A_I_ADAPTER_H_ */

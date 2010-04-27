@@ -3,7 +3,7 @@
 // class dependencies
 #include "aiadapter.h"
 
-AIADapter::AIADapter()
+AIAdapter::AIAdapter()
 {
 
 }
