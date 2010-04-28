@@ -282,11 +282,11 @@ void View::createGUI()
     CEGUI::Window* sheet = win->createWindow("DefaultGUISheet", "View/Sheet");
     mSystem->setGUISheet(sheet);
 
-    createGUIComponent("Animation speed", 0.6, 0.005, 0.19, 0.05, "StaticText", false, false)
+    createGUIComponent("Animation speed", 0.0, 0.165, 0.19, 0.05, "StaticText", false, false)
         ->setText("Animation speed: 1x");
 
     CEGUI::Scrollbar* animationSpeedSlider = static_cast<CEGUI::Scrollbar*>(
-        createGUIComponent("Animation speed", 0.605, 0.055, 0.17, 0.02, "HorizontalScrollbar", false, false));
+        createGUIComponent("Animation speed", 0.0, 0.215, 0.19, 0.02, "HorizontalScrollbar", false, false));
     animationSpeedSlider->setDocumentSize(4);
     animationSpeedSlider->setScrollPosition(1);
     animationSpeedSlider->subscribeEvent(
@@ -296,13 +296,13 @@ void View::createGUI()
     createGUIComponent("Undo", 0.875, 0.45, 0.12, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::undo, this));
 
-    createGUIComponent("Restart", 0, 0.10, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Restart", 0.875, 0.505, 0.12, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::restart, this));
 
-    createGUIComponent("Quit", 0, 0.15, 0.1, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
+    createGUIComponent("Quit", 0.875, 0.55, 0.12, 0.04)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::quit, mListener));
 
-    createGUIComponent("FPS info", 0, 0.22, 0.1, 0.04, "Button", true,
+    createGUIComponent("FPS info", 0.875, 0.6, 0.12, 0.04, "Button", true,
         false)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::toggleDebugInfo, mListener));
 
@@ -327,10 +327,10 @@ void View::createGUI()
     chooseButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::chooseBishop, this));
     chooseButton->setVisible(false);
 
-    createGUIComponent("Move assistance level", 0.25, 0.005, 0.18, 0.05, "StaticText", true, false);
+    createGUIComponent("Move assistance level", 0.00, 0.09, 0.18, 0.05, "StaticText", true, false);
 
     CEGUI::Spinner* moveAssistanceSpinner = static_cast<CEGUI::Spinner*>(
-        createGUIComponent("Move assistance", 0.43, 0.005, 0.05, 0.05, "Spinner", false, false));
+        createGUIComponent("Move assistance", 0.18, 0.09, 0.05, 0.05, "Spinner", false, false));
     moveAssistanceSpinner->setCurrentValue(3.0);
     moveAssistanceSpinner->setMinimumValue(0.0);
     moveAssistanceSpinner->setMaximumValue(3.0);
@@ -346,6 +346,35 @@ void View::createGUI()
 
     createGUIComponent(ViewConstants::SHOW_ADDITIONAL, 0.005, 0.005, 0.22, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::hideGUI, mListener));
+    
+    // White dropdown menus
+    CEGUI::Window* whiteText = createGUIComponent("White:", 0.3, 0.0, 0.15, 0.04, "StaticText", true, true);
+    //whiteText->setProperty("FrameEnabled", "False");
+    //whiteText->setProperty("BackgroundEnabled", "False");
+
+    CEGUI::Combobox* white = static_cast<CEGUI::Combobox*>(createGUIComponent(
+        "White", 0.3, 0.045, 0.15, 0.2, "Combobox", false, true));
+    white->setReadOnly(true);
+    white->setText("Human");
+    white->addItem(new CEGUI::ListboxTextItem("Human"));
+    white->addItem(new CEGUI::ListboxTextItem("AI (Daniel)"));
+    
+    // Swap sides button
+    createGUIComponent("<=>", 0.475, 0.02, 0.04, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
+        CEGUI::Event::Subscriber(&View::undo, this));
+
+    // Black dropdown menus
+    CEGUI::Window* blackText = createGUIComponent("Black:", 0.54, 0.0, 0.15, 0.04, "StaticText", true, true);
+    //blackText->setProperty("FrameEnabled", "False");
+    //blackText->setProperty("BackgroundEnabled", "False");
+
+    CEGUI::Combobox* black = static_cast<CEGUI::Combobox*>(createGUIComponent(
+        "Black", 0.54, 0.045, 0.15, 0.2, "Combobox", false, true));
+    black->setReadOnly(true);
+    black->setText("Human");
+    black->addItem(new CEGUI::ListboxTextItem("Human"));
+    black->addItem(new CEGUI::ListboxTextItem("AI (Daniel)"));
+
 }
 
 void View::recreateLog()
