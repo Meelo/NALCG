@@ -7,7 +7,7 @@ Server -> Client
   - Muutoin clientin ei pidä reagoida millään tavalla, ei tarvitse vastata.
  * MSG_U - Lista palvelimelle kirjautuneista käyttäjistä
   - Palvelin lähettää clienteille listan palvelimelle kirjautuneista käyttäjistä joka kerta, kun uusi käyttäjä kirjautuu palvelimelle tai käyttäjä lopettaa.
-  - Clienteille lähetettävä lista on muotoa MSG_U\nuser1\nuser2\nuser3
+  - Clienteille lähetettävä lista on muotoa MSG_U\nuser1\nuser2\nuser3\nMSG_UEND
  * MSG_Ename - haastetulle pelaajalle lähetetty viesti, jossa name on haasteen lähettäjän nimimerkki
   - Palvelin lähettää haastetulle pelaajalle MSG_E-viestin, jonka perusteella client-osaa pyytää pelaajalta vastausta haasteeseen
  * MSG_C - pelaajille lähetettävä haasteen hyväksymisestä kertova viesti
