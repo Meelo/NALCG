@@ -2,7 +2,7 @@
 #define _NALCG_A_I_H_
 
 // class includes
-#include "enduser.h"
+#include "../enduser.h"
 
 // system includes
 
@@ -15,7 +15,7 @@ public:
     // Note: Do not use board as a member variable as it can change and be deleted.
     // It's not safe to use it after these function calls have returned.
     virtual void init(const Board* board, Middleman* middleman) { mMiddleman = middleman; }
-    virtual void setBoard(const Board* const board, unsigned int round) = 0;
+    virtual void setBoard(const Board* board, unsigned int round) = 0;
 
     virtual void setControl(bool white, bool black) = 0;
 

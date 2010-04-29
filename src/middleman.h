@@ -2,8 +2,8 @@
 #define _NALCG_MIDDLEMAN_H_
 
 // class includes
-#include "ai.h"
-#include "aiinfo.h"
+#include "ais/ai.h"
+#include "ais/aiinfo.h"
 #include "enduser.h"
 #include "logic/colour.h"
 #include "logic/board.h"
