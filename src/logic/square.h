@@ -31,7 +31,7 @@ public:
     // Getters
     const std::string getNameOfPiece() const;
     Colour getColourOfPiece() const;
-    char getSymbolOfPiece() const;
+    char getSymbolOfPiece(bool markSpecialSymbols = false) const;
 
     // Setters
 

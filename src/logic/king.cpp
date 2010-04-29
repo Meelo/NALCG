@@ -97,6 +97,24 @@ void King::specialMoveBehaviour(std::size_t, std::size_t)
     specialMoveAllowed = false;
 }
 
+char King::getSymbol(bool markSpecialSymbols) const
+{
+    if (markSpecialSymbols && specialMoveAllowed)
+    {
+        // is white symbol? (white is lowercase, black is uppercase)
+        if (symbol & (1 << 5))
+        {
+            return ChessBoard::WHITE_KING_SYMBOL_SPECIAL;
+        }
+        else
+        {
+            return ChessBoard::BLACK_KING_SYMBOL_SPECIAL;
+        }
+    }
+
+    return symbol;
+}
+
 // private
 
 bool King::isCastlingAllowed(std::size_t rookLocation,
