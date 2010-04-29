@@ -39,7 +39,7 @@ public:
     virtual void parsePosition(const Board* board, bool whiteToMove)
     {
         char charBoard[8][8];
-        //board->getCharBoard(charBoard);
+        board->createCharBoard(&charBoard[0][0], 8, 8);
         Position *pos = new Position(mg, charBoard, whiteToMove); // luodaan jotenkin ton charboardin perusteella tms
         ai->setPosition(pos);
 
