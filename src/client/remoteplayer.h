@@ -28,8 +28,7 @@ public:
         network.sendln(nick.str());
     }
 
-    virtual void move(int fromX, int fromY, int toX, int toY,
-        bool continuous = false)
+    virtual void move(int fromX, int fromY, int toX, int toY)
     {
         std::ostringstream message;
         message << "TPE_3 ";
@@ -48,7 +47,27 @@ public:
         // This holds no meaning in network play.
     }
 
+    virtual void sendChallenge(const std::string& name)
+    {
+        network.sendln("MSG_B" + name);
+    }
+
+    virtual void respondToChallenge(bool accept)
+    {
+        if (accept)
+        {
+            network.sendln("MSG_C");
+        }
+        else
+        {
+            network.sendln("MSG_D");
+        }
+    }
+
+
     // Somehow handle incoming messages and send them to middleman.
+
+    
 
 protected:
     Network network;
