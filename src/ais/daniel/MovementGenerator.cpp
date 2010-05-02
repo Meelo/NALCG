@@ -549,13 +549,13 @@ void MovementGenerator::restore(int i1, int j1, int i2, int j2, char memory) {
   board[i2][j2] = memory;
 }
 
-std::string MovementGenerator::convertToStringCoordinates(int i1, int j1, int i2, int j2) {
+inline std::string MovementGenerator::convertToStringCoordinates(int i1, int j1, int i2, int j2) {
   std::string str;
-  str.push_back(j1 + 'A');
-  str.push_back(8 - i1 + '0');
-  str.push_back('-');
-  str.push_back(j2 + 'A');
-  str.push_back(8 - i2 + '0');
+  str += char(j1 + 'A');
+  str += char(8 - i1 + '0');
+  str += char('-');
+  str += char(j2 + 'A');
+  str += char(8 - i2 + '0');
   return str;
 }
 

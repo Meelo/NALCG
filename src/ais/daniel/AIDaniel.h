@@ -3,7 +3,7 @@
 #include <map>
 #include "Position.h"
 
-#define CUTOFFDEPTH 2
+#define CUTOFFDEPTH 4
 
 class AIDaniel {
  private:
