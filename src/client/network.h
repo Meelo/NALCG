@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NALCG_NETWORK_H_
+#define _NALCG_NETWORK_H_
 
 // system includes
 #include <string>
@@ -28,3 +29,5 @@ public:
     virtual bool hasLines();
     virtual std::string popLine();
 };
+
+#endif // _NALCG_NETWORK_H_

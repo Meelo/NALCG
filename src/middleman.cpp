@@ -144,6 +144,35 @@ unsigned int Middleman::getGameConditionMask() const
     return board->getGameConditionMask(currentTurn);
 }
 
+
+// Methods (possibly) over IP
+void Middleman::sendChallenge(const std::string& remotePlayer)
+{
+    //~ client.sendChallenge(remotePlayer);
+}
+
+
+void Middleman::promptChallenge(const std::string& challenger)
+{
+    for (std::size_t i = 0; i < views.size(); ++i)
+    {
+        //~ views.at(i)->promptChallenge(challenger);
+    }
+}
+
+
+void Middleman::respondToChallenge(bool accept)
+{
+    //~ client.respondToChallenge(accept);
+
+    if (accept)
+    {
+        // init game..
+        // dium daum
+    }
+}
+
+
 // private methods
 void Middleman::playRound()
 {
@@ -151,6 +180,7 @@ void Middleman::playRound()
     currentTurn = currentTurn == WHITE ? BLACK : WHITE;
     ++rounds;
 }
+
 
 void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
                             std::size_t toX,   std::size_t toY, bool continuous)
@@ -163,6 +193,7 @@ void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
 
     board->initRoundSpecificState();
 }
+
 
 void Middleman::promoteUpdate(  std::size_t fromX,  std::size_t fromY,
                                 std::size_t toX,    std::size_t toY,
@@ -177,6 +208,7 @@ void Middleman::promoteUpdate(  std::size_t fromX,  std::size_t fromY,
     board->initRoundSpecificState();
 }
 
+
 void Middleman::boardUpdate()
 {
     for (std::size_t i = 0; i < views.size(); ++i)
@@ -186,6 +218,7 @@ void Middleman::boardUpdate()
     updateBoardForAI();
 }
 
+
 void Middleman::updateBoardForAI()
 {
     for (std::size_t i = 0; i < aiList.size(); ++i)
@@ -193,6 +226,7 @@ void Middleman::updateBoardForAI()
         aiList.at(i)->setBoard(board, rounds);
     }
 }
+
 
 const std::string Middleman::newLogEntry(std::size_t fromX, std::size_t fromY,
     std::size_t toX, std::size_t toY) const
@@ -210,7 +244,8 @@ const std::string Middleman::newLogEntry(std::size_t fromX, std::size_t fromY,
     return currentMove;
 }
 
-void Middleman::setControl(unsigned int whiteController, 
+
+void Middleman::setControl(unsigned int whiteController,
     unsigned int blackController)
 {
     // add players
@@ -222,7 +257,7 @@ void Middleman::setControl(unsigned int whiteController,
     // initialize AI players.
     for (std::size_t i = 0; i < aiList.size(); i++)
     {
-        aiList.at(i)->setControl(whiteController == i + 1, 
+        aiList.at(i)->setControl(whiteController == i + 1,
             blackController == i + 1);
     }
 }

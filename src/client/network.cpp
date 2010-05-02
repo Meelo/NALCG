@@ -1,11 +1,11 @@
+// class dependencies
+#include "network.h"
+
 // system includes
 #include <iostream>
 
 // boost includes
 #include <boost/bind.hpp>
-
-// class dependencies
-#include "Network.h"
 
 using boost::asio::ip::tcp;
 

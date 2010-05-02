@@ -7,12 +7,13 @@
 #include "../enduser.h"
 #include "network.h"
 
-class RemotePlayer : public EndUser
+class RemotePlayer
 {
 public:
     RemotePlayer()
     {
     }
+
     virtual ~RemotePlayer()
     {
     }

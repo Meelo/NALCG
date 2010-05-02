@@ -8,6 +8,7 @@
 #include "logic/colour.h"
 #include "logic/board.h"
 #include "logic/chesspieces-meta.h"
+#include "client/remoteplayer.h"
 
 // system includes
 #include <cassert>
@@ -36,9 +37,6 @@ public:
 
     void undo(unsigned int steps = FULL_TURN);
 
-    void updateBoardForAI();
-
-    // Getters
     std::size_t getAICount() const { return aiList.size(); }
 
     const AIInfo& getAIInfoAt(std::size_t index) const { return aiInfos.at(index); }
@@ -50,15 +48,22 @@ public:
     // Should be called *after* playRound(), since that updates currentPlayer.
     unsigned int getGameConditionMask() const;
 
-    // Setters
     void addView(EndUser* view) { views.push_back(view); }
 
     // 0 = Human, 1..n = AI player index + 1.
     void setControl(unsigned int whiteController, unsigned int blackController);
 
+    // Methods (possibly) over IP
+    void sendChallenge(const std::string& remotePlayer);
+
+    void promptChallenge(const std::string& challenger);
+
+    void respondToChallenge(bool accept);
+
 private:
     // Members
     Board* board;
+    RemotePlayer client;
     Colour currentTurn;
     unsigned int rounds;
     std::vector<EndUser*> views;
@@ -79,6 +84,8 @@ private:
                         unsigned int promoteTo);
 
     void boardUpdate();
+
+    void updateBoardForAI();
 
     const std::string newLogEntry(  std::size_t fromX, std::size_t fromY,
                                     std::size_t toX,   std::size_t toY) const;
