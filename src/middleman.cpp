@@ -210,7 +210,8 @@ const std::string Middleman::newLogEntry(std::size_t fromX, std::size_t fromY,
     return currentMove;
 }
 
-void Middleman::setControl(int whiteController, int blackController)
+void Middleman::setControl(unsigned int whiteController, 
+    unsigned int blackController)
 {
     // add players
     for (std::size_t i = 0; i < views.size(); i++)
@@ -221,7 +222,8 @@ void Middleman::setControl(int whiteController, int blackController)
     // initialize AI players.
     for (std::size_t i = 0; i < aiList.size(); i++)
     {
-        aiList.at(i)->setControl(whiteController == i + 1, blackController == i + 1);
+        aiList.at(i)->setControl(whiteController == i + 1, 
+            blackController == i + 1);
     }
 }
 
