@@ -41,10 +41,10 @@ bool Position::testLeafNode() {
       case 'X':
       case 'k':
       case 'x':
-	break;
+    break;
       // Game is still alive
       default:
-	return false;
+    return false;
       }
     }
   }
@@ -81,7 +81,7 @@ int Position::pawnIsolationPenalty(int j, bool white) {
   if (j > 0) {
     for (int i = 0; i < 8; ++i) {
       if (board[i][k] == p || board[i][k] == e) {
-	return 0;
+    return 0;
       }
     }
   }
@@ -89,7 +89,7 @@ int Position::pawnIsolationPenalty(int j, bool white) {
     k = j + 1;
     for (int i = 0; i < 8; ++i) {
       if (board[i][k] == p || board[i][k] == e) {
-	return 0;
+    return 0;
       }
     }
   }
@@ -126,17 +126,17 @@ int Position::pawnBackwardPenalty(int i, int j, bool white) {
     // a higher penalty.)
     if (white) {
       for (int k = i - 1; k >= 0; --k) {
-	if (board[k][j] == 'P' || board[k][j] == 'E') {
-	  return 6;
-	}
+    if (board[k][j] == 'P' || board[k][j] == 'E') {
+      return 6;
+    }
       }
     }
     else {
       for (int k = i + 1; k < 8; ++k) {
-	if (board[k][j] == 'p' || board[k][j] == 'e') {
-	  return 6;
-	}
-      } 
+    if (board[k][j] == 'p' || board[k][j] == 'e') {
+      return 6;
+    }
+      }
     }
   }
   return 10;
@@ -184,7 +184,7 @@ int Position::pawnProximityToKingBonus(int i, int j, bool white) {
   for (int y = i - 1; y <= i + 1; ++y) {
     for (int x = j - 1; x <= j + 1; ++x) {
       if (x >= 0 && x < 8 && y >= 0 && y < 8 && (board[y][x] == p || board[y][x] == e)) {
-	bonus += 10;
+    bonus += 10;
       }
     }
   }
@@ -365,7 +365,7 @@ int Position::xrayControlBonus(int i, int j, bool white) {
     // Threatening a valuable (r, q or k) piece even as an "x-ray" attack
     // is worth a bonus.
     if ((white && board[i][j] < 'Z') || (!white && board[i][j] > 'a')) {
-	bonus += 8;
+    bonus += 8;
     }
   }
   // If white and whiteSide are the same, increment bonus by 1, otherwise by 2.
@@ -418,33 +418,33 @@ void Position::move(std::string mv) {
     if (whiteToMove) {
       // Queenside castling white
       if (mv.size() > 3) {
-	board[7][0] = ' ';
-	board[7][4] = ' ';
-	board[7][2] = 'k';
-	board[7][3] = 'r';
+    board[7][0] = ' ';
+    board[7][4] = ' ';
+    board[7][2] = 'k';
+    board[7][3] = 'r';
       }
       // Kingside castling white
       else {
-	board[7][7] = ' ';
-	board[7][4] = ' ';
-	board[7][6] = 'k';
-	board[7][5] = 'r';
+    board[7][7] = ' ';
+    board[7][4] = ' ';
+    board[7][6] = 'k';
+    board[7][5] = 'r';
       }
     }
     else {
       // Queenside castling black
       if (mv.size() > 3) {
-	board[0][0] = ' ';
-	board[0][4] = ' ';
-	board[0][2] = 'K';
-	board[0][3] = 'R';
+    board[0][0] = ' ';
+    board[0][4] = ' ';
+    board[0][2] = 'K';
+    board[0][3] = 'R';
       }
       // Kingside castling black
       else {
-	board[0][7] = ' ';
-	board[0][4] = ' ';
-	board[0][6] = 'K';
-	board[0][5] = 'R';
+    board[0][7] = ' ';
+    board[0][4] = ' ';
+    board[0][6] = 'K';
+    board[0][5] = 'R';
       }
     }
   }
@@ -467,45 +467,45 @@ void Position::move(std::string mv) {
     if (whiteToMove) {
       // Check for en passant
       if (board[i2][j2] == 'p' && board[i2 + 1][j2] == 'E') {
-	board[i2 + 1][j2] = ' ';
+    board[i2 + 1][j2] = ' ';
       }
       // The right to en passant is one-turn-only. Set all E's to P's.
       for (int j = 0; j < 8; ++j) {
-	if (board[3][j] == 'E') {
-	  board[3][j] = 'P';
-	}
+    if (board[3][j] == 'E') {
+      board[3][j] = 'P';
+    }
       }
       // Check for pawn promotion
       if (i2 == 0 && board[i2][j2] == 'p') {
-	// Default is queen promotion
-	if (mv.size() < 6) {
-	  board[i2][j2] = 'q';
-	}
-	else {
-	  board[i2][j2] = mv.at(5) + 32;
-	}
+    // Default is queen promotion
+    if (mv.size() < 6) {
+      board[i2][j2] = 'q';
+    }
+    else {
+      board[i2][j2] = mv.at(5) + 32;
+    }
       }
     }
     else {
       // Same checks for black
       if (board[i2][j2] == 'P' && board[i2 - 1][j2] == 'e') {
-	board[i2 - 1][j2] = ' ';
-      }    
+    board[i2 - 1][j2] = ' ';
+      }
 
       for (int j = 0; j < 8; ++j) {
-	if (board[4][j] == 'e') {
-	  board[4][j] = 'p';
-	}
+    if (board[4][j] == 'e') {
+      board[4][j] = 'p';
+    }
       }
       // Check for pawn promotion
       if (i2 == 7 && board[i2][j2] == 'P') {
-	// Default is queen promotion
-	if (mv.size() < 6) {
-	  board[i2][j2] = 'Q';
-	}
-	else {
-	  board[i2][j2] = mv.at(5);
-	}
+    // Default is queen promotion
+    if (mv.size() < 6) {
+      board[i2][j2] = 'Q';
+    }
+    else {
+      board[i2][j2] = mv.at(5);
+    }
       }
     }
     // Check whether a piece was moved that requires a change of status
@@ -522,7 +522,7 @@ void Position::move(std::string mv) {
     case 'p':
     case 'P':
       if (std::abs(i1 - i2) > 1) {
-	board[i2][j2] -= 11; // P -> E, p -> e
+    board[i2][j2] -= 11; // P -> E, p -> e
       }
       break;
     }
@@ -551,12 +551,12 @@ void Position::getBoard(char b[8][8], int *wkx, int *wky, int *bkx, int *bky) {
   for (int i = 0; i < 8; ++i) {
     for (int j = 0; j < 8; ++j) {
       if (board[i][j] == 'K' || board[i][j] == 'X') {
-	*bkx = j;
-	*bky = i;
+    *bkx = j;
+    *bky = i;
       }
       if (board[i][j] == 'k' || board[i][j] == 'x') {
-	*wkx = j;
-	*wky = i;
+    *wkx = j;
+    *wky = i;
       }
       b[i][j] = board[i][j];
     }
@@ -579,12 +579,12 @@ int Position::evaluate() {
   if (gameOver) {
     if (isCheck) {
       if (whiteToMove) {
-	// White is checkmated
-	return std::numeric_limits<int>::min();
+    // White is checkmated
+    return std::numeric_limits<int>::min();
       }
       else {
-	// Black is checkmated
-	return std::numeric_limits<int>::max();
+    // Black is checkmated
+    return std::numeric_limits<int>::max();
       }
     }
     else {
@@ -595,68 +595,68 @@ int Position::evaluate() {
   int white = 0;
   int black = 0;
   int wkx,wky,bkx,bky;
-  int lesserPiece = 0;
+  //~ int lesserPiece = 0; // unused?
   for (int i = 0; i < 8; ++i) {
     for (int j = 0; j < 8; ++j) {
       switch(board[i][j]) {
       case 'R':
       case 'T':
-	black += 520;
-	black += rookControlBonus(i,j,false);
-	break;
+    black += 520;
+    black += rookControlBonus(i,j,false);
+    break;
       case 'B':
-	black += 330;
-	black += bishopControlBonus(i,j,false);
-	break;
+    black += 330;
+    black += bishopControlBonus(i,j,false);
+    break;
       case 'N':
-	black += 330;
-	black += centreBonus(i);
-	black += centreBonus(j);
-	break;
+    black += 330;
+    black += centreBonus(i);
+    black += centreBonus(j);
+    break;
       case 'Q':
-	black += 950;
-	break;
+    black += 950;
+    break;
       case 'P':
       case 'E':
-	black += 100;
-	black -= pawnIsolationPenalty(j,false);
-	//	black -= pawnBackwardPenalty(i,j,false);
-	black += pawnAdvancementBonus(i,j,false);
-	break;
+    black += 100;
+    black -= pawnIsolationPenalty(j,false);
+    //  black -= pawnBackwardPenalty(i,j,false);
+    black += pawnAdvancementBonus(i,j,false);
+    break;
       case 'K':
       case 'X':
-	bkx = j;
-	bky = i;
-	break;
+    bkx = j;
+    bky = i;
+    break;
       case 'r':
       case 't':
-	white += 520;
-	white += rookControlBonus(i,j,true);
-	break;
+    white += 520;
+    white += rookControlBonus(i,j,true);
+    break;
       case 'b':
-	white += 330;
-       	white += bishopControlBonus(i,j,true);
-	break;
+    white += 330;
+        white += bishopControlBonus(i,j,true);
+    break;
       case 'n':
-	white += 330;
-	white += centreBonus(i);
-	white += centreBonus(j);
-	break;
+    white += 330;
+    white += centreBonus(i);
+    white += centreBonus(j);
+    break;
       case 'q':
-	white += 950;
-	break;
+    white += 950;
+    break;
       case 'p':
       case 'e':
-	white += 100;
-       	white -= pawnIsolationPenalty(j,true);
-	//	white -= pawnBackwardPenalty(i,j,true);
-       	white += pawnAdvancementBonus(i,j,true);
-	break;
+    white += 100;
+        white -= pawnIsolationPenalty(j,true);
+    //  white -= pawnBackwardPenalty(i,j,true);
+        white += pawnAdvancementBonus(i,j,true);
+    break;
       case 'k':
       case 'x':
-	wkx = j;
-	wky = i;
-	break;
+    wkx = j;
+    wky = i;
+    break;
       }
     }
   }
@@ -694,51 +694,51 @@ long Position::getHash() {
     for (int j = 0; j < 8; ++j) {
       switch (board[i][j]) {
       case 'P':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 1;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 1;
+    break;
       case 'E':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 2;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 2;
+    break;
       case 'T':
       case 'R':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 4;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 4;
+    break;
       case 'N':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 8;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 8;
+    break;
       case 'B':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 16;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 16;
+    break;
       case 'Q':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 32;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 32;
+    break;
       case 'K':
       case 'X':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 64;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 64;
+    break;
       case 'p':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 128;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 128;
+    break;
       case 'e':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 256;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 256;
+    break;
       case 't':
       case 'r':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 512;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 512;
+    break;
       case 'n':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 1024;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 1024;
+    break;
       case 'b':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 2048;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 2048;
+    break;
       case 'q':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 4096;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 4096;
+    break;
       case 'k':
       case 'x':
-	hash = hash ^ (1 << (i * 8 + j)) ^ 8192;
-	break;
+    hash = hash ^ (1 << (i * 8 + j)) ^ 8192;
+    break;
       }
     }
   }

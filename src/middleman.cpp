@@ -148,7 +148,7 @@ unsigned int Middleman::getGameConditionMask() const
 // Methods (possibly) over IP
 void Middleman::sendChallenge(const std::string& remotePlayer)
 {
-    //~ client.sendChallenge(remotePlayer);
+    client.sendChallenge(remotePlayer);
 }
 
 
@@ -156,14 +156,14 @@ void Middleman::promptChallenge(const std::string& challenger)
 {
     for (std::size_t i = 0; i < views.size(); ++i)
     {
-        //~ views.at(i)->promptChallenge(challenger);
+        views.at(i)->promptChallenge(challenger);
     }
 }
 
 
 void Middleman::respondToChallenge(bool accept)
 {
-    //~ client.respondToChallenge(accept);
+    client.respondToChallenge(accept);
 
     if (accept)
     {

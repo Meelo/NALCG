@@ -12,11 +12,11 @@ class Position
 {
  private:
   char board[8][8];
-  bool whiteToMove;
-  bool isCheck;
-  bool gameOver;
-  bool quiet;
   MovementGenerator *generator;
+  bool whiteToMove;
+  bool gameOver;
+  bool isCheck;
+  bool quiet;
   std::vector<std::string> legalMoves;
   bool testLeafNode();
   char translate(char piece);
