@@ -4,10 +4,11 @@
 // system includes
 
 // class includes
-#include "../enduser.h"
 #include "network.h"
 
-class RemotePlayer : public EndUser
+class Middleman;
+class Board;
+class RemotePlayer
 {
 public:
     RemotePlayer()
@@ -19,13 +20,14 @@ public:
 
     virtual void init(const Board* board, Middleman* middleman)
     {
-        network.connect("dzarg.mine.nu", "6668");
-        network.startBuffering();
+        mMiddleman = middleman;
+        mNetwork.connect("dzarg.mine.nu", "6668");
+        mNetwork.startBuffering();
 
         // Send nickname.
         std::ostringstream nick;
         nick << rand();
-        network.sendln(nick.str());
+        mNetwork.sendln(nick.str());
     }
 
     virtual void move(int fromX, int fromY, int toX, int toY)
@@ -33,7 +35,7 @@ public:
         std::ostringstream message;
         message << "TPE_3 ";
         message << fromX << " " << fromY << " " << toX << " " << toY;
-        network.sendln(message.str());
+        mNetwork.sendln(message.str());
     }
 
 
@@ -49,18 +51,18 @@ public:
 
     virtual void sendChallenge(const std::string& name)
     {
-        network.sendln("MSG_B" + name);
+        mNetwork.sendln("MSG_B" + name);
     }
 
     virtual void respondToChallenge(bool accept)
     {
         if (accept)
         {
-            network.sendln("MSG_C");
+            mNetwork.sendln("MSG_C");
         }
         else
         {
-            network.sendln("MSG_D");
+            mNetwork.sendln("MSG_D");
         }
     }
 
@@ -70,7 +72,8 @@ public:
     
 
 protected:
-    Network network;
+    Network mNetwork;
+    Middleman* mMiddleman;
 };
 
 #endif // _NALCG_REMOTE_PLAYER_H_

@@ -46,39 +46,43 @@ void AIAdapter::setControl(bool white, bool black)
 
 void AIAdapter::makeMoveIfInControl()
 {
-    bool whiteToMove = mMiddleman->getGameLog().size() % 2 == 0;
-
-    if ((whiteToMove && controlWhite) || (!whiteToMove && controlBlack))
     {
-        std::string move = ai->getNextMove();
-        std::size_t x0, y0, x1, y1;
+        boost::mutex::scoped_lock l(mutex);
 
-        // Tassa valissa parsetaan movesta noi ylemmalla rivilla olevat
-        if (move.at(0) == 'O') {
-            if (whiteToMove) {
-                x0 = 7;
-                y0 = 4;
-                x1 = 7;
+        bool whiteToMove = mMiddleman->getGameLog().size() % 2 == 0;
+
+        if ((whiteToMove && controlWhite) || (!whiteToMove && controlBlack))
+        {
+            std::string move = ai->getNextMove();
+            std::size_t x0, y0, x1, y1;
+
+            // Tassa valissa parsetaan movesta noi ylemmalla rivilla olevat
+            if (move.at(0) == 'O') {
+                if (whiteToMove) {
+                    x0 = 7;
+                    y0 = 4;
+                    x1 = 7;
+                }
+                else {
+                    x0 = 0;
+                    y0 = 4;
+                    x1 = 0;
+                }
+                if (move.size() > 3) {
+                    y1 = 2;
+                }
+                else {
+                    y1 = 6;
+                } 
             }
             else {
-                x0 = 0;
-                y0 = 4;
-                x1 = 0;
+                y0 = move.at(0) - 'A';
+                x0 = 8 - (move.at(1) - '0');
+                y1 = move.at(3) - 'A';
+                x1 = 8 - (move.at(4) - '0');
             }
-            if (move.size() > 3) {
-                y1 = 2;
-            }
-            else {
-                y1 = 6;
-            } 
-        }
-        else {
-            y0 = move.at(0) - 'A';
-            x0 = 8 - (move.at(1) - '0');
-            y1 = move.at(3) - 'A';
-            x1 = 8 - (move.at(4) - '0');
-        }
 
-        mMiddleman->move(y0, x0, y1, x1, ChessBoard::PROMOTE_TO_QUEEN);
+            mMiddleman->move(y0, x0, y1, x1, ChessBoard::PROMOTE_TO_QUEEN);
+        }
     }
 }
