@@ -118,10 +118,7 @@ void Server::quittedUsers()
 
             for ( i = mClients.begin(); i != mClients.end(); ++i)
             {
-                if((*i)->testConnection())
-                {
-                    *((*i)->getSocket()) << getTime(1) + " User " + temp->getName() + " quitted.";
-                }
+                *((*i)->getSocket()) << getTime(1) + " User " + temp->getName() + " quitted.";
             }
             delete temp;
         }
@@ -303,6 +300,7 @@ void Server::userList()
     {
         users += "\n" + (*i)->getName();
     }
+    users += "\nMSG_UEND";
     pthread_rwlock_unlock(&mLock);
     sendMsg(users);
 }
