@@ -2,9 +2,11 @@
 #define _NALCG_A_I_H_
 
 // class includes
-#include "../enduser.h"
 
 // system includes
+
+class Board;
+class Middleman;
 
 class AI
 {

@@ -1,10 +1,16 @@
-#include "view/view.h"
 #include "middleman.h"
+#include "enduser.h"
+#include "view/view.h"
+#include "ais/aiinfo.h"
+#include "ais/ai.h"
 #include "ais/daniel/aiadapter.h"
+
+#include <vector>
+#include <string>
 
 int main(int argc, char **argv)
 {
-    View* view = new View;
+    EndUser* view = new View;
     std::vector<AI*> aiList;
     std::vector<AIInfo> aiInfos;
     aiList.push_back(new AIAdapter());

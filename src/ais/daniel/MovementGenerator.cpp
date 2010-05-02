@@ -1,3 +1,5 @@
+#include "MovementGenerator.h"
+
 #include "Position.h"
 
 MovementGenerator::MovementGenerator() {

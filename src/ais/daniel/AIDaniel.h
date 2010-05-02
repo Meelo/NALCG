@@ -1,7 +1,11 @@
+#ifndef _NALCG_AI_DANIEL_H_
+#define _NALCG_AI_DANIEL_H_
+
+#include "Position.h"
+
 #include <string>
 #include <algorithm>
 #include <map>
-#include "Position.h"
 
 #define CUTOFFDEPTH 4
 
@@ -19,3 +23,5 @@ class AIDaniel {
   void setPosition(Position *p);
   ~AIDaniel();
 };
+
+#endif // _NALCG_AI_DANIEL_H_

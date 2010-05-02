@@ -348,7 +348,9 @@ void View::createGUI()
         CEGUI::Event::Subscriber(&ViewFrameListener::hideGUI, mListener));
     
     // White dropdown menus
-    CEGUI::Window* whiteText = createGUIComponent("White:", 0.3, 0.0, 0.15, 0.04, "StaticText", true, true);
+    //CEGUI::Window* whiteText = 
+    createGUIComponent("White:", 0.3, 0.0, 0.15, 0.04, "StaticText", true, true);
+    
     //whiteText->setProperty("FrameEnabled", "False");
     //whiteText->setProperty("BackgroundEnabled", "False");
 
@@ -365,7 +367,8 @@ void View::createGUI()
         CEGUI::Event::Subscriber(&View::swapPlayers, this));
 
     // Black dropdown menus
-    CEGUI::Window* blackText = createGUIComponent("Black:", 0.54, 0.0, 0.15, 0.04, "StaticText", true, true);
+    //CEGUI::Window* blackText = 
+    createGUIComponent("Black:", 0.54, 0.0, 0.15, 0.04, "StaticText", true, true);
     //blackText->setProperty("FrameEnabled", "False");
     //blackText->setProperty("BackgroundEnabled", "False");
 

@@ -11,6 +11,7 @@ fi
 
 # for linker options
 GCCFLAGS=`pkg-config --libs --cflags CEGUI-OGRE OIS OGRE CEGUI`
+GCCFLAGS+=" -lboost_thread -lboost_system"
 
 function usage {
     echo "usage: sh $0 class1 class2 class3"
@@ -24,7 +25,7 @@ if [[ $# == 0 ]]; then
     usage
     echo -e "\nValid files:"
     #files="`find . -iregex '.*\.cpp'`"
-    files="*.cpp logic/*.cpp view/*.cpp"
+    files="*.cpp logic/*.cpp view/*.cpp ais/*.cpp ais/daniel/*.cpp"
     for f in $files
     do
         echo -en "${f%.cpp} "
@@ -34,7 +35,7 @@ else
     # check if user wants to go through all dependencies
     if [[ $1 == "--all" ]]; then
         #files="`find . -iregex '.*\.cpp'`"
-        files="*.cpp logic/*.cpp view/*.cpp"
+        files="*.cpp logic/*.cpp view/*.cpp ais/*.cpp ais/daniel/*.cpp"
     else
         files=$@
     fi
