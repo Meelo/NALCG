@@ -19,7 +19,7 @@ public:
         mCamera(camera), mSceneMgr(sceneMgr),
         mRaySceneQuery(sceneMgr->createRayQuery(Ray())), mSelectedObject(0),
         mDirection(Vector3::ZERO), mAnimationManager(animationManager),
-        mView(view), mSafeMode(true), mQueueAnimations(false),
+        mView(view), mSafeMode(true), mQueueAnimations(true),
         mCanShowSelectablePieces(true), mMoveAssistanceLevel(3), mMouse(mouse)
     {
     }
@@ -45,6 +45,7 @@ public:
     virtual void animationFinished();
     virtual bool showSelectablePieces();
     virtual void highlightHoveredSquare();
+    virtual void playQueuedMove();
     bool handleMoveAssistanceChanged(const CEGUI::EventArgs& e);
     bool handleSafeModeChanged(const CEGUI::EventArgs& e);
     virtual bool canShowSelectablePieces()

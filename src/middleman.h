@@ -53,6 +53,9 @@ public:
     // Setters
     void addView(EndUser* view) { views.push_back(view); }
 
+    // 0 = Human, 1..n = AI player index + 1.
+    void setControl(int whiteController, int blackController);
+
 private:
     // Members
     Board* board;

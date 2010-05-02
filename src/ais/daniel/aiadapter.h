@@ -10,6 +10,8 @@
 #include "AIDaniel.h"
 #include "../../logic/chessboard.h"
 
+#include <boost/thread/thread.hpp>
+
 class AIAdapter : public AI
 {
 public:
@@ -42,6 +44,20 @@ public:
         board->createCharBoard(&charBoard[0][0], 8, 8);
         Position *pos = new Position(mg, charBoard, whiteToMove); // luodaan jotenkin ton charboardin perusteella tms
         ai->setPosition(pos);
+
+        boost::thread thread(boost::bind(&AIAdapter::makeMoveIfInControl, this));
+    }
+
+    virtual void setControl(bool white, bool black)
+    {
+        controlWhite = white;
+        controlBlack = black;
+        boost::thread thread(boost::bind(&AIAdapter::makeMoveIfInControl, this));
+    }
+
+    virtual void makeMoveIfInControl()
+    {
+        bool whiteToMove = mMiddleman->getGameLog().size() % 2 == 0;
 
         if ((whiteToMove && controlWhite) || (!whiteToMove && controlBlack))
         {
@@ -76,12 +92,6 @@ public:
 
             mMiddleman->move(y0, x0, y1, x1, ChessBoard::PROMOTE_TO_QUEEN);
         }
-    }
-
-    virtual void setControl(bool white, bool black)
-    {
-        controlWhite = white;
-        controlBlack = black;        
     }
 
 protected:

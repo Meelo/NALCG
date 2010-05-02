@@ -47,6 +47,7 @@ public:
         {
             mRound++;
             recreateLog();
+            mListener->setCanShowSelectablePieces(true);
         }
     }
     virtual void promoteMove(int fromX, int fromY, int toX, int toY,
@@ -125,6 +126,8 @@ protected:
     void sendPromotionMove(unsigned int promoteTo);
 
     void start();
+    bool updateControllers(const CEGUI::EventArgs& e);
+    bool swapPlayers(const CEGUI::EventArgs& e);
 };
 
 #endif // _NALCG_VIEW_H_

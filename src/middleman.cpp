@@ -210,6 +210,21 @@ const std::string Middleman::newLogEntry(std::size_t fromX, std::size_t fromY,
     return currentMove;
 }
 
+void Middleman::setControl(int whiteController, int blackController)
+{
+    // add players
+    for (std::size_t i = 0; i < views.size(); i++)
+    {
+        views.at(i)->setControl(whiteController == 0, blackController == 0);
+    }
+
+    // initialize AI players.
+    for (std::size_t i = 0; i < aiList.size(); i++)
+    {
+        aiList.at(i)->setControl(whiteController == i + 1, blackController == i + 1);
+    }
+}
+
 
 template <typename T>
 void Middleman::deleteAndClear(std::vector<T>& vector)

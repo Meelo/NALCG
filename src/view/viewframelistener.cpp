@@ -12,6 +12,7 @@ bool ViewFrameListener::frameStarted(const FrameEvent& evt)
     mMouse->capture();
 
     mHandler.moveCamera(evt.timeSinceLastFrame);
+    mHandler.playQueuedMove();
     flashMovableSquares(evt.timeSinceLastFrame);
     moveLights(evt.timeSinceLastFrame);
     playOpeningAnimation(evt.timeSinceLastFrame);
@@ -46,7 +47,6 @@ bool ViewFrameListener::frameStarted(const FrameEvent& evt)
     {
         invalidMoveNode->setVisible(false);
     }
-
     return !mKeyboard->isKeyDown(OIS::KC_ESCAPE);
 }
 

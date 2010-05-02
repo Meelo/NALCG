@@ -50,9 +50,12 @@ bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
         if (!mCameraShaken)
         {
             Camera* camera = mSceneMgr->getCameraIterator().getNext();
-            mAnimationManager->addAnimation(
-                AnimationFactory::createCameraShakeAnimation(
-                camera, mSceneMgr));
+            GenericAnimation* cameraShake =
+                AnimationFactory::createCameraShakeAnimation(camera, mSceneMgr);
+
+            mAnimationManager->addAnimation(cameraShake);
+            cameraShake->enableCallback(mCallback);
+
             mCameraShaken = true;
             mAnimatedNode->setPosition(mDestination);
         }

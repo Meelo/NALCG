@@ -357,10 +357,12 @@ void View::createGUI()
     white->setReadOnly(true);
     white->setText("Human");
     white->addItem(new CEGUI::ListboxTextItem("Human"));
+    white->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,
+        CEGUI::Event::Subscriber(&View::updateControllers, this));
     
     // Swap sides button
     createGUIComponent("<=>", 0.475, 0.02, 0.04, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
-        CEGUI::Event::Subscriber(&View::undo, this));
+        CEGUI::Event::Subscriber(&View::swapPlayers, this));
 
     // Black dropdown menus
     CEGUI::Window* blackText = createGUIComponent("Black:", 0.54, 0.0, 0.15, 0.04, "StaticText", true, true);
@@ -372,6 +374,8 @@ void View::createGUI()
     black->setReadOnly(true);
     black->setText("Human");
     black->addItem(new CEGUI::ListboxTextItem("Human"));
+    black->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,
+        CEGUI::Event::Subscriber(&View::updateControllers, this));
 
     for (std::size_t i = 0; i < mMiddleman->getAICount(); i++)
     {
@@ -756,4 +760,31 @@ void View::start()
         fprintf(stderr, "An exception has occurred: %s\n", e.what());
     }
     mMiddleman->endGame();
+}
+
+
+bool View::updateControllers(const CEGUI::EventArgs& e)
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Combobox* white = static_cast<CEGUI::Combobox*>(wmgr.getWindow("View/WhiteCombobox"));
+    CEGUI::Combobox* black = static_cast<CEGUI::Combobox*>(wmgr.getWindow("View/BlackCombobox"));
+    
+    std::size_t whiteIndex = white->getItemIndex(white->findItemWithText(white->getText(), 0));
+    std::size_t blackIndex = black->getItemIndex(black->findItemWithText(black->getText(), 0));
+
+    mMiddleman->setControl(whiteIndex, blackIndex);
+    return true;
+}
+
+bool View::swapPlayers(const CEGUI::EventArgs& e)
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* white = wmgr.getWindow("View/WhiteCombobox");
+    CEGUI::Window* black = wmgr.getWindow("View/BlackCombobox");
+
+    const CEGUI::String whitePlayer = white->getText();
+    white->setText(black->getText());
+    black->setText(whitePlayer);
+
+    return updateControllers(e);
 }

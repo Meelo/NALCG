@@ -350,20 +350,31 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
 void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY,
                                 bool continuous, unsigned int promoteTo)
 {
-    if (mQueueAnimations && mAnimationManager->animationsRunning())
-    {
-        std::vector<int> moveOrder;
-        moveOrder.push_back(fromX);
-        moveOrder.push_back(fromY);
-        moveOrder.push_back(toX);
-        moveOrder.push_back(toY);
-        moveOrder.push_back(continuous);
-        moveOrder.push_back(promoteTo);
+    std::vector<int> moveOrder;
+    moveOrder.push_back(fromX);
+    moveOrder.push_back(fromY);
+    moveOrder.push_back(toX);
+    moveOrder.push_back(toY);
+    moveOrder.push_back(continuous);
+    moveOrder.push_back(promoteTo);
 
-        mAnimationQueue.push_back(moveOrder);
-    }
-    else
+    mAnimationQueue.push_back(moveOrder);
+}
+
+void BufferedInputHandler::playQueuedMove()
+{
+    if (!mAnimationQueue.empty() && !mAnimationManager->animationsRunning())
     {
+        std::vector<int> moveOrder = mAnimationQueue.back();
+        mAnimationQueue.pop_back();
+
+        int fromX = moveOrder.at(0);
+        int fromY = moveOrder.at(1);
+        int toX = moveOrder.at(2);
+        int toY = moveOrder.at(3);
+        bool continuous = moveOrder.at(4) != 0;
+        unsigned int promoteTo = moveOrder.at(5);
+        std::cout << "Not queuing move" << std::endl;
         std::ostringstream sourceName;
         sourceName << fromX << " " << fromY;
         SceneNode* pieceNode = findPieceAbove(mSceneMgr->getSceneNode(sourceName.str()));
@@ -395,30 +406,12 @@ void BufferedInputHandler::move(int fromX, int fromY, int toX, int toY,
         mAnimationManager->addAnimation(animation);
 
         animation->enableCallback(this);
-        if (continuous)
-        {
-            mQueueAnimations = true;
-        }
-        else
-        {
-            mQueueAnimations = false;
-        }
     }
 }
 
 void BufferedInputHandler::animationFinished()
 {
-    if (!mAnimationQueue.empty())
-    {
-        std::vector<int> moveOrder = mAnimationQueue.back();
-        mAnimationQueue.pop_back();
-
-        // fromX, fromY, toX, toY, continuous, promote
-        // TODO: a struct or class for this so it won't seem so magical
-        move(moveOrder.at(0), moveOrder.at(1),
-            moveOrder.at(2), moveOrder.at(3),
-            moveOrder.at(4) != 0, moveOrder.at(5));
-    }
+    std::cout << "Animation finished, " << mAnimationQueue.size() << " moves in queue" << std::endl;
 }
 
 bool BufferedInputHandler::resetSquareIndicators(bool onlyInvalidsAndTargets)
@@ -480,6 +473,7 @@ bool BufferedInputHandler::showSelectablePieces()
 
             if (ent->getParentNode())
             {
+                ent->setVisible(false);
                 SceneNode* pieceNode = findPieceAbove(ent->getParentNode()->getParent());
                 if (pieceNode)
                 {
