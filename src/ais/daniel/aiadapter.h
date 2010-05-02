@@ -36,6 +36,7 @@ protected:
     MovementGenerator *mg;
     bool controlWhite;
     bool controlBlack;
+    boost::mutex mutex;
 };
 
 #endif // _NALCG_A_I_ADAPTER_H_
