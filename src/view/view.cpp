@@ -19,12 +19,12 @@ View::~View()
 
     delete mSystem;
     mSystem = 0;
-    //delete mRenderer; // FIXME: Will crash if enabled since this is a different thread.
+    delete mRenderer;
     mRenderer = 0;
 
     delete mListener;
     mListener = 0;
-    //delete mRoot; // FIXME: Will crash if enabled since this is a different thread.
+    delete mRoot;
     mRoot = 0;
 }
 

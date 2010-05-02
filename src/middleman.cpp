@@ -58,7 +58,11 @@ Colour Middleman::endGame()
     delete board;
     board = 0;
 
-    // TODO: Send end signal to other views as well
+    for (std::size_t i = 0; i < views.size(); ++i)
+    {
+        delete views.at(i);
+    }
+
     running = false;
 
     // winner
