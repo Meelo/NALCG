@@ -9,6 +9,8 @@
 #include <OIS/OIS.h>
 #include <OgreCEGUIRenderer.h>
 
+#include <boost/thread/thread.hpp>
+
 using namespace Ogre;
 
 class View : public WindowEventListener, public EndUser
@@ -22,28 +24,7 @@ public:
 
     virtual void init(const Board* board, Middleman *middleman) {
         EndUser::init(board, middleman);
-        try {
-
-            createRoot();
-            defineResources();
-            setupRenderSystem();
-            createRenderWindow();
-            initializeResourceGroups();
-            setupScene();
-            setupInputSystem();
-            setupCEGUI();
-            createFrameListener();
-            createGUI();
-            createScene();
-            createBoard(board);
-            createGround(false);
-            createInitialExplosion();
-            startRenderLoop();
-        } catch( Exception& e ) {
-            fprintf(stderr, "An exception has occurred: %s\n", e.what());
-        } catch (std::exception& e) {
-            std::cerr << "An exception has occured: " << e.what() << std::endl;
-        }
+        boost::thread thread(boost::bind(&View::start, this));
     }
 
     virtual void setBoard(const Board* board, unsigned int round)
@@ -142,6 +123,8 @@ protected:
     bool chooseKnight(const CEGUI::EventArgs& e);
     bool chooseBishop(const CEGUI::EventArgs& e);
     void sendPromotionMove(unsigned int promoteTo);
+
+    void start();
 };
 
 #endif // _NALCG_VIEW_H_

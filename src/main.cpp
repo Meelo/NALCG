@@ -12,5 +12,6 @@ int main(int argc, char **argv)
     Middleman middleman(aiList, aiInfos);
     middleman.addView(&view);
     middleman.startGame();
+    while (true);
     return 0;
 }

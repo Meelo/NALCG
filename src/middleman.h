@@ -36,6 +36,8 @@ public:
 
     void undo(unsigned int steps = FULL_TURN);
 
+    void updateBoardForAI();
+
     // Getters
     std::size_t getAICount() const { return aiList.size(); }
 

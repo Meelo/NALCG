@@ -38,6 +38,12 @@ void Middleman::startGame()
         views.at(i)->init(board, this);
     }
 
+    // initialize AI players.
+    for (std::size_t i = 0; i < aiList.size(); i++)
+    {
+        aiList.at(i)->init(board, this);
+    }
+
 }
 
 Colour Middleman::endGame()
@@ -140,6 +146,8 @@ void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
     {
         views.at(i)->move(fromX, fromY, toX, toY, continuous);
     }
+    updateBoardForAI();
+
     board->initRoundSpecificState();
 }
 
@@ -151,6 +159,8 @@ void Middleman::promoteUpdate(  std::size_t fromX,  std::size_t fromY,
     {
         views.at(i)->promoteMove(fromX, fromY, toX, toY, promoteTo);
     }
+    updateBoardForAI();
+
     board->initRoundSpecificState();
 }
 
@@ -159,6 +169,15 @@ void Middleman::boardUpdate()
     for (std::size_t i = 0; i < views.size(); ++i)
     {
         views.at(i)->setBoard(board, rounds);
+    }
+    updateBoardForAI();
+}
+
+void Middleman::updateBoardForAI()
+{
+    for (std::size_t i = 0; i < aiList.size(); ++i)
+    {
+        aiList.at(i)->setBoard(board, rounds);
     }
 }
 

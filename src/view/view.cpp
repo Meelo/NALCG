@@ -357,7 +357,6 @@ void View::createGUI()
     white->setReadOnly(true);
     white->setText("Human");
     white->addItem(new CEGUI::ListboxTextItem("Human"));
-    white->addItem(new CEGUI::ListboxTextItem("AI (Daniel)"));
     
     // Swap sides button
     createGUIComponent("<=>", 0.475, 0.02, 0.04, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
@@ -373,7 +372,13 @@ void View::createGUI()
     black->setReadOnly(true);
     black->setText("Human");
     black->addItem(new CEGUI::ListboxTextItem("Human"));
-    black->addItem(new CEGUI::ListboxTextItem("AI (Daniel)"));
+
+    for (std::size_t i = 0; i < mMiddleman->getAICount(); i++)
+    {
+        std::string name = mMiddleman->getAIInfoAt(i).getName();
+        white->addItem(new CEGUI::ListboxTextItem(name));
+        black->addItem(new CEGUI::ListboxTextItem(name));
+    }
 
 }
 
@@ -726,5 +731,28 @@ void View::ensureLatestState()
         mSceneMgr->setAmbientLight(ViewConstants::AMBIENT_COLOUR);
         mSceneMgr->getLight("Yellow")->setDiffuseColour(ViewConstants::YELLOW_COLOUR);
         mSceneMgr->getLight("Blue")->setDiffuseColour(ViewConstants::BLUE_COLOUR);
+    }
+}
+
+void View::start()
+{
+    try {
+        createRoot();
+        defineResources();
+        setupRenderSystem();
+        createRenderWindow();
+        initializeResourceGroups();
+        setupScene();
+        setupInputSystem();
+        setupCEGUI();
+        createFrameListener();
+        createGUI();
+        createScene();
+        createBoard(mMiddleman->getGameStateAt(0));
+        createGround(false);
+        createInitialExplosion();
+        startRenderLoop();
+    } catch( Exception& e ) {
+        fprintf(stderr, "An exception has occurred: %s\n", e.what());
     }
 }
