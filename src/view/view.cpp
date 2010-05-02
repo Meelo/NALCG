@@ -19,12 +19,12 @@ View::~View()
 
     delete mSystem;
     mSystem = 0;
-    delete mRenderer;
+    //delete mRenderer; // FIXME: Will crash if enabled since this is a different thread.
     mRenderer = 0;
 
     delete mListener;
     mListener = 0;
-    delete mRoot;
+    //delete mRoot; // FIXME: Will crash if enabled since this is a different thread.
     mRoot = 0;
 }
 
@@ -755,4 +755,5 @@ void View::start()
     } catch( Exception& e ) {
         fprintf(stderr, "An exception has occurred: %s\n", e.what());
     }
+    mMiddleman->endGame();
 }

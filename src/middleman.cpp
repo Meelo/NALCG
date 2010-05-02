@@ -2,12 +2,14 @@
 #include "middleman.h"
 #include "logic/chessboard.h"
 
+#include <boost/thread/thread.hpp>
+
 // system includes
 
 Middleman::Middleman(const std::vector<AI*>& aiList,
     const std::vector<AIInfo>& aiInfos) :
     board(0), currentTurn(WHITE), rounds(0), aiList(aiList),
-    aiInfos(aiInfos)
+    aiInfos(aiInfos), running(true)
 {
     assert(aiList.size() == aiInfos.size());
 }
@@ -44,6 +46,10 @@ void Middleman::startGame()
         aiList.at(i)->init(board, this);
     }
 
+    while (running)
+    {
+        boost::this_thread::sleep(boost::posix_time::millisec(100));
+    }
 }
 
 Colour Middleman::endGame()
@@ -51,6 +57,9 @@ Colour Middleman::endGame()
     // TODO: Cleaning up the mess
     delete board;
     board = 0;
+
+    // TODO: Send end signal to other views as well
+    running = false;
 
     // winner
     return WHITE;

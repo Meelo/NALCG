@@ -63,6 +63,7 @@ private:
     std::vector<AIInfo> aiInfos;
     std::vector<Board*> gameStates;
     std::vector<std::string> gameLog;
+    bool running;
 
     // Methods
     void playRound();
