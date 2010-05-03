@@ -365,8 +365,8 @@ void BufferedInputHandler::playQueuedMove()
 {
     if (!mAnimationQueue.empty() && !mAnimationManager->animationsRunning())
     {
-        std::vector<int> moveOrder = mAnimationQueue.back();
-        mAnimationQueue.pop_back();
+        std::vector<int> moveOrder = mAnimationQueue.front();
+        mAnimationQueue.pop_front();
 
         int fromX = moveOrder.at(0);
         int fromY = moveOrder.at(1);
@@ -404,8 +404,6 @@ void BufferedInputHandler::playQueuedMove()
         }
 
         mAnimationManager->addAnimation(animation);
-
-        animation->enableCallback(this);
     }
 }
 

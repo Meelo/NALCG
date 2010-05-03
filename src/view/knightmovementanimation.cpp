@@ -54,7 +54,6 @@ bool KnightMovementAnimation::animate(const Real& timeSinceLastFrame)
                 AnimationFactory::createCameraShakeAnimation(camera, mSceneMgr);
 
             mAnimationManager->addAnimation(cameraShake);
-            cameraShake->enableCallback(mCallback);
 
             mCameraShaken = true;
             mAnimatedNode->setPosition(mDestination);
