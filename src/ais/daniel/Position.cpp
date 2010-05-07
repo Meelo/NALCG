@@ -1,13 +1,13 @@
 #include "Position.h"
 
 
-Position::Position(MovementGenerator *mg) : generator(mg), gameOver(false), isCheck(false), quiet(true) {
+Position::Position(MovementGenerator *mg) : generator(mg), gameOver(false), isCheck(false) {
     reset();
     mg->setPosition(this);
     mg->getAllLegalMoves(&legalMoves);
 }
 
-Position::Position(Position *p, int mv) : quiet(true) {
+Position::Position(Position *p, int mv) {
     int x;
     p->getBoard(&board[0], &x, &x, &x, &x);
     whiteToMove = p->isWhiteToMove();
@@ -380,13 +380,6 @@ int Position::xrayControlBonus(int i, int j, bool white) {
     return bonus;
 }
 
-void Position::clearLegalMoves() {
-    while (!legalMoves.empty()) {
-        //delete legalMoves.back();
-        legalMoves.pop_back();
-    }
-}
-
 void Position::reset() {
     whiteToMove = true;
     isCheck = false;
@@ -418,11 +411,6 @@ void Position::reset() {
 }
 
 void Position::move(int mv, int promotion) {
-    // If a piece is eaten by the move, the position isn't quiet
-    if (board[UNPACK_I2(mv)][UNPACK_J2(mv)] != ' ') {
-        quiet = false;
-    }
-
     // Move the piece
     board[UNPACK_I2(mv)][UNPACK_J2(mv)] = board[UNPACK_I1(mv)][UNPACK_J1(mv)];
     board[UNPACK_I1(mv)][UNPACK_J1(mv)] = ' ';
@@ -523,7 +511,7 @@ void Position::move(int mv, int promotion) {
         break;
     }
     whiteToMove = !whiteToMove;
-    clearLegalMoves();
+    legalMoves.clear();
     generator->setPosition(this);
     generator->getAllLegalMoves(&legalMoves);
     isCheck = !generator->isKingSafe(0,0,0,0);
@@ -558,16 +546,12 @@ void Position::getBoard(char b[8][8], int *wkx, int *wky, int *bkx, int *bky) {
     }
 }
 
-bool Position::isWhiteToMove() {
+inline bool Position::isWhiteToMove() {
     return whiteToMove;
 }
 
 bool Position::isGameOver() {
     return gameOver;
-}
-
-bool Position::isPositionQuiet() {
-    return quiet;
 }
 
 int Position::evaluate() {
@@ -760,8 +744,3 @@ long Position::getHash() {
     }
     return hash;
 }
-
-Position::~Position() {
-    clearLegalMoves();
-}
-

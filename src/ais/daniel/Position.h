@@ -17,7 +17,6 @@ private:
     bool whiteToMove;
     bool isCheck;
     bool gameOver;
-    bool quiet;
     MovementGenerator *generator;
     std::vector<int> legalMoves;
     bool testLeafNode();
@@ -30,7 +29,6 @@ private:
     int bishopControlBonus(int i, int j, bool white);
     int rookControlBonus(int i, int j, bool white);
     int xrayControlBonus(int i, int j, bool white);
-    void clearLegalMoves();
 
 public:
     Position(MovementGenerator *mg);
@@ -42,10 +40,8 @@ public:
     void getBoard(char b[8][8], int *wkx, int *wky, int *bkx, int *bky);
     bool isWhiteToMove();
     bool isGameOver();
-    bool isPositionQuiet();
     int evaluate();
     std::vector<int>* getLegalMoves();
     MovementGenerator* getMovementGenerator();
     long getHash();
-    ~Position();
 };
