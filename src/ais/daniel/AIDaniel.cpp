@@ -8,7 +8,7 @@ int AIDaniel::alphaBeta(Position *pos, int depth, int alpha, int beta, bool max)
         return pos->evaluate();
     }
     if (max) {
-        for (std::size_t i = 0; i < pos->getLegalMoves()->size(); ++i) {
+        for (int i = 0; i < pos->getLegalMoves()->size(); ++i) {
             Position child(pos, i);
             beta = std::min(beta, alphaBeta(&child, depth + 1, alpha, beta, !max));
             if (beta <= alpha) {
@@ -18,7 +18,7 @@ int AIDaniel::alphaBeta(Position *pos, int depth, int alpha, int beta, bool max)
         return beta;
     }
     else {
-        for (std::size_t i = 0; i < pos->getLegalMoves()->size(); ++i) {
+        for (int i = 0; i < pos->getLegalMoves()->size(); ++i) {
             Position child(pos, i);
             alpha = std::max(alpha, alphaBeta(&child, depth + 1, alpha, beta, !max));
             if (beta <= alpha) {
@@ -29,20 +29,16 @@ int AIDaniel::alphaBeta(Position *pos, int depth, int alpha, int beta, bool max)
     }
 }
 
-void AIDaniel::makeMove(std::string move) {
-    position->move(move);
-}
-
-std::string AIDaniel::getNextMove() {
+int AIDaniel::getNextMove() {
     std::vector<int> values;
     int best = 0;
     if (position->isWhiteToMove()) {
-        for (std::size_t i = 0; i < position->getLegalMoves()->size(); ++i) {
+        for (int i = 0; i < position->getLegalMoves()->size(); ++i) {
             Position child(position, i);
             values.push_back(alphaBeta(&child, 0, std::numeric_limits<int>::min(),std::numeric_limits<int>::max(),true));
         }
         int max = std::numeric_limits<int>::min();
-        for (std::size_t i = 0; i < values.size(); ++i) {
+        for (int i = 0; i < values.size(); ++i) {
             if (max < values.at(i)) {
                 max = values.at(i);
                 best = i;
@@ -50,13 +46,13 @@ std::string AIDaniel::getNextMove() {
         }
     }
     else {
-        for (std::size_t i = 0; i < position->getLegalMoves()->size(); ++i) {
+        for (int i = 0; i < position->getLegalMoves()->size(); ++i) {
             Position child(position, i);
             values.push_back(alphaBeta(&child, 0, std::numeric_limits<int>::min(),std::numeric_limits<int>::max(),false));
             std::cout << i << " " << values.at(i) << " " << position->getLegalMoves()->at(i) << std::endl;
         }
         int min = std::numeric_limits<int>::max();
-        for (std::size_t i = 0; i < values.size(); ++i) {
+        for (int i = 0; i < values.size(); ++i) {
             if (min > values.at(i)) {
                 min = values.at(i);
                 best = i;
@@ -64,7 +60,7 @@ std::string AIDaniel::getNextMove() {
         }
     }
     bestMove = position->getLegalMoves()->at(best);
-    position->move(bestMove);
+    position->move(bestMove, 0);
     return bestMove;
 }
 

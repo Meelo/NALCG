@@ -53,36 +53,10 @@ void AIAdapter::makeMoveIfInControl()
 
         if ((whiteToMove && controlWhite) || (!whiteToMove && controlBlack))
         {
-            std::string move = ai->getNextMove();
-            std::size_t x0, y0, x1, y1;
+            int mv = ai->getNextMove();
 
-            // Tassa valissa parsetaan movesta noi ylemmalla rivilla olevat
-            if (move.at(0) == 'O') {
-                if (whiteToMove) {
-                    x0 = 7;
-                    y0 = 4;
-                    x1 = 7;
-                }
-                else {
-                    x0 = 0;
-                    y0 = 4;
-                    x1 = 0;
-                }
-                if (move.size() > 3) {
-                    y1 = 2;
-                }
-                else {
-                    y1 = 6;
-                } 
-            }
-            else {
-                y0 = move.at(0) - 'A';
-                x0 = 8 - (move.at(1) - '0');
-                y1 = move.at(3) - 'A';
-                x1 = 8 - (move.at(4) - '0');
-            }
-
-            mMiddleman->move(y0, x0, y1, x1, ChessBoard::PROMOTE_TO_QUEEN);
+            //std::cout << mv.j1 << " " << mv.i1 << " " <<  mv.j2 << " " <<  mv.i2 << std::endl;
+            mMiddleman->move(UNPACK_J1(mv), UNPACK_I1(mv), UNPACK_J2(mv), UNPACK_I2(mv), ChessBoard::PROMOTE_TO_QUEEN);
         }
     }
 }
