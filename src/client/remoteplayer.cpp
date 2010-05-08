@@ -1,7 +1,7 @@
 #include "remoteplayer.h"
 #include "network.h"
 #include "../middleman.h"
-
+#include "../logic/chessboard.h"
 
 RemotePlayer::RemotePlayer()
     : mNetwork(Network::createNewNetwork())
@@ -85,9 +85,22 @@ void RemotePlayer::handleIncomingMessages()
         {
             std::string line = mNetwork->popLine();
 
+            if (line.substr(0, 5) == "TPE_3")
+            {
+                std::stringstream move;
+                move << line.substr(6);
+                std::size_t fromX, fromY, toX, toY;
+                move >> fromX;
+                move >> fromY;
+                move >> toX;
+                move >> toY;
+
+                // FIXME: auto-promote to queen in network play.
+                mMiddleman->move(fromX, fromY, toX, toY, ChessBoard::PROMOTE_TO_QUEEN);
+            }
             if (line.substr(0, 5) == "MSG_E")
             {
-                    mMiddleman->promptChallenge(line.substr(5));
+                mMiddleman->promptChallenge(line.substr(5));
             }
             else if (line == "MSG_U")
             {
