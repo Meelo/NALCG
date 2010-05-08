@@ -1,4 +1,4 @@
-#include "Position.h"
+#include "position.h"
 #include <cassert>
 
 #define PACK_MOVE(i1,j1,i2,j2) (((i1) << 12) + ((j1) << 8) + ((i2) << 4) + j2)
@@ -54,7 +54,7 @@ void MovementGenerator::addLegalRookMoves(int i, int j) {
             break;
         }
         ++y;
-    }  
+    }
 }
 
 void MovementGenerator::addLegalBishopMoves(int i, int j) {
@@ -281,7 +281,7 @@ inline bool MovementGenerator::isKingSafe(int i1, int j1, int i2, int j2) {
         y = bky;
     }
     // However, we have to check whether the piece being moved is the king...
-    if (board[i2][j2] == 'k' || board[i2][j2] == 'K' || 
+    if (board[i2][j2] == 'k' || board[i2][j2] == 'K' ||
         board[i2][j2] == 'x' || board[i2][j2] == 'X') {
             x = j2;
             y = i2;
@@ -470,8 +470,8 @@ inline bool MovementGenerator::isKingSafe(int i1, int j1, int i2, int j2) {
     // Test for enemy knights
     testx = x - 2;
     testy = y - 1;
-    if (testx >= 0 && testy >= 0 && 
-        (board[testy][testx] == 'n' || board[testy][testx] == 'N') && 
+    if (testx >= 0 && testy >= 0 &&
+        (board[testy][testx] == 'n' || board[testy][testx] == 'N') &&
         isPieceHostile(testy, testx)) {
             return false;
     }
@@ -498,29 +498,29 @@ inline bool MovementGenerator::isKingSafe(int i1, int j1, int i2, int j2) {
     }
     testx = x - 1;
     testy = y - 2;
-    if (testx >= 0 && testy >= 0 && 
-        (board[testy][testx] == 'n' || board[testy][testx] == 'N') && 
+    if (testx >= 0 && testy >= 0 &&
+        (board[testy][testx] == 'n' || board[testy][testx] == 'N') &&
         isPieceHostile(testy, testx)) {
             restore(i1,j1,i2,j2,memory);
             return false;
     }
     testx = x + 1;
-    if (testx < 8 && testy >= 0 && 
-        (board[testy][testx] == 'n' || board[testy][testx] == 'N') && 
+    if (testx < 8 && testy >= 0 &&
+        (board[testy][testx] == 'n' || board[testy][testx] == 'N') &&
         isPieceHostile(testy, testx)) {
             restore(i1,j1,i2,j2,memory);
             return false;
     }
     testy = y + 2;
-    if (testx < 8 && testy < 8 && 
-        (board[testy][testx] == 'n' || board[testy][testx] == 'N') && 
+    if (testx < 8 && testy < 8 &&
+        (board[testy][testx] == 'n' || board[testy][testx] == 'N') &&
         isPieceHostile(testy, testx)) {
             restore(i1,j1,i2,j2,memory);
             return false;
     }
     testx = x - 1;
-    if (testx >= 0 && testy < 8 && 
-        (board[testy][testx] == 'n' || board[testy][testx] == 'N') && 
+    if (testx >= 0 && testy < 8 &&
+        (board[testy][testx] == 'n' || board[testy][testx] == 'N') &&
         isPieceHostile(testy, testx)) {
             restore(i1,j1,i2,j2,memory);
             return false;

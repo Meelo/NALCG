@@ -5,9 +5,9 @@
 
 // class includes
 #include "../ai.h"
-#include "MovementGenerator.h"
+#include "movementgenerator.h"
+#include "aidaniel.h"
 #include "../../middleman.h"
-#include "AIDaniel.h"
 #include "../../logic/chessboard.h"
 #include "../../logic/board.h"
 
@@ -24,7 +24,7 @@ public:
     virtual void init(const Board* board, Middleman* middleman);
 
     virtual void setBoard(const Board* board, unsigned int round);
-    
+
     virtual void parsePosition(const Board* board, bool whiteToMove);
 
     virtual void setControl(bool white, bool black);

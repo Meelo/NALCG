@@ -1,4 +1,4 @@
-#include "AIDaniel.h"
+#include "aidaniel.h"
 
 AIDaniel::AIDaniel(Position *p) : position(p) {
 }

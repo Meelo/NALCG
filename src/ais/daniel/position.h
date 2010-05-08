@@ -1,12 +1,13 @@
-#ifndef _NALCG_Position_H_
-#define _NALCG_Position_H_
+#ifndef _NALCG_POSITION_H_
+#define _NALCG_POSITION_H_
+
+#include "movementgenerator.h"
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cstdlib>
 #include <limits>
-#include "MovementGenerator.h"
 
 #define UNPACK_I1(x) (((x) >> 12) & 7)
 #define UNPACK_J1(x) (((x) >> 8) & 7)
@@ -48,4 +49,4 @@ public:
     MovementGenerator* getMovementGenerator();
     long getHash();
 };
-#endif // _NALCG_Position_H_
+#endif // _NALCG_POSITION_H_
