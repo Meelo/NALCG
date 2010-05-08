@@ -46,6 +46,8 @@ void RemotePlayer::move(int fromX, int fromY, int toX, int toY, unsigned int pro
     message << "TPE_3M ";
     message << fromX << " " << fromY << " " << toX << " " << toY << " " << promoteTo;
     mNetwork->sendln(message.str());
+
+    std::cout << "Sent move" << std::endl;
 }
 
 
@@ -55,6 +57,8 @@ void RemotePlayer::sendUndo(unsigned int steps)
     message << "TPE_3U ";
     message << steps;
     mNetwork->sendln(message.str());
+
+    std::cout << "Sent undo" << std::endl;
 }
 
 void RemotePlayer::setControl(bool white, bool black)
@@ -68,6 +72,8 @@ void RemotePlayer::setControl(bool white, bool black)
 void RemotePlayer::sendChallenge(const std::string& name)
 {
     mNetwork->sendln("MSG_B" + name);
+
+    std::cout << "Sent challenge" << std::endl;
 }
 
 void RemotePlayer::respondToChallenge(bool accept)
@@ -89,6 +95,8 @@ void RemotePlayer::handleIncomingMessages()
         while (mNetwork->hasLines())
         {
             std::string line = mNetwork->popLine();
+
+            std::cout << "Received: " << line << std::endl;
 
             if (line.substr(0, 6) == "TPE_3M")
             {
