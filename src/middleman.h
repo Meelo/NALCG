@@ -47,7 +47,7 @@ public:
     // Should be called *after* playRound(), since that updates currentPlayer.
     unsigned int getGameConditionMask() const;
 
-    void addView(EndUser* view) { views.push_back(view); }
+    void addView(EndUser* _view) { view = _view; }
 
     // 0 = Human, 1..n = AI player index + 1.
     void setControl(unsigned int whiteController, unsigned int blackController);
@@ -67,12 +67,11 @@ private:
     RemotePlayer client;
     Colour currentTurn;
     unsigned int rounds;
-    std::vector<EndUser*> views;
+    EndUser* view;
     std::vector<AI*> aiList;
     std::vector<AIInfo> aiInfos;
     std::vector<Board*> gameStates;
     std::vector<std::string> gameLog;
-    bool running;
 
     // Methods
     void playRound();
