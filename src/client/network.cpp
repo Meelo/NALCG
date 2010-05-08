@@ -28,12 +28,14 @@ protected:
     boost::mutex mutex;
     std::vector<std::string> linesBuffer;
     char delimiter;
+    bool connected;
+
     virtual void readToBuffer();
 };
 
 using boost::asio::ip::tcp;
 
-NetworkImpl::NetworkImpl() : socket(io_service), delimiter(0)
+NetworkImpl::NetworkImpl() : socket(io_service), delimiter(0), connected(false)
 {
 
 }
@@ -55,8 +57,10 @@ bool NetworkImpl::connect(const char* ip, const char* port)
     catch (std::exception& e)
     {
         std::cerr << "Exception: " << e.what() << "\n";
+        connected = false;
         return false;
     }
+    connected = true;
     return true;
 }
 
@@ -128,7 +132,7 @@ std::string NetworkImpl::popLine()
 
 void NetworkImpl::send(const std::string& message)
 {
-    if (socket.is_open())
+    if (connected)
     {
         boost::asio::write(socket, boost::asio::buffer(message, message.size()));
     }
