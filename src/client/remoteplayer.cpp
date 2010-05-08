@@ -10,8 +10,11 @@ RemotePlayer::RemotePlayer() : mNetwork(Network::createNewNetwork()), mConnected
 RemotePlayer::~RemotePlayer()
 {
     mConnected = false;
-    mThread->join();
-    delete mThread;
+    if (mThread)
+    {
+        mThread->join();
+        delete mThread;
+    }
     delete mNetwork;
 }
 
@@ -80,6 +83,7 @@ void RemotePlayer::handleIncomingMessages()
                 mMiddleman->promptChallenge(line.substr(5));
             }
         }
+        boost::this_thread::sleep(boost::posix_time::millisec(10));
     }
 }
 
