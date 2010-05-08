@@ -130,6 +130,7 @@ protected:
     void start();
     bool updateControllers(const CEGUI::EventArgs& e);
     bool swapPlayers(const CEGUI::EventArgs& e);
+    bool connect(const CEGUI::EventArgs& e);
 };
 
 #endif // _NALCG_VIEW_H_

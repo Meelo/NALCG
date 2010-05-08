@@ -19,15 +19,19 @@ public:
     RemotePlayer();
     virtual ~RemotePlayer();
 
-    virtual void init(const Board* board, Middleman* middleman);
+    virtual void init(Middleman* middleman);
+    virtual bool connect(const char* ip, const char* port);
+    virtual void disconnect();
     virtual void move(int fromX, int fromY, int toX, int toY, unsigned int promoteTo);
     virtual void sendUndo(unsigned int steps);
     virtual void setControl(bool white, bool black);
     virtual void sendChallenge(const std::string& name);
     virtual void respondToChallenge(bool accept);
-    virtual void handleIncomingMessages();
 
 protected:
+    virtual void handleIncomingMessages();
+    virtual void log(const std::string& message);
+
     Network* mNetwork;
     Middleman* mMiddleman;
     bool mConnected;

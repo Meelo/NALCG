@@ -21,6 +21,7 @@ public:
     virtual void startBuffering(char delimiter = '\n');
     virtual bool hasLines();
     virtual std::string popLine();
+    virtual void disconnect();
 
 protected:
     boost::asio::io_service io_service;
@@ -56,7 +57,7 @@ bool NetworkImpl::connect(const char* ip, const char* port)
     }
     catch (std::exception& e)
     {
-        std::cerr << "Exception: " << e.what() << "\n";
+        std::cerr << "Exception in connect: " << e.what() << "\n";
         connected = false;
         return false;
     }
@@ -107,7 +108,7 @@ void NetworkImpl::readToBuffer()
     }
     catch (std::exception& e)
     {
-        std::cerr << "Exception: " << e.what() << "\n";
+        std::cerr << "Exception in readToBuffer: " << e.what() << "\n";
     }
 }
 
@@ -134,7 +135,14 @@ void NetworkImpl::send(const std::string& message)
 {
     if (connected)
     {
-        boost::asio::write(socket, boost::asio::buffer(message, message.size()));
+        try
+        {
+            boost::asio::write(socket, boost::asio::buffer(message, message.size()));
+        }
+        catch (std::exception& e)
+        {
+            std::cerr << "Exception in send: " << e.what() << "\n";
+        }
     }
 }
 
@@ -143,7 +151,23 @@ void NetworkImpl::sendln(const std::string& message)
     send(message + "\n");
 }
 
+void NetworkImpl::disconnect()
+{
+    if (connected)
+    {
+        try
+        {
+            socket.close();
+        }
+        catch (std::exception& e)
+        {
+            std::cerr << "Exception in disconnect: " << e.what() << "\n";
+        }
+    }
+}
+
 Network* Network::createNewNetwork()
 {
     return new NetworkImpl(); 
 }
+

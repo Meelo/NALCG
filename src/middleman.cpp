@@ -39,7 +39,7 @@ void Middleman::startGame()
         aiList.at(i)->init(board, this);
     }
 
-    client.init(board, this);
+    client.init(this);
 
     // add players
     view->init(board, this);
@@ -193,6 +193,11 @@ void Middleman::remoteUpdate(   std::size_t fromX,  std::size_t fromY,
                                 unsigned int promoteTo)
 {
     client.move(fromX, fromY, toX, toY, promoteTo);
+}
+
+bool Middleman::connect(const char* ip, const char* port)
+{
+    return client.connect(ip, port);
 }
 
 

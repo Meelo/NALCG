@@ -15,6 +15,7 @@ public:
     virtual void startBuffering(char delimiter = '\n') = 0;
     virtual bool hasLines() = 0;
     virtual std::string popLine() = 0;
+    virtual void disconnect() = 0;
 
     static Network* createNewNetwork();
 };

@@ -371,6 +371,10 @@ void View::createGUI()
     black->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,
         CEGUI::Event::Subscriber(&View::updateControllers, this));
 
+
+    createGUIComponent("Connect", 0.72, 0.0, 0.1, 0.04)
+        ->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::connect, this));
+
     updateUsers(std::vector<std::string>());
 
 }
@@ -762,12 +766,12 @@ bool View::updateControllers(const CEGUI::EventArgs& e)
 
     mMiddleman->setControl(whiteIndex, blackIndex);
 
-    if (whiteIndex > mMiddleman->getAICount() + 1)
+    if (whiteIndex > mMiddleman->getAICount())
     {
         mMiddleman->sendChallenge(white->getText().c_str());
     }
 
-    if (blackIndex > mMiddleman->getAICount() + 1)
+    if (blackIndex > mMiddleman->getAICount())
     {
         mMiddleman->sendChallenge(black->getText().c_str());
     }
@@ -818,4 +822,10 @@ void View::updateUsers(const std::vector<std::string>& users)
         white->addItem(new CEGUI::ListboxTextItem(user));
         black->addItem(new CEGUI::ListboxTextItem(user));
     }
+}
+
+bool View::connect(const CEGUI::EventArgs& e)
+{
+    mMiddleman->connect("dzarg.mine.nu", "6668");
+    return true;
 }
