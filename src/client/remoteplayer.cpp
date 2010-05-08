@@ -51,6 +51,9 @@ void RemotePlayer::setBoard(const Board* board, unsigned int round)
 void RemotePlayer::setControl(bool white, bool black)
 {
     // This holds no meaning in network play.
+    // Or at least so it seems.
+    // In reality, we are going to use this method to define who controls
+    // what and where.
 }
 
 void RemotePlayer::sendChallenge(const std::string& name)

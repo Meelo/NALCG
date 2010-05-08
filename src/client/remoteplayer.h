@@ -5,6 +5,7 @@
 
 // system includes
 #include <sstream>
+#include <cstdlib>
 
 class Middleman;
 class Board;
