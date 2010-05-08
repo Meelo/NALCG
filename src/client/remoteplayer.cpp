@@ -38,11 +38,11 @@ void RemotePlayer::init(const Board* board, Middleman* middleman)
     mNetwork->sendln(nick.str());
 }
 
-void RemotePlayer::move(int fromX, int fromY, int toX, int toY)
+void RemotePlayer::move(int fromX, int fromY, int toX, int toY, unsigned int promoteTo)
 {
     std::ostringstream message;
     message << "TPE_3 ";
-    message << fromX << " " << fromY << " " << toX << " " << toY;
+    message << fromX << " " << fromY << " " << toX << " " << toY << " " << promoteTo;
     mNetwork->sendln(message.str());
 }
 
@@ -89,14 +89,14 @@ void RemotePlayer::handleIncomingMessages()
             {
                 std::stringstream move;
                 move << line.substr(6);
-                std::size_t fromX, fromY, toX, toY;
+                std::size_t fromX, fromY, toX, toY, promoteTo;
                 move >> fromX;
                 move >> fromY;
                 move >> toX;
                 move >> toY;
+                move >> promoteTo;
 
-                // FIXME: auto-promote to queen in network play.
-                mMiddleman->move(fromX, fromY, toX, toY, ChessBoard::PROMOTE_TO_QUEEN);
+                mMiddleman->move(fromX, fromY, toX, toY, promoteTo);
             }
             if (line.substr(0, 5) == "MSG_E")
             {
