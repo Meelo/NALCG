@@ -5,13 +5,15 @@
 #include "serversocket.h"
 #include <list>
 
-const int MAX = 30;
+const unsigned int MAX = 30;
 
 class Server
 {
     public:
         Server ( );
         ~Server ( );
+
+        void createSocket(int port = 6668);
         void accept(ServerSocket& socket);
         User* addUser( );
         void quittedUsers ( );

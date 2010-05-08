@@ -7,7 +7,7 @@
 #include <pthread.h>
 #include <fstream>
 #include <cstdlib>
-       
+
 Server mServer;
 
 void *scanUsers(void *arg) {
@@ -25,6 +25,23 @@ int main ( int argc, char **argv )
 {
     pthread_t sid1;
     User *user;
+
+    // usage:   ./NALCG-server <port_number>
+    // example: ./NALCG-server 6611
+    // example: ./NALCG-server
+    // default port is 6668
+    if (argc >= 2)
+    {
+        int port = atoi(argv[1]);
+        if (port > 0)
+        {
+            mServer.createSocket(port);
+        }
+    }
+    else
+    {
+        mServer.createSocket(6668);
+    }
 
     try
     {

@@ -6,17 +6,21 @@
 #include <pthread.h>
 #include <string>
 #include <iostream>
- 
-Server::Server()
+
+Server::Server( ) : mSocket(0)
 {
-    mSocket = new ServerSocket( 6668 );
-    std::cout << "Server started at " << getTime(1) << ".\nRunning....\n";
     pthread_rwlock_init(&mLock, NULL);
 }
 
 Server::~Server()
 {
     delete mSocket;
+}
+
+void Server::createSocket(int port)
+{
+    mSocket = new ServerSocket(port);
+    std::cout << "Server started at " << getTime(1) << ".\nRunning....\n";
 }
 
 void Server::accept(ServerSocket& socket)
@@ -108,7 +112,7 @@ void Server::quittedUsers()
         {
             mClients.remove(temp);
             k = pthread_cancel(temp->getSid());
-	    
+
             if(temp->isPlaying())
             {
                 *(temp->getOpponent()->getSocket()) << "MSG_D";
