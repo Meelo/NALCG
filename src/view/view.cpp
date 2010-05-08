@@ -354,7 +354,6 @@ void View::createGUI()
         "White", 0.3, 0.045, 0.15, 0.2, "Combobox", false, true));
     white->setReadOnly(true);
     white->setText("Human");
-    white->addItem(new CEGUI::ListboxTextItem("Human"));
     white->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,
         CEGUI::Event::Subscriber(&View::updateControllers, this));
     
@@ -369,16 +368,10 @@ void View::createGUI()
         "Black", 0.54, 0.045, 0.15, 0.2, "Combobox", false, true));
     black->setReadOnly(true);
     black->setText("Human");
-    black->addItem(new CEGUI::ListboxTextItem("Human"));
     black->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,
         CEGUI::Event::Subscriber(&View::updateControllers, this));
 
-    for (std::size_t i = 0; i < mMiddleman->getAICount(); i++)
-    {
-        std::string name = mMiddleman->getAIInfoAt(i).getName();
-        white->addItem(new CEGUI::ListboxTextItem(name));
-        black->addItem(new CEGUI::ListboxTextItem(name));
-    }
+    updateUsers(std::vector<std::string>());
 
 }
 
@@ -793,17 +786,25 @@ void View::promptChallenge(const std::string& challengerName)
 void View::updateUsers(const std::vector<std::string>& users)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-    CEGUI::Window* logWindow = wmgr.getWindow("View/LogListbox");
-    CEGUI::Listbox* logList = static_cast<CEGUI::Listbox*>(logWindow);
+    CEGUI::Combobox* white = static_cast<CEGUI::Combobox*>(wmgr.getWindow("View/WhiteCombobox"));
+    CEGUI::Combobox* black = static_cast<CEGUI::Combobox*>(wmgr.getWindow("View/BlackCombobox"));
 
-    // Black dropdown menus
-    createGUIComponent("Black:", 0.54, 0.0, 0.15, 0.04, "StaticText", true, true);
-
-    CEGUI::Combobox* black = static_cast<CEGUI::Combobox*>(createGUIComponent(
-        "Black", 0.54, 0.045, 0.15, 0.2, "Combobox", false, true));
-    black->setReadOnly(true);
-    black->setText("Human");
+    white->resetList();
+    black->resetList();
+    white->addItem(new CEGUI::ListboxTextItem("Human"));
     black->addItem(new CEGUI::ListboxTextItem("Human"));
-    black->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,
-        CEGUI::Event::Subscriber(&View::updateControllers, this));
+
+    for (std::size_t i = 0; i < mMiddleman->getAICount(); i++)
+    {
+        std::string name = mMiddleman->getAIInfoAt(i).getName();
+        white->addItem(new CEGUI::ListboxTextItem(name));
+        black->addItem(new CEGUI::ListboxTextItem(name));
+    }
+
+    for (std::size_t i = 0; i < users.size(); i++)
+    {
+        const std::string& user = users.at(i);
+        white->addItem(new CEGUI::ListboxTextItem(user));
+        black->addItem(new CEGUI::ListboxTextItem(user));
+    }
 }

@@ -128,7 +128,10 @@ std::string NetworkImpl::popLine()
 
 void NetworkImpl::send(const std::string& message)
 {
-    boost::asio::write(socket, boost::asio::buffer(message, message.size()));
+    if (socket.is_open())
+    {
+        boost::asio::write(socket, boost::asio::buffer(message, message.size()));
+    }
 }
 
 void NetworkImpl::sendln(const std::string& message)
