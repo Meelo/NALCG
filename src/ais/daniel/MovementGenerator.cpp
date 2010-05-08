@@ -256,7 +256,6 @@ void MovementGenerator::addLegalCastlingMoves() {
 }
 
 inline bool MovementGenerator::isKingSafe(int i1, int j1, int i2, int j2) {
-    return true;
     bool enPassant = false;
     char memory = board[i2][j2];
     board[i2][j2] = board[i1][j1];

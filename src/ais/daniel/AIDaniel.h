@@ -3,13 +3,12 @@
 #include <map>
 #include "Position.h"
 
-#define CUTOFFDEPTH 4
+#define CUTOFFDEPTH 3 // Actually one higher.
 
 class AIDaniel {
  private:
 	Position *position;
 	int bestMove;
-	//std::map<long,int> visited;
 	int alphaBeta(Position *pos, int depth, int alpha, int beta, bool max);
 
  public:

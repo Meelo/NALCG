@@ -36,6 +36,7 @@ int AIDaniel::getNextMove() {
         for (int i = 0; i < position->getLegalMoves()->size(); ++i) {
             Position child(position, i);
             values.push_back(alphaBeta(&child, 0, std::numeric_limits<int>::min(),std::numeric_limits<int>::max(),true));
+            std::cout << "white: " << i << " " << values.at(i) << " " << position->getLegalMoves()->at(i) << std::endl;
         }
         int max = std::numeric_limits<int>::min();
         for (int i = 0; i < values.size(); ++i) {
@@ -49,7 +50,7 @@ int AIDaniel::getNextMove() {
         for (int i = 0; i < position->getLegalMoves()->size(); ++i) {
             Position child(position, i);
             values.push_back(alphaBeta(&child, 0, std::numeric_limits<int>::min(),std::numeric_limits<int>::max(),false));
-            std::cout << i << " " << values.at(i) << " " << position->getLegalMoves()->at(i) << std::endl;
+            std::cout << "black: " << i << " " << values.at(i) << " " << position->getLegalMoves()->at(i) << std::endl;
         }
         int min = std::numeric_limits<int>::max();
         for (int i = 0; i < values.size(); ++i) {

@@ -55,7 +55,7 @@ void AIAdapter::makeMoveIfInControl()
         {
             int mv = ai->getNextMove();
 
-            //std::cout << mv.j1 << " " << mv.i1 << " " <<  mv.j2 << " " <<  mv.i2 << std::endl;
+            std::cout << UNPACK_J1(mv) << " " << UNPACK_I1(mv) << " " <<  UNPACK_J2(mv) << " " <<  UNPACK_I2(mv) << std::endl;
             mMiddleman->move(UNPACK_J1(mv), UNPACK_I1(mv), UNPACK_J2(mv), UNPACK_I2(mv), ChessBoard::PROMOTE_TO_QUEEN);
         }
     }

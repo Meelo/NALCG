@@ -8,6 +8,7 @@ Position::Position(MovementGenerator *mg) : generator(mg), gameOver(false), isCh
 }
 
 Position::Position(Position *p, int mv) {
+    legalMoves.reserve(64);
     int x;
     p->getBoard(&board[0], &x, &x, &x, &x);
     whiteToMove = p->isWhiteToMove();
