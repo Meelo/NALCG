@@ -9,7 +9,7 @@
  
 Server::Server()
 {
-    mSocket = new ServerSocket( 30000 );
+    mSocket = new ServerSocket( 6668 );
     std::cout << "Server started at " << getTime(1) << ".\nRunning....\n";
     pthread_rwlock_init(&mLock, NULL);
 }

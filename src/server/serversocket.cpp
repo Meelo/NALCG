@@ -57,5 +57,5 @@ void ServerSocket::listen ( )
 
 bool ServerSocket::testConnection()
 {
-    return Socket::send ( "MSG_A" );
+    return Socket::send ( "MSG_A\n" );
 }
