@@ -58,6 +58,8 @@ public:
 
     void respondToChallenge(bool accept);
 
+    void updateUsers(const std::vector<std::string>& users);
+
 private:
     // Members
     Board* board;

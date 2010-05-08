@@ -795,3 +795,9 @@ void View::promptChallenge(const std::string& challengerName)
 {
     mMiddleman->respondToChallenge(true);
 }
+
+
+void View::updateUsers(const std::vector<std::string>& users)
+{
+
+}

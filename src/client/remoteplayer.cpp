@@ -110,7 +110,7 @@ void RemotePlayer::handleIncomingMessages()
             else if (line == "MSG_UEND")
             {
                 mCollectUsers = false;
-                // TODO: send users to middleman.
+                mMiddleman->updateUsers(mUsers);
             }
             else if (mCollectUsers)
             {

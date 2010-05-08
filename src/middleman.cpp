@@ -151,6 +151,13 @@ void Middleman::respondToChallenge(bool accept)
     }
 }
 
+void Middleman::updateUsers(const std::vector<std::string>& users)
+{
+    for (std::size_t i = 0; i < views.size(); ++i)
+    {
+        views.at(i)->updateUsers(users);
+    }
+}
 
 // private methods
 void Middleman::playRound()

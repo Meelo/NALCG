@@ -22,6 +22,7 @@ public:
     virtual void setControl(bool white, bool black) = 0;
     virtual Middleman* getMiddleman() const { return mMiddleman; }
     virtual void promptChallenge(const std::string& challengerName) = 0;
+    virtual void updateUsers(const std::vector<std::string>& users) = 0;
 protected:
     Middleman* mMiddleman;
 };

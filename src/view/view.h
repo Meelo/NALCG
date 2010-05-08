@@ -60,6 +60,7 @@ public:
     }
     virtual void setControl(bool white, bool black) { }
     virtual void promptChallenge(const std::string& challengerName);
+    virtual void updateUsers(const std::vector<std::string>& users);
 
     virtual int getBoardWidth() const { return mBoardWidth; }
     virtual int getBoardHeight() const { return mBoardHeight; }
