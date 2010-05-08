@@ -1,4 +1,4 @@
-#include "Position.h"
+#include "position.h"
 
 
 Position::Position(MovementGenerator *mg) : generator(mg), gameOver(false), isCheck(false) {
@@ -138,7 +138,7 @@ int Position::pawnBackwardPenalty(int i, int j, bool white) {
                 if (board[k][j] == 'p' || board[k][j] == 'e') {
                     return 6;
                 }
-            } 
+            }
         }
     }
     return 10;
@@ -469,7 +469,7 @@ void Position::move(int mv, int promotion) {
         // Same checks for black
         if (board[UNPACK_I2(mv)][UNPACK_J2(mv)] == 'P' && board[UNPACK_I2(mv) - 1][UNPACK_J2(mv)] == 'e') {
             board[UNPACK_I2(mv) - 1][UNPACK_J2(mv)] = ' ';
-        }    
+        }
 
         for (int j = 0; j < 8; ++j) {
             if (board[4][j] == 'e') {
@@ -574,8 +574,7 @@ int Position::evaluate() {
     }
     int white = 0;
     int black = 0;
-    int wkx,wky,bkx,bky;
-    int lesserPiece = 0;
+    int wkx = 0, wky = 0, bkx = 0, bky = 0;
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             switch(board[i][j]) {
@@ -600,7 +599,7 @@ int Position::evaluate() {
             case 'E':
                 black += 100;
                 black -= pawnIsolationPenalty(j,false);
-                //	black -= pawnBackwardPenalty(i,j,false);
+                //  black -= pawnBackwardPenalty(i,j,false);
                 black += pawnAdvancementBonus(i,j,false);
                 break;
             case 'K':
@@ -629,7 +628,7 @@ int Position::evaluate() {
             case 'e':
                 white += 100;
                 white -= pawnIsolationPenalty(j,true);
-                //	white -= pawnBackwardPenalty(i,j,true);
+                //  white -= pawnBackwardPenalty(i,j,true);
                 white += pawnAdvancementBonus(i,j,true);
                 break;
             case 'k':
