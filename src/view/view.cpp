@@ -790,3 +790,8 @@ bool View::swapPlayers(const CEGUI::EventArgs& e)
 
     return updateControllers(e);
 }
+
+void View::promptChallenge(const std::string& challengerName)
+{
+    mMiddleman->respondToChallenge(true);
+}

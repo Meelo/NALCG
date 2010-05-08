@@ -59,7 +59,7 @@ public:
         recreateLog();
     }
     virtual void setControl(bool white, bool black) { }
-    virtual void promptChallenge(const std::string& challengerName) { }
+    virtual void promptChallenge(const std::string& challengerName);
 
     virtual int getBoardWidth() const { return mBoardWidth; }
     virtual int getBoardHeight() const { return mBoardHeight; }
