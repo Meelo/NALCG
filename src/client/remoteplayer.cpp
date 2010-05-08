@@ -47,9 +47,12 @@ void RemotePlayer::move(int fromX, int fromY, int toX, int toY, unsigned int pro
 }
 
 
-void RemotePlayer::setBoard(const Board* board, unsigned int round)
+void RemotePlayer::sendUndo(unsigned int steps)
 {
-    // Not implemented.
+    std::ostringstream message;
+    message << "TPE_3U ";
+    message << steps;
+    mNetwork->sendln(message.str());
 }
 
 void RemotePlayer::setControl(bool white, bool black)
@@ -101,7 +104,15 @@ void RemotePlayer::handleIncomingMessages()
                 response << mMiddleman->move(fromX, fromY, toX, toY, promoteTo);
                 mNetwork->sendln(response.str());
             }
-            if (line.substr(0, 5) == "MSG_E")
+            else if (line.substr(0, 6) == "TPE_3U")
+            {
+                std::stringstream undo;
+                undo << line.substr(7);
+                unsigned int steps;
+                undo >> steps;
+                mMiddleman->undo(steps);
+            }
+            else if (line.substr(0, 5) == "MSG_E")
             {
                 mMiddleman->promptChallenge(line.substr(5));
             }
