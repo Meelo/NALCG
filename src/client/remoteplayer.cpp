@@ -22,7 +22,7 @@ RemotePlayer::~RemotePlayer()
     delete mNetwork;
 }
 
-void RemotePlayer::init(const Board* board, Middleman* middleman)
+void RemotePlayer::init(const Board*, Middleman* middleman)
 {
     mMiddleman = middleman;
 

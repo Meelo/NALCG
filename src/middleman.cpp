@@ -46,6 +46,8 @@ void Middleman::startGame()
         views.at(i)->init(board, this);
     }
 
+    client.init(board, this);
+
 }
 
 std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t y) const
@@ -55,7 +57,8 @@ std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t 
 
 unsigned int Middleman::move(   std::size_t fromX, std::size_t fromY,
                                 std::size_t toX,   std::size_t toY,
-                                unsigned int promoteTo)
+                                unsigned int promoteTo,
+                                bool fromRemote)
 {
     // make mutable versions of parameters,
     // since board's move() will update them when necessary.
@@ -90,6 +93,10 @@ unsigned int Middleman::move(   std::size_t fromX, std::size_t fromY,
             moveUpdate(x0, y0, x1, y1, true);
             // and then make the original move
             moveUpdate(fromX, fromY, toX, toY, false);
+        }
+        if (!fromRemote)
+        {
+            remoteUpdate(fromX, fromY, toX, toY, promoteTo);
         }
     }
 
@@ -192,6 +199,14 @@ void Middleman::promoteUpdate(  std::size_t fromX,  std::size_t fromY,
     updateBoardForAI();
 
     board->initRoundSpecificState();
+}
+
+
+void Middleman::remoteUpdate(   std::size_t fromX,  std::size_t fromY,
+                                std::size_t toX,    std::size_t toY,
+                                unsigned int promoteTo)
+{
+    client.move(fromX, fromY, toX, toY, promoteTo);
 }
 
 

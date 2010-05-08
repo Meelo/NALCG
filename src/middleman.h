@@ -31,7 +31,8 @@ public:
 
     unsigned int move(  std::size_t fromX, std::size_t fromY,
                         std::size_t toX,   std::size_t toY,
-                        unsigned int promoteTo = 0);
+                        unsigned int promoteTo = 0,
+                        bool fromRemote = false);
 
     void undo(unsigned int steps = FULL_TURN);
 
@@ -80,6 +81,10 @@ private:
                     std::size_t toX,   std::size_t toY, bool continuous = false);
 
     void promoteUpdate( std::size_t fromX, std::size_t fromY,
+                        std::size_t toX,   std::size_t toY,
+                        unsigned int promoteTo);
+
+    void remoteUpdate(  std::size_t fromX, std::size_t fromY,
                         std::size_t toX,   std::size_t toY,
                         unsigned int promoteTo);
 
