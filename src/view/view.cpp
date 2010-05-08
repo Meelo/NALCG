@@ -761,6 +761,17 @@ bool View::updateControllers(const CEGUI::EventArgs& e)
     std::size_t blackIndex = black->getItemIndex(black->findItemWithText(black->getText(), 0));
 
     mMiddleman->setControl(whiteIndex, blackIndex);
+
+    if (whiteIndex > mMiddleman->getAICount() + 1)
+    {
+        mMiddleman->sendChallenge(white->getText().c_str());
+    }
+
+    if (blackIndex > mMiddleman->getAICount() + 1)
+    {
+        mMiddleman->sendChallenge(black->getText().c_str());
+    }
+
     return true;
 }
 
