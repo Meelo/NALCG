@@ -574,8 +574,7 @@ int Position::evaluate() {
     }
     int white = 0;
     int black = 0;
-    int wkx,wky,bkx,bky;
-    int lesserPiece = 0;
+    int wkx = 0, wky = 0, bkx = 0, bky = 0;
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             switch(board[i][j]) {

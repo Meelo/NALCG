@@ -11,7 +11,6 @@ void MovementGenerator::addLegalRookMoves(int i, int j) {
     int x = j - 1;
     while (x >= 0) {
         if ((board[i][x] == ' ' || isPieceHostile(i,x)) && isKingSafe(i,j,i,x)) {
-            int move = (i << 12) + (j << 8) + (i << 4) + x;
             legalMoves->push_back(PACK_MOVE(i,j,i,x));
         }
         if (board[i][x] != ' ') {
