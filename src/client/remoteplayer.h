@@ -21,7 +21,7 @@ public:
 
     virtual void init(const Board* board, Middleman* middleman);
     virtual void move(int fromX, int fromY, int toX, int toY, unsigned int promoteTo);
-    virtual void setBoard(const Board* board, unsigned int round);
+    virtual void sendUndo(unsigned int steps);
     virtual void setControl(bool white, bool black);
     virtual void sendChallenge(const std::string& name);
     virtual void respondToChallenge(bool accept);

@@ -348,11 +348,7 @@ void View::createGUI()
         CEGUI::Event::Subscriber(&ViewFrameListener::hideGUI, mListener));
     
     // White dropdown menus
-    //CEGUI::Window* whiteText = 
     createGUIComponent("White:", 0.3, 0.0, 0.15, 0.04, "StaticText", true, true);
-    
-    //whiteText->setProperty("FrameEnabled", "False");
-    //whiteText->setProperty("BackgroundEnabled", "False");
 
     CEGUI::Combobox* white = static_cast<CEGUI::Combobox*>(createGUIComponent(
         "White", 0.3, 0.045, 0.15, 0.2, "Combobox", false, true));
@@ -367,10 +363,7 @@ void View::createGUI()
         CEGUI::Event::Subscriber(&View::swapPlayers, this));
 
     // Black dropdown menus
-    //CEGUI::Window* blackText = 
     createGUIComponent("Black:", 0.54, 0.0, 0.15, 0.04, "StaticText", true, true);
-    //blackText->setProperty("FrameEnabled", "False");
-    //blackText->setProperty("BackgroundEnabled", "False");
 
     CEGUI::Combobox* black = static_cast<CEGUI::Combobox*>(createGUIComponent(
         "Black", 0.54, 0.045, 0.15, 0.2, "Combobox", false, true));
@@ -799,5 +792,18 @@ void View::promptChallenge(const std::string& challengerName)
 
 void View::updateUsers(const std::vector<std::string>& users)
 {
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* logWindow = wmgr.getWindow("View/LogListbox");
+    CEGUI::Listbox* logList = static_cast<CEGUI::Listbox*>(logWindow);
 
+    // Black dropdown menus
+    createGUIComponent("Black:", 0.54, 0.0, 0.15, 0.04, "StaticText", true, true);
+
+    CEGUI::Combobox* black = static_cast<CEGUI::Combobox*>(createGUIComponent(
+        "Black", 0.54, 0.045, 0.15, 0.2, "Combobox", false, true));
+    black->setReadOnly(true);
+    black->setText("Human");
+    black->addItem(new CEGUI::ListboxTextItem("Human"));
+    black->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,
+        CEGUI::Event::Subscriber(&View::updateControllers, this));
 }
