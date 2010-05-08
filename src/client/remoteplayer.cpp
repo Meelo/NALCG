@@ -3,7 +3,11 @@
 #include "../middleman.h"
 
 
-RemotePlayer::RemotePlayer() : mNetwork(Network::createNewNetwork()), mConnected(false), mThread(0)
+RemotePlayer::RemotePlayer()
+    : mNetwork(Network::createNewNetwork())
+    , mConnected(false)
+    , mThread(0)
+    , mCollectUsers(false)
 {
 }
 
@@ -83,7 +87,21 @@ void RemotePlayer::handleIncomingMessages()
 
             if (line.substr(0, 5) == "MSG_E")
             {
-                mMiddleman->promptChallenge(line.substr(5));
+                    mMiddleman->promptChallenge(line.substr(5));
+            }
+            else if (line == "MSG_U")
+            {
+                mCollectUsers = true;
+                mUsers.clear();
+            }
+            else if (line == "MSG_UEND")
+            {
+                mCollectUsers = false;
+                // TODO: send users to middleman.
+            }
+            else if (mCollectUsers)
+            {
+                mUsers.push_back(line);
             }
         }
         boost::this_thread::sleep(boost::posix_time::millisec(10));

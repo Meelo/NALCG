@@ -6,6 +6,8 @@
 // system includes
 #include <sstream>
 #include <cstdlib>
+#include <vector>
+#include <string>
 
 class Middleman;
 class Board;
@@ -30,6 +32,8 @@ protected:
     Middleman* mMiddleman;
     bool mConnected;
     boost::thread* mThread;
+    std::vector<std::string> mUsers;
+    bool mCollectUsers;
 };
 
 #endif // _NALCG_REMOTE_PLAYER_H_
