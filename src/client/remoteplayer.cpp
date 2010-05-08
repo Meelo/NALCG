@@ -26,11 +26,13 @@ void RemotePlayer::init(const Board*, Middleman* middleman)
 {
     mMiddleman = middleman;
 
-    mNetwork->connect("dzarg.mine.nu", "6668");
-    mNetwork->startBuffering();
+    if (mNetwork->connect("dzarg.mine.nu", "6668"))
+    {
+        mNetwork->startBuffering();
 
-    mConnected = true;
-    mThread = new boost::thread(boost::bind(&RemotePlayer::handleIncomingMessages, this));
+        mConnected = true;
+        mThread = new boost::thread(boost::bind(&RemotePlayer::handleIncomingMessages, this));
+    }
 
     // Send nickname.
     std::ostringstream nick;
