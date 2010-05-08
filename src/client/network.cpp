@@ -3,22 +3,46 @@
 
 // system includes
 #include <iostream>
+#include <vector>
 
 // boost includes
 #include <boost/bind.hpp>
+#include <boost/asio.hpp>
+#include <boost/thread/thread.hpp>
+
+class NetworkImpl : public Network
+{
+public:
+    NetworkImpl();
+    virtual ~NetworkImpl();
+    virtual bool connect(const char* ip, const char* port);
+    virtual void send(const std::string& message);
+    virtual void sendln(const std::string& message);
+    virtual void startBuffering(char delimiter = '\n');
+    virtual bool hasLines();
+    virtual std::string popLine();
+
+protected:
+    boost::asio::io_service io_service;
+    boost::asio::ip::tcp::socket socket;
+    boost::mutex mutex;
+    std::vector<std::string> linesBuffer;
+    char delimiter;
+    virtual void readToBuffer();
+};
 
 using boost::asio::ip::tcp;
 
-Network::Network() : socket(io_service), delimiter(0)
+NetworkImpl::NetworkImpl() : socket(io_service), delimiter(0)
 {
 
 }
 
-Network::~Network()
+NetworkImpl::~NetworkImpl()
 {
 }
 
-bool Network::connect(const char* ip, const char* port)
+bool NetworkImpl::connect(const char* ip, const char* port)
 {
     try
     {
@@ -36,13 +60,13 @@ bool Network::connect(const char* ip, const char* port)
     return true;
 }
 
-void Network::startBuffering(char delimiter)
+void NetworkImpl::startBuffering(char delimiter)
 {
     this->delimiter = delimiter;
-    boost::thread thread(boost::bind(&Network::readToBuffer, this));
+    boost::thread thread(boost::bind(&NetworkImpl::readToBuffer, this));
 }
 
-void Network::readToBuffer()
+void NetworkImpl::readToBuffer()
 {
     try {
         boost::asio::streambuf input;
@@ -83,7 +107,7 @@ void Network::readToBuffer()
     }
 }
 
-bool Network::hasLines()
+bool NetworkImpl::hasLines()
 {
     {
         boost::mutex::scoped_lock l(mutex);
@@ -91,7 +115,7 @@ bool Network::hasLines()
     }
 }
 
-std::string Network::popLine()
+std::string NetworkImpl::popLine()
 {
     {
         boost::mutex::scoped_lock l(mutex);
@@ -102,12 +126,17 @@ std::string Network::popLine()
     }
 }
 
-void Network::send(const std::string& message)
+void NetworkImpl::send(const std::string& message)
 {
     boost::asio::write(socket, boost::asio::buffer(message, message.size()));
 }
 
-void Network::sendln(const std::string& message)
+void NetworkImpl::sendln(const std::string& message)
 {
     send(message + "\n");
+}
+
+Network* Network::createNewNetwork()
+{
+    return new NetworkImpl(); 
 }

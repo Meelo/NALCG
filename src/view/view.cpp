@@ -762,7 +762,6 @@ void View::start()
     } catch( Exception& e ) {
         fprintf(stderr, "An exception has occurred: %s\n", e.what());
     }
-    mMiddleman->endGame();
 }
 
 

@@ -34,39 +34,18 @@ void Middleman::startGame()
     // white starts
     currentTurn = WHITE;
 
-    // add players
-    for (std::size_t i = 0; i < views.size(); i++)
-    {
-        views.at(i)->init(board, this);
-    }
-
     // initialize AI players.
     for (std::size_t i = 0; i < aiList.size(); i++)
     {
         aiList.at(i)->init(board, this);
     }
 
-    while (running)
+    // add players
+    for (std::size_t i = 0; i < views.size(); i++)
     {
-        boost::this_thread::sleep(boost::posix_time::millisec(100));
-    }
-}
-
-Colour Middleman::endGame()
-{
-    // TODO: Cleaning up the mess
-    delete board;
-    board = 0;
-
-    for (std::size_t i = 0; i < views.size(); ++i)
-    {
-        delete views.at(i);
+        views.at(i)->init(board, this);
     }
 
-    running = false;
-
-    // winner
-    return WHITE;
 }
 
 std::vector<std::size_t>  Middleman::getValidMovesAt(std::size_t x, std::size_t y) const

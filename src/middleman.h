@@ -27,8 +27,6 @@ public:
     // Methods
     void startGame();
 
-    Colour endGame();
-
     std::vector<std::size_t> getValidMovesAt(std::size_t x, std::size_t y) const;
 
     unsigned int move(  std::size_t fromX, std::size_t fromY,

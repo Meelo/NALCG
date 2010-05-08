@@ -24,7 +24,7 @@ public:
 
     virtual void init(const Board* board, Middleman *middleman) {
         EndUser::init(board, middleman);
-        boost::thread thread(boost::bind(&View::start, this));
+        start();
     }
 
     virtual void setBoard(const Board* board, unsigned int round)

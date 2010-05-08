@@ -1,10 +1,11 @@
 #ifndef _NALCG_REMOTE_PLAYER_H_
 #define _NALCG_REMOTE_PLAYER_H_
 
-// system includes
-
 // class includes
 #include "network.h"
+
+// system includes
+#include <sstream>
 
 class Middleman;
 class Board;
@@ -12,24 +13,25 @@ class Board;
 class RemotePlayer
 {
 public:
-    RemotePlayer()
+    RemotePlayer() : mNetwork(Network::createNewNetwork())
     {
     }
 
     virtual ~RemotePlayer()
     {
+        delete mNetwork;
     }
 
     virtual void init(const Board* board, Middleman* middleman)
     {
         mMiddleman = middleman;
-        mNetwork.connect("dzarg.mine.nu", "6668");
-        mNetwork.startBuffering();
+        mNetwork->connect("dzarg.mine.nu", "6668");
+        mNetwork->startBuffering();
 
         // Send nickname.
         std::ostringstream nick;
         nick << rand();
-        mNetwork.sendln(nick.str());
+        mNetwork->sendln(nick.str());
     }
 
     virtual void move(int fromX, int fromY, int toX, int toY)
@@ -37,7 +39,7 @@ public:
         std::ostringstream message;
         message << "TPE_3 ";
         message << fromX << " " << fromY << " " << toX << " " << toY;
-        mNetwork.sendln(message.str());
+        mNetwork->sendln(message.str());
     }
 
 
@@ -49,22 +51,25 @@ public:
     virtual void setControl(bool white, bool black)
     {
         // This holds no meaning in network play.
+        // Or at least so it seems.
+        // In reality, we are going to use this method to define who controls
+        // what and where.
     }
 
     virtual void sendChallenge(const std::string& name)
     {
-        mNetwork.sendln("MSG_B" + name);
+        mNetwork->sendln("MSG_B" + name);
     }
 
     virtual void respondToChallenge(bool accept)
     {
         if (accept)
         {
-            mNetwork.sendln("MSG_C");
+            mNetwork->sendln("MSG_C");
         }
         else
         {
-            mNetwork.sendln("MSG_D");
+            mNetwork->sendln("MSG_D");
         }
     }
 
@@ -74,7 +79,7 @@ public:
 
 
 protected:
-    Network mNetwork;
+    Network* mNetwork;
     Middleman* mMiddleman;
 };
 
