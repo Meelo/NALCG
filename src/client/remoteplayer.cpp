@@ -41,7 +41,7 @@ void RemotePlayer::init(const Board* board, Middleman* middleman)
 void RemotePlayer::move(int fromX, int fromY, int toX, int toY, unsigned int promoteTo)
 {
     std::ostringstream message;
-    message << "TPE_3 ";
+    message << "TPE_3M ";
     message << fromX << " " << fromY << " " << toX << " " << toY << " " << promoteTo;
     mNetwork->sendln(message.str());
 }
@@ -85,10 +85,10 @@ void RemotePlayer::handleIncomingMessages()
         {
             std::string line = mNetwork->popLine();
 
-            if (line.substr(0, 5) == "TPE_3")
+            if (line.substr(0, 6) == "TPE_3M")
             {
                 std::stringstream move;
-                move << line.substr(6);
+                move << line.substr(7);
                 std::size_t fromX, fromY, toX, toY, promoteTo;
                 move >> fromX;
                 move >> fromY;
@@ -96,7 +96,10 @@ void RemotePlayer::handleIncomingMessages()
                 move >> toY;
                 move >> promoteTo;
 
-                mMiddleman->move(fromX, fromY, toX, toY, promoteTo);
+                std::ostringstream response;
+                response << "TPE_3R ";
+                response << mMiddleman->move(fromX, fromY, toX, toY, promoteTo);
+                mNetwork->sendln(response.str());
             }
             if (line.substr(0, 5) == "MSG_E")
             {
