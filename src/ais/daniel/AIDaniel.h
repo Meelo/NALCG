@@ -1,3 +1,6 @@
+#ifndef _NALCG_AIDaniel_H_
+#define _NALCG_AIDaniel_H_
+
 #include <string>
 #include <algorithm>
 #include <map>
@@ -18,3 +21,4 @@ class AIDaniel {
 	void setPosition(Position *p);
 	~AIDaniel();
 };
+#endif // _NALCG_AIDaniel_H_

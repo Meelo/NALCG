@@ -1,3 +1,6 @@
+#ifndef _NALCG_Position_H_
+#define _NALCG_Position_H_
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -45,3 +48,4 @@ public:
     MovementGenerator* getMovementGenerator();
     long getHash();
 };
+#endif // _NALCG_Position_H_

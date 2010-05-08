@@ -1,3 +1,6 @@
+#ifndef _NALCG_MovementGenerator_H_
+#define _NALCG_MovementGenerator_H_
+
 #pragma once
 
 #include <string>
@@ -29,3 +32,4 @@ class MovementGenerator
 	void getAllLegalMoves(std::vector<int> *lm);
 	bool isKingSafe(int i1, int j1, int i2, int j2);
 };
+#endif // _NALCG_MovementGenerator_H_
