@@ -46,6 +46,7 @@ void AIAdapter::setControl(bool white, bool black)
 
 void AIAdapter::makeMoveIfInControl()
 {
+    if ((mMiddleman->getGameConditionMask() & (ChessBoard::CHECKMATE | ChessBoard::DRAW)) == 0)
     {
         boost::mutex::scoped_lock l(mutex);
 
