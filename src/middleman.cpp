@@ -8,15 +8,14 @@
 
 Middleman::Middleman(const std::vector<AI*>& aiList,
     const std::vector<AIInfo>& aiInfos) :
-    board(0), currentTurn(WHITE), rounds(0), aiList(aiList),
-    aiInfos(aiInfos), running(true)
+    board(0), currentTurn(WHITE), rounds(0), view(0),
+    aiList(aiList), aiInfos(aiInfos)
 {
     assert(aiList.size() == aiInfos.size());
 }
 
 Middleman::~Middleman()
 {
-    views.clear();
     deleteAndClear(aiList);
     deleteAndClear(gameStates);
 }
@@ -40,13 +39,12 @@ void Middleman::startGame()
         aiList.at(i)->init(board, this);
     }
 
-    // add players
-    for (std::size_t i = 0; i < views.size(); i++)
-    {
-        views.at(i)->init(board, this);
-    }
-
     client.init(board, this);
+
+    // add players
+    view->init(board, this);
+
+
 
 }
 
@@ -140,10 +138,7 @@ void Middleman::sendChallenge(const std::string& remotePlayer)
 
 void Middleman::promptChallenge(const std::string& challenger)
 {
-    for (std::size_t i = 0; i < views.size(); ++i)
-    {
-        views.at(i)->promptChallenge(challenger);
-    }
+    view->promptChallenge(challenger);
 }
 
 
@@ -160,10 +155,7 @@ void Middleman::respondToChallenge(bool accept)
 
 void Middleman::updateUsers(const std::vector<std::string>& users)
 {
-    for (std::size_t i = 0; i < views.size(); ++i)
-    {
-        views.at(i)->updateUsers(users);
-    }
+    view->updateUsers(users);
 }
 
 // private methods
@@ -178,10 +170,7 @@ void Middleman::playRound()
 void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
                             std::size_t toX,   std::size_t toY, bool continuous)
 {
-    for (std::size_t i = 0; i < views.size(); ++i)
-    {
-        views.at(i)->move(fromX, fromY, toX, toY, continuous);
-    }
+    view->move(fromX, fromY, toX, toY, continuous);
     updateBoardForAI();
 
     board->initRoundSpecificState();
@@ -192,10 +181,7 @@ void Middleman::promoteUpdate(  std::size_t fromX,  std::size_t fromY,
                                 std::size_t toX,    std::size_t toY,
                                 unsigned int promoteTo)
 {
-    for (std::size_t i = 0; i < views.size(); ++i)
-    {
-        views.at(i)->promoteMove(fromX, fromY, toX, toY, promoteTo);
-    }
+    view->promoteMove(fromX, fromY, toX, toY, promoteTo);
     updateBoardForAI();
 
     board->initRoundSpecificState();
@@ -212,10 +198,8 @@ void Middleman::remoteUpdate(   std::size_t fromX,  std::size_t fromY,
 
 void Middleman::boardUpdate()
 {
-    for (std::size_t i = 0; i < views.size(); ++i)
-    {
-        views.at(i)->setBoard(board, rounds);
-    }
+    view->setBoard(board, rounds);
+
     updateBoardForAI();
 }
 
@@ -250,10 +234,7 @@ void Middleman::setControl(unsigned int whiteController,
     unsigned int blackController)
 {
     // add players
-    for (std::size_t i = 0; i < views.size(); i++)
-    {
-        views.at(i)->setControl(whiteController == 0, blackController == 0);
-    }
+    view->setControl(whiteController == 0, blackController == 0);
 
     // initialize AI players.
     for (std::size_t i = 0; i < aiList.size(); i++)
