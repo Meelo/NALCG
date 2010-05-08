@@ -304,7 +304,7 @@ void Server::userList()
     {
         users += "\n" + (*i)->getName();
     }
-    users += "\nMSG_UEND";
+    users += "\nMSG_UEND\n";
     pthread_rwlock_unlock(&mLock);
     sendMsg(users);
 }

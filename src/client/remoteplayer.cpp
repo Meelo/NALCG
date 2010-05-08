@@ -36,6 +36,7 @@ void RemotePlayer::init(const Board*, Middleman* middleman)
 
     // Send nickname.
     std::ostringstream nick;
+    srand(time(0));
     nick << rand();
     mNetwork->sendln(nick.str());
 }
