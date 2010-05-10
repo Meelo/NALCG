@@ -5,6 +5,7 @@
 
 RemotePlayer::RemotePlayer()
     : mNetwork(Network::createNewNetwork())
+    , mMiddleman(0)
     , mConnected(false)
     , mThread(0)
     , mCollectUsers(false)

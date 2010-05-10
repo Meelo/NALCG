@@ -17,7 +17,8 @@ class View : public WindowEventListener, public EndUser
 {
 public:
     View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
-        mRenderer(0), mSystem(0), mListener(0), mBoardWidth(0),
+        mRenderer(0), mSystem(0), mListener(0), mSceneMgr(0),
+        mCamera(0), mWindow(0), mBoardWidth(0),
         mBoardHeight(0), mRound(0), mPast(false)
     {
     }
