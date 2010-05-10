@@ -25,11 +25,8 @@ public:
 
     virtual void setBoard(const Board* board, unsigned int round);
 
-    virtual void parsePosition(const Board* board, bool whiteToMove);
-
     virtual void setControl(bool white, bool black);
 
-    virtual void makeMoveIfInControl();
 
 protected:
     AIDaniel *ai;
@@ -37,6 +34,13 @@ protected:
     bool controlWhite;
     bool controlBlack;
     boost::mutex mutex;
+    boost::thread* thread;
+    bool moveAllowed;
+
+    virtual void parsePosition(const Board* board, bool whiteToMove);
+    virtual void makeMoveIfInControl();
+    void stopThread();
+    void startThreadIfInControl();
 };
 
 #endif // _NALCG_A_I_ADAPTER_H_

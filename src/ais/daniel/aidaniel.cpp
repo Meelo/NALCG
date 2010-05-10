@@ -1,9 +1,13 @@
 #include "aidaniel.h"
 
-AIDaniel::AIDaniel(Position *p) : position(p) {
+AIDaniel::AIDaniel(Position *p) : position(p), isInterrupted(false) {
 }
 
 int AIDaniel::alphaBeta(Position *pos, int depth, int alpha, int beta, bool max) {
+    if (isInterrupted)
+    {
+        return 0;
+    }
     if (depth >= CUTOFFDEPTH || pos->isGameOver()) {
         return pos->evaluate();
     }
@@ -30,6 +34,7 @@ int AIDaniel::alphaBeta(Position *pos, int depth, int alpha, int beta, bool max)
 }
 
 int AIDaniel::getNextMove() {
+    isInterrupted = false;
     std::vector<int> values;
     int best = 0;
     if (position->isWhiteToMove()) {
@@ -73,6 +78,11 @@ Position* AIDaniel::getPosition() {
 void AIDaniel::setPosition(Position *p) {
     delete position;
     position = p;
+}
+
+void AIDaniel::interrupt()
+{
+    isInterrupted = true;
 }
 
 AIDaniel::~AIDaniel() {

@@ -13,6 +13,7 @@ class AIDaniel {
  private:
     Position *position;
     int bestMove;
+    bool isInterrupted;
     int alphaBeta(Position *pos, int depth, int alpha, int beta, bool max);
 
  public:
@@ -20,6 +21,7 @@ class AIDaniel {
     int getNextMove();
     Position* getPosition();
     void setPosition(Position *p);
+    void interrupt();
     ~AIDaniel();
 };
 #endif // _NALCG_AIDaniel_H_
