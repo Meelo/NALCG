@@ -2,6 +2,8 @@
 
 #include "viewconstants.h"
 
+#include <boost/thread/thread.hpp>
+
 bool ViewFrameListener::frameStarted(const FrameEvent& evt)
 {
     if (!mContinue)
@@ -53,6 +55,10 @@ bool ViewFrameListener::frameStarted(const FrameEvent& evt)
 bool ViewFrameListener::frameEnded(const FrameEvent& evt)
 {
     updateStats();
+    if (!mAnimationManager.animationsRunning())
+    {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+    }
     return true;
 }
 

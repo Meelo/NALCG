@@ -19,7 +19,6 @@ class AIDaniel {
  public:
     AIDaniel(Position *p);
     int getNextMove();
-    Position* getPosition();
     void setPosition(Position *p);
     void interrupt();
     ~AIDaniel();

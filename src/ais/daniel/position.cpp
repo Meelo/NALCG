@@ -30,7 +30,7 @@ Position::Position(MovementGenerator *mg, char b[8][8], bool white) : generator(
 }
 
 // Is the game over
-bool Position::testLeafNode() {
+inline bool Position::testLeafNode() {
     // Checkmate or stalemate
     if (legalMoves.empty()) {
         return true;
@@ -54,7 +54,7 @@ bool Position::testLeafNode() {
     return true;
 }
 
-char Position::translate(char piece) {
+inline char Position::translate(char piece) {
     switch(piece) {
     case 'T':
         return 'R';
@@ -72,7 +72,7 @@ char Position::translate(char piece) {
     return piece;
 }
 
-int Position::pawnIsolationPenalty(int j, bool white) {
+inline int Position::pawnIsolationPenalty(int j, bool white) {
     char p = 'P';
     char e = 'E';
     if (white) {
@@ -109,7 +109,7 @@ int Position::pawnIsolationPenalty(int j, bool white) {
     return 20;
 }
 
-int Position::pawnBackwardPenalty(int i, int j, bool white) {
+inline int Position::pawnBackwardPenalty(int i, int j, bool white) {
     int y = i + 1;
     int x1 = j - 1;
     int x2 = j + 1;
@@ -144,7 +144,7 @@ int Position::pawnBackwardPenalty(int i, int j, bool white) {
     return 10;
 }
 
-int Position::pawnAdvancementBonus(int i, int j, bool white) {
+inline int Position::pawnAdvancementBonus(int i, int j, bool white) {
     int advancement;
     if (white) {
         advancement = 6 - i;
@@ -175,7 +175,7 @@ int Position::pawnAdvancementBonus(int i, int j, bool white) {
     return advancement * 3;
 }
 
-int Position::pawnProximityToKingBonus(int i, int j, bool white) {
+inline int Position::pawnProximityToKingBonus(int i, int j, bool white) {
     int bonus = 0;
     char p = 'P';
     char e = 'E';
@@ -186,7 +186,7 @@ int Position::pawnProximityToKingBonus(int i, int j, bool white) {
     for (int y = i - 1; y <= i + 1; ++y) {
         for (int x = j - 1; x <= j + 1; ++x) {
             if (x >= 0 && x < 8 && y >= 0 && y < 8 && (board[y][x] == p || board[y][x] == e)) {
-                bonus += 10;
+                bonus += 6;
             }
         }
     }
@@ -197,7 +197,7 @@ int Position::pawnProximityToKingBonus(int i, int j, bool white) {
     return bonus;
 }
 
-int Position::centreBonus(int x) {
+inline int Position::centreBonus(int x) {
     switch (x) {
     case 0:
     case 7:
@@ -213,7 +213,7 @@ int Position::centreBonus(int x) {
     }
 }
 
-int Position::bishopControlBonus(int i, int j, bool white) {
+inline int Position::bishopControlBonus(int i, int j, bool white) {
     int bonus = 0;
     // Check upwards to the left
     int x = j - 1;
@@ -286,7 +286,7 @@ downright:
     return bonus;
 }
 
-int Position::rookControlBonus(int i, int j, bool white) {
+inline int Position::rookControlBonus(int i, int j, bool white) {
     int bonus = 0;
     // Check to the left
     int x = j - 1;
@@ -350,7 +350,7 @@ down:
     return bonus;
 }
 
-int Position::xrayControlBonus(int i, int j, bool white) {
+inline int Position::xrayControlBonus(int i, int j, bool white) {
     int bonus = 0;
     bool whiteSide = true;
     if (i < 4) {
@@ -381,7 +381,7 @@ int Position::xrayControlBonus(int i, int j, bool white) {
     return bonus;
 }
 
-void Position::reset() {
+inline void Position::reset() {
     whiteToMove = true;
     isCheck = false;
     for (int i = 0; i < 8; ++i) {
@@ -411,7 +411,7 @@ void Position::reset() {
     }
 }
 
-void Position::move(int mv, int promotion) {
+inline void Position::move(int mv, int promotion) {
     // Move the piece
     board[UNPACK_I2(mv)][UNPACK_J2(mv)] = board[UNPACK_I1(mv)][UNPACK_J1(mv)];
     board[UNPACK_I1(mv)][UNPACK_J1(mv)] = ' ';
@@ -518,7 +518,7 @@ void Position::move(int mv, int promotion) {
     isCheck = !generator->isKingSafe(0,0,0,0);
 }
 
-void Position::print() {
+inline void Position::print() {
     for (int i = 0; i < 8; ++i) {
         std::cout << "  +---+---+---+---+---+---+---+---+" << std::endl;
         std::cout << 8 - i;
@@ -531,7 +531,7 @@ void Position::print() {
     std::cout << "    A   B   C   D   E   F   G   H" << std::endl << std::endl;
 }
 
-void Position::getBoard(char b[8][8], int *wkx, int *wky, int *bkx, int *bky) {
+inline void Position::getBoard(char b[8][8], int *wkx, int *wky, int *bkx, int *bky) {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             if (board[i][j] == 'K' || board[i][j] == 'X') {
@@ -658,11 +658,11 @@ int Position::evaluate() {
     return white - black;
 }
 
-std::vector<int>* Position::getLegalMoves() {
+inline std::vector<int>* Position::getLegalMoves() {
     return &legalMoves;
 }
 
-MovementGenerator* Position::getMovementGenerator() {
+inline MovementGenerator* Position::getMovementGenerator() {
     return generator;
 }
 

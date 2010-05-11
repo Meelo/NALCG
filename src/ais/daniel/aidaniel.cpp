@@ -3,7 +3,7 @@
 AIDaniel::AIDaniel(Position *p) : position(p), isInterrupted(false) {
 }
 
-int AIDaniel::alphaBeta(Position *pos, int depth, int alpha, int beta, bool max) {
+inline int AIDaniel::alphaBeta(Position *pos, int depth, int alpha, int beta, bool max) {
     if (isInterrupted)
     {
         return 0;
@@ -68,11 +68,6 @@ int AIDaniel::getNextMove() {
     bestMove = position->getLegalMoves()->at(best);
     position->move(bestMove, 0);
     return bestMove;
-}
-
-
-Position* AIDaniel::getPosition() {
-    return position;
 }
 
 void AIDaniel::setPosition(Position *p) {

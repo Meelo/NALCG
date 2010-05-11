@@ -84,8 +84,11 @@ void AIAdapter::startThreadIfInControl()
 
 void AIAdapter::makeMoveIfInControl()
 {
-    boost::mutex::scoped_lock l(mutex);
-    int mv = ai->getNextMove();
+    int mv;
+    {
+        boost::mutex::scoped_lock l(mutex);
+        mv = ai->getNextMove();
+    }
 
     if (moveAllowed)
     {
