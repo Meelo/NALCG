@@ -108,7 +108,7 @@ void AIAdapter::makeMoveIfInControl()
 
     if (moveAllowed)
     {
-        std::cout << UNPACK_J1(mv) << " " << UNPACK_I1(mv) << " " <<  UNPACK_J2(mv) << " " <<  UNPACK_I2(mv) << std::endl;
+        std::cout << (mMiddleman->getGameLog().size() % 2 == 0 ? "White" : "Black") << " moves: " << UNPACK_J1(mv) << " " << UNPACK_I1(mv) << " " <<  UNPACK_J2(mv) << " " <<  UNPACK_I2(mv) << std::endl;
         mMiddleman->move(UNPACK_J1(mv), UNPACK_I1(mv), UNPACK_J2(mv), UNPACK_I2(mv), ChessBoard::PROMOTE_TO_QUEEN);
     }
 }

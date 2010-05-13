@@ -76,12 +76,15 @@ void RemotePlayer::disconnect()
 
 void RemotePlayer::move(int fromX, int fromY, int toX, int toY, unsigned int promoteTo)
 {
-    log("Move begin");
-    std::ostringstream message;
-    message << "TPE_3M ";
-    message << fromX << " " << fromY << " " << toX << " " << toY << " " << promoteTo;
-    mNetwork->sendln(message.str());
-    log("Move end");
+    if (!mDisabled)
+    {
+        log("Move begin");
+        std::ostringstream message;
+        message << "TPE_3M ";
+        message << fromX << " " << fromY << " " << toX << " " << toY << " " << promoteTo;
+        mNetwork->sendln(message.str());
+        log("Move end");
+    }
 }
 
 

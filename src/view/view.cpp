@@ -361,7 +361,7 @@ void View::createGUI()
     CEGUI::Spinner* whiteDepthSpinner = static_cast<CEGUI::Spinner*>(
         createGUIComponent("White depth", 0.4, 0.00, 0.05, 0.08, "Spinner", false, true));
     whiteDepthSpinner->setCurrentValue(4.0);
-    whiteDepthSpinner->setMinimumValue(1.0);
+    whiteDepthSpinner->setMinimumValue(3.0);
     whiteDepthSpinner->setMaximumValue(6.0);
     whiteDepthSpinner->subscribeEvent(
         CEGUI::Spinner::EventValueChanged,
@@ -385,7 +385,7 @@ void View::createGUI()
     CEGUI::Spinner* blackDepthSpinner = static_cast<CEGUI::Spinner*>(
         createGUIComponent("Black depth", 0.69, 0.00, 0.05, 0.08, "Spinner", false, true));
     blackDepthSpinner->setCurrentValue(4.0);
-    blackDepthSpinner->setMinimumValue(1.0);
+    blackDepthSpinner->setMinimumValue(3.0);
     blackDepthSpinner->setMaximumValue(6.0);
     blackDepthSpinner->subscribeEvent(
         CEGUI::Spinner::EventValueChanged,

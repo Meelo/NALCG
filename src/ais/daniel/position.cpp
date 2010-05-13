@@ -9,7 +9,7 @@ Position::Position(MovementGenerator *mg) : generator(mg), gameOver(false), isCh
 
 Position::Position(Position *p, int mv) {
     // Dampen the noisiness.
-    noisiness = (int)(p->getNoisiness() * 0.7f);
+    noisiness = (int)(p->getNoisiness() * 0.5f);
 
     legalMoves.reserve(64);
     int x;

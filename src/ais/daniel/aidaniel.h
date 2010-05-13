@@ -9,7 +9,7 @@
 
 class AIDaniel {
  private:
-    static const int QUIESCENCE_SEARCH_MAX_ADDITIONAL_DEPTH = 0;
+    static const int QUIESCENCE_SEARCH_MAX_ADDITIONAL_DEPTH = 1;
 
     Position *position;
     int bestMove;
