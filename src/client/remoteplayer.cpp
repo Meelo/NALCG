@@ -25,23 +25,30 @@ RemotePlayer::~RemotePlayer()
 void RemotePlayer::init(Middleman* middleman)
 {
     mMiddleman = middleman;
-    if (parseConfigFile())
-    {
-        mDisabled = false;
-    }
+    //~ mDisabled = !parseConfigFile();
+    mDisabled = true;
 }
 
 
 bool RemotePlayer::connect(const char* ip, const char* port)
 {
+    if (mDisabled)
+    {
+        log("Re-parsing configs begin");
+        mDisabled = !parseConfigFile();
+        log("Re-parsing configs end");
+    }
+
     log("Connect begin");
-    if (!mDisabled && mNetwork->connect(ip, port))
+    if (!mDisabled
+        && mNetwork->connect(mNInfo.address.c_str(), mNInfo.port.c_str()))
     {
         log("Connect successful");
         mNetwork->startBuffering();
 
         mConnected = true;
-        mThread = new boost::thread(boost::bind(&RemotePlayer::handleIncomingMessages, this));
+        mThread = new boost::thread(boost::bind(
+            &RemotePlayer::handleIncomingMessages, this));
 
         // Send nickname.
         log("Nickname send begin");
@@ -51,6 +58,7 @@ bool RemotePlayer::connect(const char* ip, const char* port)
         return true;
     }
     log("Connect failed");
+    mDisabled = true;
     return false;
 }
 
@@ -194,8 +202,13 @@ void RemotePlayer::log(const std::string& message)
 
 bool RemotePlayer::parseConfigFile()
 {
+    log("parsing begin");
     std::ifstream inputFile("../data/remote.cfg");
-    if (!inputFile.is_open()) { return false; }
+    if (!inputFile.is_open())
+    {
+        log("parsing end, Fail(couldn't open config file)");
+        return false;
+    }
 
     std::string line;
     while (std::getline(inputFile, line))
@@ -209,10 +222,15 @@ bool RemotePlayer::parseConfigFile()
             std::string key = line.substr(0, separator);
             std::string value = line.substr(separator + 1);
 
-            if (!updateNetworkInfo(key, value)) { return false; }
+            if (!updateNetworkInfo(key, value))
+            {
+                log("parsing end, Fail(wrong key)");
+                return false;
+            }
         }
     }
 
+    log("parsing end, success");
     return true;
 }
 
