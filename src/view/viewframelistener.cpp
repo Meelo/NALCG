@@ -161,6 +161,7 @@ bool ViewFrameListener::hideGUI(const CEGUI::EventArgs& e)
         wmgr.getWindow("View/Move assistance levelStaticText")->setVisible(true);
         wmgr.getWindow("View/Move assistanceSpinner")->setVisible(true);
         wmgr.getWindow("View/FPS infoButton")->setVisible(true);
+        wmgr.getWindow("View/ConnectButton")->setVisible(true);
     }
     else if (hideButton->getText() == HIDE_GUI)
     {
@@ -170,6 +171,7 @@ bool ViewFrameListener::hideGUI(const CEGUI::EventArgs& e)
         wmgr.getWindow("View/Unsafe modeCheckbox")->setVisible(false);
         wmgr.getWindow("View/Move assistance levelStaticText")->setVisible(false);
         wmgr.getWindow("View/Move assistanceSpinner")->setVisible(false);
+        wmgr.getWindow("View/ConnectButton")->setVisible(false);
 
         wmgr.getWindow("View/UndoButton")->setVisible(false);
         wmgr.getWindow("View/RestartButton")->setVisible(false);

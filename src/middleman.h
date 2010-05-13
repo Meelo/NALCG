@@ -52,6 +52,8 @@ public:
     // 0 = Human, 1..n = AI player index + 1.
     void setControl(unsigned int whiteController, unsigned int blackController);
 
+    void setAICutoffDepth(int white, int black);
+
     // Methods (possibly) over IP
     void sendChallenge(const std::string& remotePlayer);
 
@@ -61,7 +63,7 @@ public:
 
     void updateUsers(const std::vector<std::string>& users);
 
-    bool connect(const char* ip, const char* port);
+    bool connect();
 
 private:
     // Members

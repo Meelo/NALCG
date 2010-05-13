@@ -348,15 +348,25 @@ void View::createGUI()
         CEGUI::Event::Subscriber(&ViewFrameListener::hideGUI, mListener));
     
     // White dropdown menus
-    createGUIComponent("White:", 0.3, 0.0, 0.15, 0.04, "StaticText", true, true);
+    createGUIComponent("White:", 0.25, 0.0, 0.15, 0.04, "StaticText", true, true);
 
     CEGUI::Combobox* white = static_cast<CEGUI::Combobox*>(createGUIComponent(
-        "White", 0.3, 0.045, 0.15, 0.2, "Combobox", false, true));
+        "White", 0.25, 0.045, 0.15, 0.2, "Combobox", false, true));
     white->setReadOnly(true);
     white->setText("Human");
     white->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,
         CEGUI::Event::Subscriber(&View::updateControllers, this));
-    
+
+    // White depth spinner
+    CEGUI::Spinner* whiteDepthSpinner = static_cast<CEGUI::Spinner*>(
+        createGUIComponent("White depth", 0.4, 0.00, 0.05, 0.08, "Spinner", false, true));
+    whiteDepthSpinner->setCurrentValue(4.0);
+    whiteDepthSpinner->setMinimumValue(1.0);
+    whiteDepthSpinner->setMaximumValue(6.0);
+    whiteDepthSpinner->subscribeEvent(
+        CEGUI::Spinner::EventValueChanged,
+        CEGUI::Event::Subscriber(&View::handleDepthChanged, this));
+
     // Swap sides button
     createGUIComponent("<=>", 0.475, 0.02, 0.04, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::swapPlayers, this));
@@ -371,8 +381,17 @@ void View::createGUI()
     black->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,
         CEGUI::Event::Subscriber(&View::updateControllers, this));
 
+    // Black depth spinner
+    CEGUI::Spinner* blackDepthSpinner = static_cast<CEGUI::Spinner*>(
+        createGUIComponent("Black depth", 0.69, 0.00, 0.05, 0.08, "Spinner", false, true));
+    blackDepthSpinner->setCurrentValue(4.0);
+    blackDepthSpinner->setMinimumValue(1.0);
+    blackDepthSpinner->setMaximumValue(6.0);
+    blackDepthSpinner->subscribeEvent(
+        CEGUI::Spinner::EventValueChanged,
+        CEGUI::Event::Subscriber(&View::handleDepthChanged, this));
 
-    createGUIComponent("Connect", 0.72, 0.0, 0.1, 0.04)
+    createGUIComponent("Connect", 0.0, 0.25, 0.1, 0.04, "Button", true, false)
         ->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&View::connect, this));
 
     updateUsers(std::vector<std::string>());
@@ -826,6 +845,18 @@ void View::updateUsers(const std::vector<std::string>& users)
 
 bool View::connect(const CEGUI::EventArgs& e)
 {
-    mMiddleman->connect("dzarg.mine.nu", "6668");
+    mMiddleman->connect();
+    return true;
+}
+
+
+bool View::handleDepthChanged(const CEGUI::EventArgs& e)
+{
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Spinner* white = static_cast<CEGUI::Spinner*>(wmgr.getWindow("View/White depthSpinner"));
+    CEGUI::Spinner* black = static_cast<CEGUI::Spinner*>(wmgr.getWindow("View/Black depthSpinner"));
+
+    mMiddleman->setAICutoffDepth(white->getCurrentValue() + 0.5f, black->getCurrentValue() + 0.5f);
+
     return true;
 }

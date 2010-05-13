@@ -194,9 +194,9 @@ void Middleman::remoteUpdate(   std::size_t fromX,  std::size_t fromY,
     client.move(fromX, fromY, toX, toY, promoteTo);
 }
 
-bool Middleman::connect(const char* ip, const char* port)
+bool Middleman::connect()
 {
-    return client.connect(ip, port);
+    return client.connect("dzarg.mine.nu", "6667");
 }
 
 
@@ -237,10 +237,8 @@ const std::string Middleman::newLogEntry(std::size_t fromX, std::size_t fromY,
 void Middleman::setControl(unsigned int whiteController,
     unsigned int blackController)
 {
-    // add players
     view->setControl(whiteController == 0, blackController == 0);
 
-    // initialize AI players.
     for (std::size_t i = 0; i < aiList.size(); i++)
     {
         aiList.at(i)->setControl(whiteController == i + 1,
@@ -248,6 +246,13 @@ void Middleman::setControl(unsigned int whiteController,
     }
 }
 
+void Middleman::setAICutoffDepth(int white, int black)
+{
+    for (std::size_t i = 0; i < aiList.size(); i++)
+    {
+        aiList.at(i)->setCutoffDepth(white, black);
+    }
+}
 
 template <typename T>
 void Middleman::deleteAndClear(std::vector<T>& vector)

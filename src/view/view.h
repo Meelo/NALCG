@@ -135,6 +135,7 @@ protected:
     bool updateControllers(const CEGUI::EventArgs& e);
     bool swapPlayers(const CEGUI::EventArgs& e);
     bool connect(const CEGUI::EventArgs& e);
+    bool handleDepthChanged(const CEGUI::EventArgs& e);
 };
 
 #endif // _NALCG_VIEW_H_

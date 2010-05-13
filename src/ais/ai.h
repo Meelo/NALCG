@@ -20,6 +20,7 @@ public:
     virtual void setBoard(const Board* board, unsigned int round) = 0;
 
     virtual void setControl(bool white, bool black) = 0;
+    virtual void setCutoffDepth(int white, int black) = 0;
 
 protected:
     Middleman* mMiddleman;
