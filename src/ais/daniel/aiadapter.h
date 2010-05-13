@@ -27,6 +27,7 @@ public:
 
     virtual void setControl(bool white, bool black);
 
+    virtual void setCutoffDepth(int white, int black);
 
 protected:
     AIDaniel *ai;
@@ -36,6 +37,8 @@ protected:
     boost::mutex mutex;
     boost::thread* thread;
     bool moveAllowed;
+    int whiteCutoffDepth;
+    int blackCutoffDepth;
 
     virtual void parsePosition(const Board* board, bool whiteToMove);
     virtual void makeMoveIfInControl();

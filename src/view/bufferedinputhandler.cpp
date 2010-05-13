@@ -374,7 +374,6 @@ void BufferedInputHandler::playQueuedMove()
         int toY = moveOrder.at(3);
         //bool continuous = moveOrder.at(4) != 0;
         unsigned int promoteTo = moveOrder.at(5);
-        std::cout << "Not queuing move" << std::endl;
         std::ostringstream sourceName;
         sourceName << fromX << " " << fromY;
         SceneNode* pieceNode = findPieceAbove(mSceneMgr->getSceneNode(sourceName.str()));

@@ -171,9 +171,8 @@ void Middleman::moveUpdate( std::size_t fromX, std::size_t fromY,
                             std::size_t toX,   std::size_t toY, bool continuous)
 {
     view->move(fromX, fromY, toX, toY, continuous);
-    updateBoardForAI();
-
     board->initRoundSpecificState();
+    updateBoardForAI();
 }
 
 

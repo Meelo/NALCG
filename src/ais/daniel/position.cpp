@@ -1,13 +1,16 @@
 #include "position.h"
 
 
-Position::Position(MovementGenerator *mg) : generator(mg), gameOver(false), isCheck(false) {
+Position::Position(MovementGenerator *mg) : generator(mg), gameOver(false), isCheck(false), noisiness(0) {
     reset();
     mg->setPosition(this);
     mg->getAllLegalMoves(&legalMoves);
 }
 
 Position::Position(Position *p, int mv) {
+    // Dampen the noisiness.
+    noisiness = (int)(p->getNoisiness() * 0.7f);
+
     legalMoves.reserve(64);
     int x;
     p->getBoard(&board[0], &x, &x, &x, &x);
@@ -17,7 +20,7 @@ Position::Position(Position *p, int mv) {
     gameOver = testLeafNode();
 }
 
-Position::Position(MovementGenerator *mg, char b[8][8], bool white) : generator(mg), whiteToMove(white) {
+Position::Position(MovementGenerator *mg, char b[8][8], bool white) : generator(mg), whiteToMove(white), noisiness(0) {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             board[i][j] = b[i][j];
@@ -412,6 +415,11 @@ inline void Position::reset() {
 }
 
 inline void Position::move(int mv, int promotion) {
+    // If a piece is eaten by the move, the position isn't quiet
+    if (board[UNPACK_I2(mv)][UNPACK_J2(mv)] != ' ') {
+        noisiness += 50;
+    }
+
     // Move the piece
     board[UNPACK_I2(mv)][UNPACK_J2(mv)] = board[UNPACK_I1(mv)][UNPACK_J1(mv)];
     board[UNPACK_I1(mv)][UNPACK_J1(mv)] = ' ';

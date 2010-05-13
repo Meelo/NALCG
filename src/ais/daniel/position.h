@@ -23,6 +23,8 @@ private:
     bool isCheck;
     bool whiteToMove;
     std::vector<int> legalMoves;
+    int noisiness;
+
     bool testLeafNode();
     char translate(char piece);
     int pawnIsolationPenalty(int j, bool white);
@@ -48,5 +50,6 @@ public:
     std::vector<int>* getLegalMoves();
     MovementGenerator* getMovementGenerator();
     long getHash();
+    int getNoisiness() const { return noisiness; }
 };
 #endif // _NALCG_POSITION_H_

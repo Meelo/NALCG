@@ -3,7 +3,14 @@
 // class dependencies
 #include "aiadapter.h"
 
-AIAdapter::AIAdapter() : ai(0), controlWhite(false), controlBlack(false), thread(0), moveAllowed(false)
+AIAdapter::AIAdapter()
+    : ai(0)
+    , controlWhite(false)
+    , controlBlack(false)
+    , thread(0)
+    , moveAllowed(false)
+    , whiteCutoffDepth(AIDaniel::DEFAULT_CUTOFF_DEPTH)
+    , blackCutoffDepth(AIDaniel::DEFAULT_CUTOFF_DEPTH)
 {
     mg = new MovementGenerator();
 }
@@ -52,6 +59,13 @@ void AIAdapter::setControl(bool white, bool black)
     startThreadIfInControl();
 }
 
+void AIAdapter::setCutoffDepth(int white, int black)
+{
+    whiteCutoffDepth = white;
+    blackCutoffDepth = black;
+}
+
+
 void AIAdapter::stopThread()
 {
     if (thread)
@@ -77,6 +91,7 @@ void AIAdapter::startThreadIfInControl()
         {
             stopThread();
             moveAllowed = true;
+            ai->setCutoffDepth(whiteToMove ? whiteCutoffDepth : blackCutoffDepth);
             thread = new boost::thread(boost::bind(&AIAdapter::makeMoveIfInControl, this));
         }
     }
