@@ -1,7 +1,7 @@
 # Makefile for Server
 CFLAGS=-lpthread
 OPTS=-Wall
-CC=g++
+CC=g++ -g
 APP=NALCG-server
 OBJS= serversocket.o socket.o server.o user.o servermain.o
 

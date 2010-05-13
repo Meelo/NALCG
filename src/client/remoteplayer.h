@@ -13,6 +13,13 @@ class Middleman;
 class Board;
 class Network;
 
+struct NetworkInfo
+{
+    std::string nick;
+    std::string address;
+    std::string port;
+};
+
 class RemotePlayer
 {
 public:
@@ -31,9 +38,15 @@ public:
 protected:
     virtual void handleIncomingMessages();
     virtual void log(const std::string& message);
+    bool parseConfigFile();
+    bool updateNetworkInfo( const std::string& key,
+                            const std::string& value);
+    void removeInvalidChars(std::string& line);
 
     Network* mNetwork;
     Middleman* mMiddleman;
+    NetworkInfo mNInfo;
+    bool mDisabled;
     bool mConnected;
     boost::thread* mThread;
     std::vector<std::string> mUsers;

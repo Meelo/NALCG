@@ -90,7 +90,7 @@ User* Server::addUser()
 
 void Server::quittedUsers()
 {
-    User *temp;
+    User *temp = 0;
     bool found;
     while( true ) {
         pthread_rwlock_wrlock(&mLock);
@@ -108,11 +108,11 @@ void Server::quittedUsers()
             }
         }
 
-        if(found)
+        if(found && temp)
         {
             mClients.remove(temp);
+            int errrr = temp->getSid();
             k = pthread_cancel(temp->getSid());
-
             if(temp->isPlaying())
             {
                 *(temp->getOpponent()->getSocket()) << "MSG_D";

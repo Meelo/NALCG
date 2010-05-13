@@ -3,9 +3,13 @@
 #include "../middleman.h"
 #include "../logic/chessboard.h"
 
+#include <fstream>
+#include <sstream>
+
 RemotePlayer::RemotePlayer()
     : mNetwork(Network::createNewNetwork())
     , mMiddleman(0)
+    , mDisabled(true)
     , mConnected(false)
     , mThread(0)
     , mCollectUsers(false)
@@ -21,13 +25,17 @@ RemotePlayer::~RemotePlayer()
 void RemotePlayer::init(Middleman* middleman)
 {
     mMiddleman = middleman;
+    if (parseConfigFile())
+    {
+        mDisabled = false;
+    }
 }
 
 
 bool RemotePlayer::connect(const char* ip, const char* port)
 {
     log("Connect begin");
-    if (mNetwork->connect(ip, port))
+    if (!mDisabled && mNetwork->connect(ip, port))
     {
         log("Connect successful");
         mNetwork->startBuffering();
@@ -37,12 +45,9 @@ bool RemotePlayer::connect(const char* ip, const char* port)
 
         // Send nickname.
         log("Nickname send begin");
-        std::ostringstream nick;
-        srand(static_cast<unsigned int>(time(0)));
-        nick << rand();
-        mNetwork->send(nick.str());
+        mNetwork->send(mNInfo.nick);
         log("Nickname send end");
-        
+
         return true;
     }
     log("Connect failed");
@@ -185,3 +190,69 @@ void RemotePlayer::log(const std::string& message)
 {
     std::cout << "@Remote: " << message << std::endl;
 }
+
+
+bool RemotePlayer::parseConfigFile()
+{
+    std::ifstream inputFile("../data/remote.cfg");
+    if (!inputFile.is_open()) { return false; }
+
+    std::string line;
+    while (std::getline(inputFile, line))
+    {
+        removeInvalidChars(line);
+        std::size_t separator;
+
+        if (!line.empty()
+            && (separator = line.find('=')) != std::string::npos)
+        {
+            std::string key = line.substr(0, separator);
+            std::string value = line.substr(separator + 1);
+
+            if (!updateNetworkInfo(key, value)) { return false; }
+        }
+    }
+
+    return true;
+}
+
+
+bool RemotePlayer::updateNetworkInfo(const std::string& key,
+                                     const std::string& value)
+{
+    if (key == "name")
+    {
+        mNInfo.nick = value;
+        return true;
+    }
+    if (key == "address")
+    {
+        mNInfo.address = value;
+        return true;
+    }
+    if (key == "port")
+    {
+        std::stringstream ss(value);
+        unsigned int num;
+        if ((ss >> num).fail())
+        {
+            return false;
+        }
+
+        mNInfo.port = value;
+        return true;
+    }
+
+    return false;
+}
+
+void RemotePlayer::removeInvalidChars(std::string& line)
+{
+    std::size_t found;
+    while ((found = line.find_first_not_of("abcdefghijklmnopqrstuvwxyz"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]=-_#.")) != std::string::npos) {
+        line.erase(found, 1);
+    }
+}
+
+
