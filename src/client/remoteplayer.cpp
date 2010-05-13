@@ -30,7 +30,7 @@ void RemotePlayer::init(Middleman* middleman)
 }
 
 
-bool RemotePlayer::connect(const char* ip, const char* port)
+bool RemotePlayer::connect()
 {
     if (mDisabled)
     {

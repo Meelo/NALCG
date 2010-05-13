@@ -27,7 +27,7 @@ public:
     virtual ~RemotePlayer();
 
     virtual void init(Middleman* middleman);
-    virtual bool connect(const char* ip, const char* port);
+    virtual bool connect();
     virtual void disconnect();
     virtual void move(int fromX, int fromY, int toX, int toY, unsigned int promoteTo);
     virtual void sendUndo(unsigned int steps);

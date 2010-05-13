@@ -194,9 +194,9 @@ void Middleman::remoteUpdate(   std::size_t fromX,  std::size_t fromY,
     client.move(fromX, fromY, toX, toY, promoteTo);
 }
 
-bool Middleman::connect(const char* ip, const char* port)
+bool Middleman::connect()
 {
-    return client.connect(ip, port);
+    return client.connect();
 }
 
 

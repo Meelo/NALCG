@@ -61,7 +61,7 @@ public:
 
     void updateUsers(const std::vector<std::string>& users);
 
-    bool connect(const char* ip, const char* port);
+    bool connect();
 
 private:
     // Members

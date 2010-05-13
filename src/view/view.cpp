@@ -346,7 +346,7 @@ void View::createGUI()
 
     createGUIComponent(ViewConstants::SHOW_ADDITIONAL, 0.005, 0.005, 0.22, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::hideGUI, mListener));
-    
+
     // White dropdown menus
     createGUIComponent("White:", 0.3, 0.0, 0.15, 0.04, "StaticText", true, true);
 
@@ -356,7 +356,7 @@ void View::createGUI()
     white->setText("Human");
     white->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,
         CEGUI::Event::Subscriber(&View::updateControllers, this));
-    
+
     // Swap sides button
     createGUIComponent("<=>", 0.475, 0.02, 0.04, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&View::swapPlayers, this));
@@ -760,7 +760,7 @@ bool View::updateControllers(const CEGUI::EventArgs& e)
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
     CEGUI::Combobox* white = static_cast<CEGUI::Combobox*>(wmgr.getWindow("View/WhiteCombobox"));
     CEGUI::Combobox* black = static_cast<CEGUI::Combobox*>(wmgr.getWindow("View/BlackCombobox"));
-    
+
     std::size_t whiteIndex = white->getItemIndex(white->findItemWithText(white->getText(), 0));
     std::size_t blackIndex = black->getItemIndex(black->findItemWithText(black->getText(), 0));
 
@@ -826,6 +826,6 @@ void View::updateUsers(const std::vector<std::string>& users)
 
 bool View::connect(const CEGUI::EventArgs& e)
 {
-    mMiddleman->connect("dzarg.mine.nu", "6668");
+    mMiddleman->connect();
     return true;
 }
