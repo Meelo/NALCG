@@ -7,6 +7,30 @@
 #include "animationfactory.h"
 #include "checkanimation.h"
 
+MovementAnimation::MovementAnimation(
+    const Vector3& destination,
+    SceneNode *movingNode,
+    SceneNode *targetPiece,
+    SceneManager *sceneMgr,
+    AnimationManager *animationManager)
+    : GenericAnimation(movingNode, sceneMgr)
+    , mDestination(destination)
+    , mTargetPiece(targetPiece)
+    , mTargetPieceName(targetPiece ? targetPiece->getName() : "NO_TARGET")
+    , mAnimationManager(animationManager)
+    , mIsCheck(false)
+    , mIsCheckmate(false)
+{
+
+    View* view = animationManager->getView();
+    Middleman* middleman = view->getMiddleman();
+    if (middleman)
+    {
+        mIsCheck = (middleman->getGameConditionMask() & ChessBoard::CHECK) != 0;
+        mIsCheckmate = (middleman->getGameConditionMask() & ChessBoard::CHECKMATE) != 0;
+    }
+}
+
 void MovementAnimation::dimLights()
 {
     mSceneMgr->setAmbientLight(ColourValue(0.05, 0.05, 0.05));
@@ -65,7 +89,7 @@ MovementAnimation::~MovementAnimation()
 
     Middleman* middleman = view->getMiddleman();
 
-    if (middleman && middleman->getGameConditionMask() & ChessBoard::CHECK)
+    if (middleman && mIsCheck)
     {
         const ChessBoard* board = dynamic_cast<const ChessBoard*>(
             middleman->getGameStateAt(middleman->getGameLog().size()));
@@ -83,7 +107,7 @@ MovementAnimation::~MovementAnimation()
 
         if (pieceNode && pieceNode != mAnimatedNode)
         {
-            if (middleman->getGameConditionMask() & ChessBoard::CHECKMATE)
+            if (mIsCheckmate)
             {
                 int x0 = -1;
                 int y0 = -1;

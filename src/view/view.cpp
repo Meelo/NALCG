@@ -558,7 +558,7 @@ void View::createBoard(const Board* board)
         Vector3(-ViewConstants::SQUARE_SIDE_LENGTH * 9, -40,
         ViewConstants::SQUARE_SIDE_LENGTH * 0.5))->yaw(Degree(180));
 
-    mListener->setCanShowSelectablePieces(true);
+    showSelectablePiecesIfInControl();
     mListener->clearSelectedObject();
 }
 

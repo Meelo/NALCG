@@ -18,8 +18,8 @@ class View : public WindowEventListener, public EndUser
 public:
     View() : mRoot(0), mKeyboard(0), mMouse(0), mInputManager(0),
         mRenderer(0), mSystem(0), mListener(0), mSceneMgr(0),
-        mCamera(0), mWindow(0), mBoardWidth(0),
-        mBoardHeight(0), mRound(0), mPast(false)
+        mCamera(0), mWindow(0), mBoardWidth(0), mBoardHeight(0),
+        mRound(0), mPast(false), mControlWhite(false), mControlBlack(false)
     {
     }
 
@@ -48,7 +48,7 @@ public:
         {
             mRound++;
             recreateLog();
-            mListener->setCanShowSelectablePieces(true);
+            showSelectablePiecesIfInControl();
         }
     }
     virtual void promoteMove(int fromX, int fromY, int toX, int toY,
@@ -59,7 +59,7 @@ public:
         mRound++;
         recreateLog();
     }
-    virtual void setControl(bool white, bool black) { }
+    virtual void setControl(bool white, bool black) { mControlWhite = white; mControlBlack = black; }
     virtual void promptChallenge(const std::string& challengerName);
     virtual void updateUsers(const std::vector<std::string>& users);
 
@@ -80,6 +80,7 @@ public:
     virtual void windowClosed(RenderWindow* rw);
     void ensureLatestState();
     virtual void recreateDeadPieces();
+    void showSelectablePiecesIfInControl() { mListener->setCanShowSelectablePieces(isWhiteTurn() ? mControlWhite : mControlBlack); }
     virtual ~View();
 
 protected:
@@ -98,6 +99,8 @@ protected:
     unsigned int mRound;
     std::vector<int> promotionMove;
     bool mPast;
+    bool mControlWhite;
+    bool mControlBlack;
 
     void createRoot();
     void defineResources();

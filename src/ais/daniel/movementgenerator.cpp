@@ -165,7 +165,7 @@ inline void MovementGenerator::addLegalKingMoves(int i, int j) {
 }
 
 inline void MovementGenerator::addLegalPawnMoves(int i, int j) {
-    int x,y;
+    register int x,y;
     // Check whether it's a white or a black pawn
     if (board[i][j] == 'p') {
         y = i - 1;

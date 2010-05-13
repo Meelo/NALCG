@@ -321,7 +321,7 @@ void BufferedInputHandler::onLeftPressed(const OIS::MouseEvent& arg)
                 mSceneMgr->getSceneNode("Selection")->setVisible(false);
                 mSelectedObject = 0;
                 resetSquareIndicators();
-                mCanShowSelectablePieces = true;
+                mView->showSelectablePiecesIfInControl();
             }
             else
             {
@@ -578,7 +578,7 @@ bool BufferedInputHandler::handleMoveAssistanceChanged(const CEGUI::EventArgs& e
     }
     else
     {
-        mCanShowSelectablePieces = true;
+        mView->showSelectablePiecesIfInControl();
     }
     return true;
 }

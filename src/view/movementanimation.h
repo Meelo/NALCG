@@ -8,12 +8,7 @@ class MovementAnimation : public GenericAnimation
 {
 public:
     MovementAnimation(const Vector3& destination, SceneNode *movingNode,
-        SceneNode *targetPiece, SceneManager *sceneMgr, AnimationManager *animationManager)
-        : GenericAnimation(movingNode, sceneMgr), mDestination(destination),
-        mTargetPiece(targetPiece), mTargetPieceName(targetPiece ? targetPiece->getName() : "NO_TARGET"),
-        mAnimationManager(animationManager)
-    {
-    }
+        SceneNode *targetPiece, SceneManager *sceneMgr, AnimationManager *animationManager);
 
     virtual ~MovementAnimation();
     virtual void dimLights();
@@ -31,6 +26,8 @@ protected:
     SceneNode* mTargetPiece;
     const std::string mTargetPieceName;
     AnimationManager* mAnimationManager;
+    bool mIsCheck;
+    bool mIsCheckmate;
 };
 
 #endif // _NALCG_MOVEMENT_ANIMATION_H_
