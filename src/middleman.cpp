@@ -5,6 +5,7 @@
 #include <boost/thread/thread.hpp>
 
 // system includes
+#include <ctime>
 
 Middleman::Middleman(const std::vector<AI*>& aiList,
     const std::vector<AIInfo>& aiInfos) :
@@ -164,6 +165,15 @@ void Middleman::playRound()
     gameStates.push_back(board->clone());
     currentTurn = currentTurn == WHITE ? BLACK : WHITE;
     ++rounds;
+
+    static time_t prev;
+    time_t curr;
+    time(&curr);
+    std::string timestamp = std::string(ctime(&curr));
+    timestamp.resize(timestamp.length() - 1);
+    std::cout   << timestamp << ": - "
+                << difftime(curr, prev) << " seconds" << std::endl;
+    prev = curr;
 }
 
 
