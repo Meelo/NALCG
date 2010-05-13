@@ -219,7 +219,7 @@ SceneNode* View::createPiece(char type, const std::string& modelName,
     }
 
     std::ostringstream entityName;
-    entityName << type << modelName << location.x << location.y << location.z << parent->getName();
+    entityName << type << modelName << location.x << location.y << location.z << parent->getName() << GenericAnimation::nextName();
 
     SceneNode* node = parent->createChildSceneNode(entityName.str(), location);
 
