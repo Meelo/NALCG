@@ -17,6 +17,7 @@ AIAdapter::AIAdapter()
 
 AIAdapter::~AIAdapter()
 {
+    moveAllowed = false;
     if (thread)
     {
         ai->interrupt();
