@@ -196,7 +196,7 @@ void Middleman::remoteUpdate(   std::size_t fromX,  std::size_t fromY,
 
 bool Middleman::connect()
 {
-    return client.connect("dzarg.mine.nu", "6667");
+    return client.connect();
 }
 
 

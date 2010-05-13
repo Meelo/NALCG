@@ -20,6 +20,7 @@ MovementAnimation::MovementAnimation(
     , mAnimationManager(animationManager)
     , mIsCheck(false)
     , mIsCheckmate(false)
+    , mIsWhiteTurn(mAnimationManager->getView()->isWhiteTurn())
 {
 
     View* view = animationManager->getView();
@@ -94,7 +95,7 @@ MovementAnimation::~MovementAnimation()
         const ChessBoard* board = dynamic_cast<const ChessBoard*>(
             middleman->getGameStateAt(middleman->getGameLog().size()));
 
-        std::size_t location = board->findKing(view->isWhiteTurn() ? WHITE : BLACK);
+        std::size_t location = board->findKing(mIsWhiteTurn ? WHITE : BLACK);
 
         std::size_t column;
         std::size_t row;

@@ -346,7 +346,7 @@ void View::createGUI()
 
     createGUIComponent(ViewConstants::SHOW_ADDITIONAL, 0.005, 0.005, 0.22, 0.05)->subscribeEvent(CEGUI::PushButton::EventClicked,
         CEGUI::Event::Subscriber(&ViewFrameListener::hideGUI, mListener));
-    
+
     // White dropdown menus
     createGUIComponent("White:", 0.25, 0.0, 0.15, 0.04, "StaticText", true, true);
 
@@ -779,7 +779,7 @@ bool View::updateControllers(const CEGUI::EventArgs& e)
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
     CEGUI::Combobox* white = static_cast<CEGUI::Combobox*>(wmgr.getWindow("View/WhiteCombobox"));
     CEGUI::Combobox* black = static_cast<CEGUI::Combobox*>(wmgr.getWindow("View/BlackCombobox"));
-    
+
     std::size_t whiteIndex = white->getItemIndex(white->findItemWithText(white->getText(), 0));
     std::size_t blackIndex = black->getItemIndex(black->findItemWithText(black->getText(), 0));
 

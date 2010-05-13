@@ -28,6 +28,7 @@ protected:
     AnimationManager* mAnimationManager;
     bool mIsCheck;
     bool mIsCheckmate;
+    bool mIsWhiteTurn;
 };
 
 #endif // _NALCG_MOVEMENT_ANIMATION_H_
